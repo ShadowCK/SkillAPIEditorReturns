@@ -129,5 +129,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-#SkillAPI source
+# SkillAPI source
 SkillAPI-master/
+
+# Test files
+test/
