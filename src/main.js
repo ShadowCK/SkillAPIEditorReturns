@@ -30,15 +30,15 @@ let ATTRIBS = ['vitality', 'spirit', 'intelligence', 'dexterity', 'strength'];
 depend('filter');
 depend('input');
 depend('yaml');
-depend('component', function () {
+depend('component', () => {
   const config = localStorage.getItem('config');
   if (config) {
     parseConfig(config);
   }
   refreshOptions();
 });
-depend('data/data', function () {
-  depend('skill', function () {
+depend('data/data', () => {
+  depend('skill', () => {
     document.getElementById('skillList').addEventListener('change', function (e) {
       activeSkill.update();
       if (activeComponent) {
@@ -52,17 +52,17 @@ depend('data/data', function () {
         showSkillPage('builder');
       }
     });
-    document.getElementById('skillDetails').addEventListener('click', function (e) {
+    document.getElementById('skillDetails').addEventListener('click', (e) => {
       activeSkill.createFormHTML();
       showSkillPage('skillForm');
     });
-    document.getElementById('saveButton').addEventListener('click', function (e) {
+    document.getElementById('saveButton').addEventListener('click', (e) => {
       saveToFile('skills.yml', getSkillSaveData());
     });
-    document.getElementById('saveSkill').addEventListener('click', function (e) {
-      saveToFile(activeSkill.data[0].value + '.yml', activeSkill.getSaveString());
+    document.getElementById('saveSkill').addEventListener('click', (e) => {
+      saveToFile(`${activeSkill.data[0].value}.yml`, activeSkill.getSaveString());
     });
-    document.getElementById('deleteSkill').addEventListener('click', function (e) {
+    document.getElementById('deleteSkill').addEventListener('click', (e) => {
       const list = document.getElementById('skillList');
       let index = list.selectedIndex;
 
@@ -80,7 +80,7 @@ depend('data/data', function () {
     });
   });
 
-  depend('class', function () {
+  depend('class', () => {
     document.getElementById('classList').addEventListener('change', function (e) {
       activeClass.update();
       if (this.selectedIndex == this.length - 1) {
@@ -90,13 +90,13 @@ depend('data/data', function () {
         activeClass.createFormHTML();
       }
     });
-    document.getElementById('saveButton').addEventListener('click', function (e) {
+    document.getElementById('saveButton').addEventListener('click', (e) => {
       saveToFile('classes.yml', getClassSaveData());
     });
   });
 
   document.getElementById('version-select').onchange = (e) => {
-    DATA = window['DATA_' + e.target.value.substr(2)];
+    DATA = window[`DATA_${e.target.value.substr(2)}`];
     localStorage.setItem('server-version', e.target.value);
   };
 
@@ -113,7 +113,7 @@ function getSkillSaveData() {
   }
   let data = 'loaded: false\n';
   const alphabetic = skills.slice(0);
-  alphabetic.sort(function (a, b) {
+  alphabetic.sort((a, b) => {
     const an = a.data[0].value;
     const bn = b.data[0].value;
     if (an > bn) return 1;
@@ -151,15 +151,15 @@ function setupOptionList(div, list, type) {
   for (let i = 0; i < keys.length; i++) {
     x = keys[i];
     if (i % 4 == 0) output += '| ';
-    output +=
-      '[[' +
-      list[x].name +
-      '|_' +
-      type.substr(0, 1).toUpperCase() +
-      type.substr(1) +
-      ' ' +
-      list[x].name +
-      ']] | ';
+    output
+      += `[[${
+        list[x].name
+      }|_${
+        type.substr(0, 1).toUpperCase()
+      }${type.substr(1)
+      } ${
+        list[x].name
+      }]] | `;
     if ((i + 1) % 4 == 0) output += '\n';
 
     const e = document.createElement('h5');
@@ -183,7 +183,7 @@ function setupOptionList(div, list, type) {
     div.appendChild(e);
   }
 
-  //saveToFile('wiki_' + type + '.txt', output);
+  // saveToFile('wiki_' + type + '.txt', output);
 }
 
 let skillsActive = true;
@@ -199,21 +199,21 @@ window.onload = function () {
     return;
   }
 
-  document.getElementById('addTrigger').addEventListener('click', function (e) {
+  document.getElementById('addTrigger').addEventListener('click', (e) => {
     activeComponent = activeSkill;
     showSkillPage('triggerChooser');
   });
 
-  document.getElementById('skillTab').addEventListener('click', function (e) {
+  document.getElementById('skillTab').addEventListener('click', (e) => {
     switchToSkills();
   });
-  document.getElementById('classTab').addEventListener('click', function (e) {
+  document.getElementById('classTab').addEventListener('click', (e) => {
     switchToClasses();
   });
 
   const cancelButtons = document.querySelectorAll('.cancelButton');
   for (let i = 0; i < cancelButtons.length; i++) {
-    cancelButtons[i].addEventListener('click', function (e) {
+    cancelButtons[i].addEventListener('click', (e) => {
       showSkillPage('builder');
     });
   }
@@ -337,7 +337,7 @@ function saveToFile(file, data) {
 // Prepares for handling dropped files
 document.addEventListener(
   'dragover',
-  function (e) {
+  (e) => {
     e.stopPropagation();
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
@@ -348,7 +348,7 @@ document.addEventListener(
 // Examines dropped files and sets up loading applicable ones
 document.addEventListener(
   'drop',
-  function (e) {
+  (e) => {
     e.stopPropagation();
     e.preventDefault();
     for (let i = 0; i < e.dataTransfer.files.length; i++) {
@@ -391,7 +391,7 @@ function parseConfig(text) {
     mapping[entry.type][entry.display.toUpperCase().replace(/ /g, '_')] = {
       name: entry.display,
       container: entry.container,
-      supplier: function () {
+      supplier() {
         return new CustomComponent(entry);
       },
     };
@@ -404,8 +404,8 @@ function loadIndividual(e) {
   if (text.indexOf('global:') >= 0) {
     loadAttributes(e);
   } else if (
-    text.indexOf('components:') >= 0 ||
-    (text.indexOf('group:') == -1 && text.indexOf('combo:') == -1 && text.indexOf('skills:') == -1)
+    text.indexOf('components:') >= 0
+    || (text.indexOf('group:') == -1 && text.indexOf('combo:') == -1 && text.indexOf('skills:') == -1)
   ) {
     loadSkills(e);
   } else {
@@ -439,7 +439,7 @@ function loadSkills(e) {
 function loadSkillText(text) {
   // Load new skills
   const data = parseYAML(text);
-  for (let key in data) {
+  for (const key in data) {
     if (data[key] instanceof YAMLObject && key != 'loaded') {
       if (isSkillNameTaken(key)) {
         getSkill(key).load(data[key]);
@@ -466,7 +466,7 @@ function loadClasses(e) {
 function loadClassText(text) {
   // Load new classes
   const data = parseYAML(text);
-  for (let key in data) {
+  for (const key in data) {
     if (data[key] instanceof YAMLObject && key != 'loaded' && !isClassNameTaken(key)) {
       if (isClassNameTaken(key)) {
         getClass(key).load(data[key]);
@@ -485,7 +485,7 @@ function loadClassText(text) {
  */
 function loadSection(data) {
   this.components = [];
-  for (let x in data) {
+  for (const x in data) {
     if (x == this.dataKey) {
       const attribs = data[x];
       for (var y in attribs) {
@@ -493,10 +493,10 @@ function loadSection(data) {
           if (this.data[i].key == y && this.data[i].load) {
             this.data[i].load(attribs[y]);
             break;
-          } else if (this.data[i].key + '-base' == y && this.data[i].loadBase) {
+          } else if (`${this.data[i].key}-base` == y && this.data[i].loadBase) {
             this.data[i].loadBase(attribs[y]);
             break;
-          } else if (this.data[i].key + '-scale' == y && this.data[i].loadScale) {
+          } else if (`${this.data[i].key}-scale` == y && this.data[i].loadScale) {
             this.data[i].loadScale(attribs[y]);
             break;
           }
@@ -505,7 +505,7 @@ function loadSection(data) {
     } else if (x == this.componentKey) {
       const components = data[x];
       for (var y in components) {
-        const type = components[y].type;
+        const { type } = components[y];
         let list;
         if (type == Type.TRIGGER) {
           list = Trigger;
@@ -520,7 +520,7 @@ function loadSection(data) {
         let key = y;
         if (key.indexOf('-') > 0) key = key.substring(0, key.indexOf('-'));
         if (list !== undefined) {
-          for (let z in list) {
+          for (const z in list) {
             if (list[z].name.toLowerCase() == key.toLowerCase()) {
               const component = list[z].construct ? new list[z].construct() : list[z].supplier();
               component.parent = this;
@@ -538,10 +538,10 @@ function loadSection(data) {
           }
           this.data[i].load(data[x]);
           break;
-        } else if (this.data[i].key + '-base' == x) {
+        } else if (`${this.data[i].key}-base` == x) {
           this.data[i].loadBase(data[x]);
           break;
-        } else if (this.data[i].key + '-scale' == x) {
+        } else if (`${this.data[i].key}-scale` == x) {
           this.data[i].loadScale(data[x]);
           break;
         }
