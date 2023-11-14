@@ -148,3 +148,5 @@ const depend = (script, callback) => {
   document.querySelector('head').appendChild(scriptTag);
   SCRIPT_TAGS.scriptCount++;
 };
+
+export { extend, depend };

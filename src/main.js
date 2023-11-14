@@ -23,253 +23,16 @@
  */
 
 import _ from 'underscore';
+import { depend } from './loader.js';
 
 // Default attributes
 let ATTRIBS = ['vitality', 'spirit', 'intelligence', 'dexterity', 'strength'];
 
-depend('filter');
-depend('input');
-depend('yaml');
-depend('component', () => {
-  const config = localStorage.getItem('config');
-  if (config) {
-    parseConfig(config);
-  }
-  refreshOptions();
-});
-depend('data/data', () => {
-  depend('skill', () => {
-    document.getElementById('skillList').addEventListener('change', function (e) {
-      activeSkill.update();
-      if (activeComponent) {
-        activeComponent.update();
-      }
-      if (this.selectedIndex == this.length - 1) {
-        newSkill();
-      } else {
-        activeSkill = skills[this.selectedIndex];
-        activeSkill.apply();
-        showSkillPage('builder');
-      }
-    });
-    document.getElementById('skillDetails').addEventListener('click', (e) => {
-      activeSkill.createFormHTML();
-      showSkillPage('skillForm');
-    });
-    document.getElementById('saveButton').addEventListener('click', (e) => {
-      saveToFile('skills.yml', getSkillSaveData());
-    });
-    document.getElementById('saveSkill').addEventListener('click', (e) => {
-      saveToFile(`${activeSkill.data[0].value}.yml`, activeSkill.getSaveString());
-    });
-    document.getElementById('deleteSkill').addEventListener('click', (e) => {
-      const list = document.getElementById('skillList');
-      let index = list.selectedIndex;
-
-      skills.splice(index, 1);
-      if (skills.length == 0) {
-        newSkill();
-      }
-      list.remove(index);
-      index = Math.min(index, skills.length - 1);
-      activeSkill = skills[index];
-      list.selectedIndex = index;
-
-      activeSkill.apply();
-      showSkillPage('builder');
-    });
-  });
-
-  depend('class', () => {
-    document.getElementById('classList').addEventListener('change', function (e) {
-      activeClass.update();
-      if (this.selectedIndex == this.length - 1) {
-        newClass();
-      } else {
-        activeClass = classes[this.selectedIndex];
-        activeClass.createFormHTML();
-      }
-    });
-    document.getElementById('saveButton').addEventListener('click', (e) => {
-      saveToFile('classes.yml', getClassSaveData());
-    });
-  });
-
-  document.getElementById('version-select').onchange = (e) => {
-    DATA = window[`DATA_${e.target.value.substr(2)}`];
-    localStorage.setItem('server-version', e.target.value);
-  };
-
-  const previousValue = localStorage.getItem('server-version');
-  if (previousValue) {
-    document.getElementById('version-select').value = previousValue;
-  }
-});
-
-function getSkillSaveData() {
-  activeSkill.update();
-  if (activeComponent) {
-    activeComponent.update();
-  }
-  let data = 'loaded: false\n';
-  const alphabetic = skills.slice(0);
-  alphabetic.sort((a, b) => {
-    const an = a.data[0].value;
-    const bn = b.data[0].value;
-    if (an > bn) return 1;
-    if (an < bn) return -1;
-    return 0;
-  });
-  for (let i = 0; i < alphabetic.length; i++) {
-    data += alphabetic[i].getSaveString();
-  }
-  return data;
-}
-
-function getClassSaveData() {
-  activeClass.update();
-  let data = 'loaded: false\n';
-  for (let i = 0; i < classes.length; i++) {
-    data += classes[i].getSaveString();
-  }
-  return data;
-}
-
-function refreshOptions() {
-  // Set up component option lists
-  setupOptionList(document.getElementById('triggerOptions'), Trigger, Type.TRIGGER);
-  setupOptionList(document.getElementById('targetOptions'), Target, Type.TARGET);
-  setupOptionList(document.getElementById('conditionOptions'), Condition, Type.CONDITION);
-  setupOptionList(document.getElementById('mechanicOptions'), Mechanic, Type.MECHANIC);
-}
-
-function setupOptionList(div, list, type) {
-  div.innerHTML = '';
-  let x;
-  let output = '';
-  const keys = Object.keys(list).sort();
-  for (let i = 0; i < keys.length; i++) {
-    x = keys[i];
-    if (i % 4 == 0) output += '| ';
-    output
-      += `[[${
-        list[x].name
-      }|_${
-        type.substr(0, 1).toUpperCase()
-      }${type.substr(1)
-      } ${
-        list[x].name
-      }]] | `;
-    if ((i + 1) % 4 == 0) output += '\n';
-
-    const e = document.createElement('h5');
-    if (list[x].premium) e.className = 'premium';
-    e.innerHTML = list[x].name;
-    e.component = list[x];
-    e.addEventListener('click', function (e) {
-      if (activeComponent == activeSkill && activeSkill.usingTrigger(this.component.name)) {
-        showSkillPage('builder');
-      } else {
-        showSkillPage('skillForm');
-        const component = this.component.construct
-          ? new this.component.construct()
-          : this.component.supplier();
-        component.parent = activeComponent;
-        activeComponent.components.push(component);
-        component.createBuilderHTML(activeComponent.html);
-        component.createFormHTML();
-      }
-    });
-    div.appendChild(e);
-  }
-
-  // saveToFile('wiki_' + type + '.txt', output);
-}
-
-let skillsActive = true;
-
-// Set up event listeners when the page loads
-window.onload = function () {
-  const isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-  const isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
-  const isChrome = !!window.chrome && !isOpera; // Chrome 1+
-  const badBrowser = !isOpera && !isFirefox && !isChrome;
-  document.getElementById('badBrowser').style.display = badBrowser ? 'block' : 'none';
-  if (badBrowser) {
-    return;
-  }
-
-  document.getElementById('addTrigger').addEventListener('click', (e) => {
-    activeComponent = activeSkill;
-    showSkillPage('triggerChooser');
-  });
-
-  document.getElementById('skillTab').addEventListener('click', (e) => {
-    switchToSkills();
-  });
-  document.getElementById('classTab').addEventListener('click', (e) => {
-    switchToClasses();
-  });
-
-  const cancelButtons = document.querySelectorAll('.cancelButton');
-  for (let i = 0; i < cancelButtons.length; i++) {
-    cancelButtons[i].addEventListener('click', (e) => {
-      showSkillPage('builder');
-    });
-  }
-
-  const attribs = localStorage.getItem('attribs');
-  const skillData = localStorage.getItem('skillData');
-  const skillIndex = localStorage.getItem('skillIndex');
-  const classData = localStorage.getItem('classData');
-  const classIndex = localStorage.getItem('classIndex');
-  if (attribs) {
-    ATTRIBS = attribs.split(',');
-  }
-  if (skillData) {
-    skills = [];
-    document.getElementById('skillList').remove(0);
-    loadSkillText(skillData);
-    if (skillIndex) {
-      document.getElementById('skillList').selectedIndex = parseInt(skillIndex);
-      activeSkill = skills[Math.max(0, Math.min(skills.length - 1, parseInt(skillIndex)))];
-      activeSkill.apply();
-      showSkillPage('builder');
-    }
-  }
-  if (classData) {
-    classes = [];
-    document.getElementById('classList').remove(0);
-    loadClassText(classData);
-    if (classIndex) {
-      document.getElementById('classList').selectedIndex = parseInt(classIndex);
-      activeClass = classes[Math.max(0, Math.min(classes.length - 1, parseInt(classIndex)))];
-      activeClass.createFormHTML();
-    }
-  }
-  if (localStorage.getItem('skillsActive') == 'false') {
-    switchToClasses();
-  }
-};
-
-function switchToSkills() {
-  if (!skillsActive) {
-    document.getElementById('skillTab').className = 'tab tabLeft tabActive';
-    document.getElementById('classTab').className = 'tab tabRight';
-    document.getElementById('skills').style.display = 'block';
-    document.getElementById('classes').style.display = 'none';
-    skillsActive = true;
-  }
-}
-
-function switchToClasses() {
-  if (skillsActive) {
-    document.getElementById('classTab').className = 'tab tabRight tabActive';
-    document.getElementById('skillTab').className = 'tab tabLeft';
-    document.getElementById('classes').style.display = 'block';
-    document.getElementById('skills').style.display = 'none';
-    skillsActive = false;
-  }
+/**
+ * Sets the style for the page based on the current visible one
+ */
+function setPageStyle(name, visible) {
+  document.getElementById(name).style.display = visible === name ? 'block' : 'none';
 }
 
 /**
@@ -282,26 +45,89 @@ function showSkillPage(name) {
   setPageStyle('triggerChooser', name);
 }
 
-/**
- * Sets the style for the page based on the current visible one
- */
-function setPageStyle(name, visible) {
-  document.getElementById(name).style.display = visible == name ? 'block' : 'none';
+function setupOptionList(div, list, type) {
+  div.innerHTML = '';
+  let x;
+  let output = '';
+  const keys = Object.keys(list).sort();
+  for (let i = 0; i < keys.length; i++) {
+    x = keys[i];
+    if (i % 4 === 0) output += '| ';
+    output += `[[${list[x].name}|_${type.substr(0, 1).toUpperCase()}${type.substr(1)} ${
+      list[x].name
+    }]] | `;
+    if ((i + 1) % 4 === 0) {
+      output += '\n';
+    }
+
+    const h5 = document.createElement('h5');
+    if (list[x].premium) h5.className = 'premium';
+    h5.innerHTML = list[x].name;
+    h5.component = list[x];
+    h5.addEventListener('click', function (e) {
+      if (
+        window.activeComponent === window.activeSkill &&
+        window.activeSkill.usingTrigger(this.component.name)
+      ) {
+        showSkillPage('builder');
+      } else {
+        showSkillPage('skillForm');
+        const component = this.component.construct
+          ? new this.component.construct()
+          : this.component.supplier();
+        component.parent = window.activeComponent;
+        window.activeComponent.components.push(component);
+        component.createBuilderHTML(window.activeComponent.html);
+        component.createFormHTML();
+      }
+    });
+    div.appendChild(h5);
+  }
+
+  // saveToFile('wiki_' + type + '.txt', output);
 }
 
-/**
- * Represents an attribute of a skill or class
- *
- * @param {string} key   - the config key for the attribute
- * @param {double} base  - the starting value for the attribute
- * @param {double} scale - the increase of the value per level
- *
- * @constructor
- */
-function Attribute(key, base, scale) {
-  this.key = key;
-  this.base = base;
-  this.scale = scale;
+function refreshOptions() {
+  // Set up component option lists
+  setupOptionList(document.getElementById('triggerOptions'), window.Trigger, window.Type.TRIGGER);
+  setupOptionList(document.getElementById('targetOptions'), window.Target, window.Type.TARGET);
+  setupOptionList(
+    document.getElementById('conditionOptions'),
+    window.Condition,
+    window.Type.CONDITION,
+  );
+  setupOptionList(
+    document.getElementById('mechanicOptions'),
+    window.Mechanic,
+    window.Type.MECHANIC,
+  );
+}
+
+function parseConfig(text) {
+  const data = JSON.parse(text);
+  const mapping = {
+    CONDITION: window.Condition,
+    MECHANIC: window.Mechanic,
+    TARGET: window.Target,
+    TRIGGER: window.Trigger,
+  };
+  for (let i = 0; i < data.length; i++) {
+    const entry = data[i];
+    mapping[entry.type][entry.display.toUpperCase().replace(/ /g, '_')] = {
+      name: entry.display,
+      container: entry.container,
+      supplier() {
+        return new window.CustomComponent(entry);
+      },
+    };
+  }
+}
+
+function loadConfig(e) {
+  const text = e.target.result;
+  localStorage.setItem('config', text);
+  parseConfig(text);
+  refreshOptions();
 }
 
 /**
@@ -324,8 +150,8 @@ function saveToFile(file, data) {
     // Firefox requires the link to be added to the DOM
     // before it can be clicked.
     downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-    downloadLink.onclick = function (e) {
-      document.body.removeChild(event.target);
+    downloadLink.onclick = (e) => {
+      document.body.removeChild(e.target);
     };
     downloadLink.style.display = 'none';
     document.body.appendChild(downloadLink);
@@ -334,83 +160,70 @@ function saveToFile(file, data) {
   downloadLink.click();
 }
 
-// Prepares for handling dropped files
-document.addEventListener(
-  'dragover',
-  (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy';
-  },
-  false,
-);
-
-// Examines dropped files and sets up loading applicable ones
-document.addEventListener(
-  'drop',
-  (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    for (let i = 0; i < e.dataTransfer.files.length; i++) {
-      const file = e.dataTransfer.files[i];
-      const reader = new FileReader();
-      if (file.name == 'tool-config.json') {
-        reader.onload = loadConfig;
-      } else if (file.name.indexOf('.yml') == -1) {
-        continue;
-      } else if (file.name.indexOf('skills') == 0) {
-        reader.onload = loadSkills;
-      } else if (file.name.indexOf('classes') == 0) {
-        reader.onload = loadClasses;
-      } else {
-        reader.onload = loadIndividual;
-      }
-      reader.readAsText(file);
-    }
-  },
-  false,
-);
-
-function loadConfig(e) {
-  const text = e.target.result;
-  localStorage.setItem('config', text);
-  parseConfig(text);
-  refreshOptions();
+function getSkillSaveData() {
+  window.activeSkill.update();
+  if (window.activeComponent) {
+    window.activeComponent.update();
+  }
+  let data = 'loaded: false\n';
+  const alphabetic = window.skills.slice(0);
+  alphabetic.sort((a, b) => {
+    const an = a.data[0].value;
+    const bn = b.data[0].value;
+    if (an > bn) return 1;
+    if (an < bn) return -1;
+    return 0;
+  });
+  for (let i = 0; i < alphabetic.length; i++) {
+    data += alphabetic[i].getSaveString();
+  }
+  return data;
 }
 
-function parseConfig(text) {
-  const data = JSON.parse(text);
-  const mapping = {
-    CONDITION: Condition,
-    MECHANIC: Mechanic,
-    TARGET: Target,
-    TRIGGER: Trigger,
-  };
-  for (let i = 0; i < data.length; i++) {
-    const entry = data[i];
-    mapping[entry.type][entry.display.toUpperCase().replace(/ /g, '_')] = {
-      name: entry.display,
-      container: entry.container,
-      supplier() {
-        return new CustomComponent(entry);
-      },
-    };
+function getClassSaveData() {
+  window.activeClass.update();
+  let data = 'loaded: false\n';
+  for (let i = 0; i < window.classes.length; i++) {
+    data += window.classes[i].getSaveString();
+  }
+  return data;
+}
+
+let skillsActive = true;
+
+function switchToSkills() {
+  if (!skillsActive) {
+    document.getElementById('skillTab').className = 'tab tabLeft tabActive';
+    document.getElementById('classTab').className = 'tab tabRight';
+    document.getElementById('skills').style.display = 'block';
+    document.getElementById('classes').style.display = 'none';
+    skillsActive = true;
   }
 }
 
-// Loads an individual skill or class file
-function loadIndividual(e) {
-  const text = e.target.result;
-  if (text.indexOf('global:') >= 0) {
-    loadAttributes(e);
-  } else if (
-    text.indexOf('components:') >= 0
-    || (text.indexOf('group:') == -1 && text.indexOf('combo:') == -1 && text.indexOf('skills:') == -1)
-  ) {
-    loadSkills(e);
-  } else {
-    loadClasses(e);
+function switchToClasses() {
+  if (skillsActive) {
+    document.getElementById('classTab').className = 'tab tabRight tabActive';
+    document.getElementById('skillTab').className = 'tab tabLeft';
+    document.getElementById('classes').style.display = 'block';
+    document.getElementById('skills').style.display = 'none';
+    skillsActive = false;
   }
+}
+
+/**
+ * Represents an attribute of a skill or class
+ *
+ * @param {string} key   - the config key for the attribute
+ * @param {double} base  - the starting value for the attribute
+ * @param {double} scale - the increase of the value per level
+ *
+ * @constructor
+ */
+function Attribute(key, base, scale) {
+  this.key = key;
+  this.base = base;
+  this.scale = scale;
 }
 
 // Loads attribute data from a file
@@ -418,27 +231,19 @@ function loadIndividual(e) {
 function loadAttributes(e) {
   const text = e.target.result;
   document.activeElement.blur();
-  const yaml = parseYAML(text);
+  const yaml = window.parseYAML(text);
   ATTRIBS = Object.keys(yaml);
   if (!skillsActive) {
-    activeClass.update();
-    activeClass.createFormHTML();
+    window.activeClass.update();
+    window.activeClass.createFormHTML();
   }
   localStorage.setItem('attribs', ATTRIBS);
-}
-
-// Loads skill data from a file after it has been read
-// e - event details
-function loadSkills(e) {
-  const text = e.target.result;
-  document.activeElement.blur();
-  loadSkillText(text);
 }
 
 // Loads skill data from a string
 function loadSkillText(text) {
   // Load new skills
-  const data = parseYAML(text);
+  const data = window.parseYAML(text);
   for (const key in data) {
     if (data[key] instanceof YAMLObject && key != 'loaded') {
       if (isSkillNameTaken(key)) {
@@ -454,18 +259,33 @@ function loadSkillText(text) {
   }
 }
 
-// Loads class data from a file after it has been read
+// Loads skill data from a file after it has been read
 // e - event details
-function loadClasses(e) {
+function loadSkills(e) {
   const text = e.target.result;
   document.activeElement.blur();
-  loadClassText(text);
+  loadSkillText(text);
+}
+
+// Loads an individual skill or class file
+function loadIndividual(e) {
+  const text = e.target.result;
+  if (text.indexOf('global:') >= 0) {
+    loadAttributes(e);
+  } else if (
+    text.indexOf('components:') >= 0 ||
+    (text.indexOf('group:') == -1 && text.indexOf('combo:') == -1 && text.indexOf('skills:') == -1)
+  ) {
+    loadSkills(e);
+  } else {
+    loadClasses(e);
+  }
 }
 
 // Loads class data from a string
 function loadClassText(text) {
   // Load new classes
-  const data = parseYAML(text);
+  const data = window.parseYAML(text);
   for (const key in data) {
     if (data[key] instanceof YAMLObject && key != 'loaded' && !isClassNameTaken(key)) {
       if (isClassNameTaken(key)) {
@@ -478,6 +298,14 @@ function loadClassText(text) {
       }
     }
   }
+}
+
+// Loads class data from a file after it has been read
+// e - event details
+function loadClasses(e) {
+  const text = e.target.result;
+  document.activeElement.blur();
+  loadClassText(text);
 }
 
 /**
@@ -550,13 +378,197 @@ function loadSection(data) {
   }
 }
 
+// Prepares for handling dropped files
+document.addEventListener(
+  'dragover',
+  (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  },
+  false,
+);
+
+// Examines dropped files and sets up loading applicable ones
+document.addEventListener(
+  'drop',
+  (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    for (let i = 0; i < e.dataTransfer.files.length; i++) {
+      const file = e.dataTransfer.files[i];
+      const reader = new FileReader();
+      if (file.name === 'tool-config.json') {
+        reader.onload = loadConfig;
+      } else if (file.name.indexOf('.yml') === -1) {
+        continue;
+      } else if (file.name.indexOf('skills') === 0) {
+        reader.onload = loadSkills;
+      } else if (file.name.indexOf('classes') === 0) {
+        reader.onload = loadClasses;
+      } else {
+        reader.onload = loadIndividual;
+      }
+      reader.readAsText(file);
+    }
+  },
+  false,
+);
+
+// Set up event listeners when the page loads
+window.onload = () => {
+  const isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+  const isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
+  const isChrome = !!window.chrome && !isOpera; // Chrome 1+
+  const badBrowser = !isOpera && !isFirefox && !isChrome;
+  document.getElementById('badBrowser').style.display = badBrowser ? 'block' : 'none';
+  if (badBrowser) {
+    return;
+  }
+
+  document.getElementById('addTrigger').addEventListener('click', (e) => {
+    window.activeComponent = window.activeSkill;
+    showSkillPage('triggerChooser');
+  });
+
+  document.getElementById('skillTab').addEventListener('click', (e) => {
+    switchToSkills();
+  });
+  document.getElementById('classTab').addEventListener('click', (e) => {
+    switchToClasses();
+  });
+
+  const cancelButtons = document.querySelectorAll('.cancelButton');
+  for (let i = 0; i < cancelButtons.length; i++) {
+    cancelButtons[i].addEventListener('click', (e) => {
+      showSkillPage('builder');
+    });
+  }
+
+  const attribs = localStorage.getItem('attribs');
+  const skillData = localStorage.getItem('skillData');
+  const skillIndex = localStorage.getItem('skillIndex');
+  const classData = localStorage.getItem('classData');
+  const classIndex = localStorage.getItem('classIndex');
+  if (attribs) {
+    ATTRIBS = attribs.split(',');
+  }
+  if (skillData) {
+    window.skills = [];
+    document.getElementById('skillList').remove(0);
+    loadSkillText(skillData);
+    if (skillIndex) {
+      document.getElementById('skillList').selectedIndex = parseInt(skillIndex, 10);
+      window.activeSkill =
+        window.skills[Math.max(0, Math.min(window.skills.length - 1, parseInt(skillIndex, 10)))];
+      window.activeSkill.apply();
+      showSkillPage('builder');
+    }
+  }
+  if (classData) {
+    window.classes = [];
+    document.getElementById('classList').remove(0);
+    loadClassText(classData);
+    if (classIndex) {
+      document.getElementById('classList').selectedIndex = parseInt(classIndex, 10);
+      window.activeClass =
+        window.classes[Math.max(0, Math.min(window.classes.length - 1, parseInt(classIndex, 10)))];
+      window.activeClass.createFormHTML();
+    }
+  }
+  if (localStorage.getItem('skillsActive') === 'false') {
+    switchToClasses();
+  }
+};
+
 /**
  * Remember the current session data for next time
  */
-window.onbeforeunload = function () {
+window.onbeforeunload = () => {
   localStorage.setItem('skillData', getSkillSaveData());
   localStorage.setItem('classData', getClassSaveData());
   localStorage.setItem('skillsActive', this.skillsActive ? 'true' : 'false');
   localStorage.setItem('skillIndex', document.getElementById('skillList').selectedIndex);
   localStorage.setItem('classIndex', document.getElementById('classList').selectedIndex);
 };
+
+// #region Load Other Scripts
+depend('filter');
+depend('input');
+depend('yaml');
+depend('component', () => {
+  const config = localStorage.getItem('config');
+  if (config) {
+    parseConfig(config);
+  }
+  refreshOptions();
+});
+depend('data/data', () => {
+  depend('skill', () => {
+    document.getElementById('skillList').addEventListener('change', function (e) {
+      window.activeSkill.update();
+      if (window.activeComponent) {
+        window.activeComponent.update();
+      }
+      if (this.selectedIndex === this.length - 1) {
+        window.newSkill();
+      } else {
+        window.activeSkill = window.skills[this.selectedIndex];
+        window.activeSkill.apply();
+        showSkillPage('builder');
+      }
+    });
+    document.getElementById('skillDetails').addEventListener('click', (e) => {
+      window.activeSkill.createFormHTML();
+      showSkillPage('skillForm');
+    });
+    document.getElementById('saveButton').addEventListener('click', (e) => {
+      saveToFile('skills.yml', getSkillSaveData());
+    });
+    document.getElementById('saveSkill').addEventListener('click', (e) => {
+      saveToFile(`${window.activeSkill.data[0].value}.yml`, window.activeSkill.getSaveString());
+    });
+    document.getElementById('deleteSkill').addEventListener('click', (e) => {
+      const list = document.getElementById('skillList');
+      let index = list.selectedIndex;
+
+      window.skills.splice(index, 1);
+      if (window.skills.length == 0) {
+        window.newSkill();
+      }
+      list.remove(index);
+      index = Math.min(index, window.skills.length - 1);
+      window.activeSkill = window.skills[index];
+      list.selectedIndex = index;
+
+      window.activeSkill.apply();
+      showSkillPage('builder');
+    });
+  });
+
+  depend('class', () => {
+    document.getElementById('classList').addEventListener('change', function (e) {
+      window.activeClass.update();
+      if (this.selectedIndex === this.length - 1) {
+        window.newClass();
+      } else {
+        window.activeClass = window.classes[this.selectedIndex];
+        window.activeClass.createFormHTML();
+      }
+    });
+    document.getElementById('saveButton').addEventListener('click', (e) => {
+      saveToFile('classes.yml', getClassSaveData());
+    });
+  });
+
+  document.getElementById('version-select').onchange = (e) => {
+    window.DATA = window[`DATA_${e.target.value.substr(2)}`];
+    localStorage.setItem('server-version', e.target.value);
+  };
+
+  const previousValue = localStorage.getItem('server-version');
+  if (previousValue) {
+    document.getElementById('version-select').value = previousValue;
+  }
+});
+// #endregion
