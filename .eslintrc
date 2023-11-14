@@ -4,7 +4,8 @@
     "no-underscore-dangle": "off",
     "no-plusplus": "off",
     "import/extensions": "off",
-    "no-param-reassign": ["error", { "props": false }]
+    "no-param-reassign": ["error", { "props": false }],
+    "no-unused-vars": "warn"
   },
   "env": {
     "browser": true,
