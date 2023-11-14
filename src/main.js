@@ -64,17 +64,17 @@ function setupOptionList(div, list, type) {
     if (list[x].premium) h5.className = 'premium';
     h5.innerHTML = list[x].name;
     h5.component = list[x];
-    h5.addEventListener('click', function (e) {
+    h5.addEventListener('click', (e) => {
       if (
         window.activeComponent === window.activeSkill &&
-        window.activeSkill.usingTrigger(this.component.name)
+        window.activeSkill.usingTrigger(h5.component.name)
       ) {
         showSkillPage('builder');
       } else {
         showSkillPage('skillForm');
-        const component = this.component.construct
-          ? new this.component.construct()
-          : this.component.supplier();
+        const component = h5.component.construct
+          ? new h5.component.construct()
+          : h5.component.supplier();
         component.parent = window.activeComponent;
         window.activeComponent.components.push(component);
         component.createBuilderHTML(window.activeComponent.html);
@@ -244,19 +244,19 @@ function loadAttributes(e) {
 function loadSkillText(text) {
   // Load new skills
   const data = window.parseYAML(text);
-  for (const key in data) {
-    if (data[key] instanceof YAMLObject && key != 'loaded') {
-      if (isSkillNameTaken(key)) {
-        getSkill(key).load(data[key]);
-        if (getSkill(key) == activeSkill) {
-          activeSkill.apply();
+  Object.entries(data).forEach(([key, value]) => {
+    if (value instanceof window.YAMLObject && key !== 'loaded') {
+      if (window.isSkillNameTaken(key)) {
+        window.getSkill(key).load(value);
+        if (window.getSkill(key) === window.activeSkill) {
+          window.activeSkill.apply();
           showSkillPage('builder');
+        } else {
+          window.addSkill(key).load(value);
         }
-      } else {
-        addSkill(key).load(data[key]);
       }
     }
-  }
+  });
 }
 
 // Loads skill data from a file after it has been read
@@ -267,37 +267,23 @@ function loadSkills(e) {
   loadSkillText(text);
 }
 
-// Loads an individual skill or class file
-function loadIndividual(e) {
-  const text = e.target.result;
-  if (text.indexOf('global:') >= 0) {
-    loadAttributes(e);
-  } else if (
-    text.indexOf('components:') >= 0 ||
-    (text.indexOf('group:') == -1 && text.indexOf('combo:') == -1 && text.indexOf('skills:') == -1)
-  ) {
-    loadSkills(e);
-  } else {
-    loadClasses(e);
-  }
-}
-
 // Loads class data from a string
 function loadClassText(text) {
   // Load new classes
   const data = window.parseYAML(text);
-  for (const key in data) {
-    if (data[key] instanceof YAMLObject && key != 'loaded' && !isClassNameTaken(key)) {
-      if (isClassNameTaken(key)) {
-        getClass(key).load(data[key]);
-        if (getClass(key) == activeClass) {
-          activeClass.createFormHTML();
+  // Change below to be using Object.keys() instead of for...in
+  Object.entries(data).forEach(([key, value]) => {
+    if (value instanceof window.YAMLObject && key !== 'loaded' && !window.isClassNameTaken(key)) {
+      if (window.isClassNameTaken(key)) {
+        window.getClass(key).load(value);
+        if (window.getClass(key) === window.activeClass) {
+          window.activeClass.createFormHTML();
         }
       } else {
-        addClass(key).load(data[key]);
+        window.addClass(key).load(value);
       }
     }
-  }
+  });
 }
 
 // Loads class data from a file after it has been read
@@ -308,74 +294,95 @@ function loadClasses(e) {
   loadClassText(text);
 }
 
+// Loads an individual skill or class file
+function loadIndividual(e) {
+  const text = e.target.result;
+  if (text.indexOf('global:') >= 0) {
+    loadAttributes(e);
+  } else if (
+    text.indexOf('components:') >= 0 ||
+    (text.indexOf('group:') === -1 &&
+      text.indexOf('combo:') === -1 &&
+      text.indexOf('skills:') === -1)
+  ) {
+    loadSkills(e);
+  } else {
+    loadClasses(e);
+  }
+}
+
 /**
  * Loads a section of config data
  */
 function loadSection(data) {
   this.components = [];
-  for (const x in data) {
-    if (x == this.dataKey) {
-      const attribs = data[x];
-      for (var y in attribs) {
-        for (var i = 0; i < this.data.length; i++) {
-          if (this.data[i].key == y && this.data[i].load) {
-            this.data[i].load(attribs[y]);
+  Object.keys(data).forEach((key) => {
+    if (key === this.datakey) {
+      const attribs = data[key];
+      Object.keys(attribs).forEach((attribKey) => {
+        for (let i = 0; i < this.data.length; i++) {
+          if (this.data[i].key === attribKey && this.data[i].load) {
+            this.data[i].load(attribs[attribKey]);
             break;
-          } else if (`${this.data[i].key}-base` == y && this.data[i].loadBase) {
-            this.data[i].loadBase(attribs[y]);
+          } else if (`${this.data[i].key}-base` === attribKey && this.data[i].loadBase) {
+            this.data[i].loadBase(attribs[attribKey]);
             break;
-          } else if (`${this.data[i].key}-scale` == y && this.data[i].loadScale) {
-            this.data[i].loadScale(attribs[y]);
+          } else if (`${this.data[i].key}-scale` === attribKey && this.data[i].loadScale) {
+            this.data[i].loadScale(attribs[attribKey]);
             break;
           }
         }
-      }
-    } else if (x == this.componentKey) {
-      const components = data[x];
-      for (var y in components) {
-        const { type } = components[y];
+      });
+    } else if (key === this.componentKey) {
+      const components = data[key];
+      Object.keys(components).forEach((componentKey) => {
+        const { type } = components[componentKey];
         let list;
-        if (type == Type.TRIGGER) {
-          list = Trigger;
-        } else if (type == Type.TARGET) {
-          list = Target;
-        } else if (type == Type.CONDITION) {
-          list = Condition;
-        } else if (type == Type.MECHANIC) {
-          list = Mechanic;
+        if (type === window.Type.TRIGGER) {
+          list = window.Trigger;
+        } else if (type === window.Type.TARGET) {
+          list = window.Target;
+        } else if (type === window.Type.CONDITION) {
+          list = window.Condition;
+        } else if (type === window.Type.MECHANIC) {
+          list = window.Mechanic;
         }
 
-        let key = y;
-        if (key.indexOf('-') > 0) key = key.substring(0, key.indexOf('-'));
+        let name = componentKey;
+        if (name.indexOf('-') > 0) {
+          name = name.substring(0, name.indexOf('-'));
+        }
         if (list !== undefined) {
-          for (const z in list) {
-            if (list[z].name.toLowerCase() == key.toLowerCase()) {
-              const component = list[z].construct ? new list[z].construct() : list[z].supplier();
+          Object.keys(list).forEach((listKey) => {
+            if (list[listKey].name.toLowerCase() === name.toLowerCase()) {
+              const component = list[listKey].construct
+                ? new list[listKey].construct()
+                : list[listKey].supplier();
               component.parent = this;
               this.components.push(component);
-              component.load(components[y]);
+              component.load(components[componentKey]);
             }
-          }
+          });
         }
-      }
-    } else if (this.dataKey != 'data') {
-      for (var i = 0; i < this.data.length; i++) {
-        if (this.data[i].key == x) {
+      });
+    } else if (this.dataKey !== 'data') {
+      for (let i = 0; i < this.data.length; i++) {
+        if (this.data[i].key === key) {
           if (!this.data[i].load) {
-            debugger;
+            debugger; // eslint-disable-line no-debugger
           }
-          this.data[i].load(data[x]);
+          this.data[i].load(data[key]);
           break;
-        } else if (`${this.data[i].key}-base` == x) {
-          this.data[i].loadBase(data[x]);
+        } else if (`${this.data[i].key}-base` === key) {
+          this.data[i].loadBase(data[key]);
           break;
-        } else if (`${this.data[i].key}-scale` == x) {
-          this.data[i].loadScale(data[x]);
+        } else if (`${this.data[i].key}-scale` === key) {
+          this.data[i].loadScale(data[key]);
           break;
         }
       }
     }
-  }
+  });
 }
 
 // Prepares for handling dropped files
@@ -389,27 +396,39 @@ document.addEventListener(
   false,
 );
 
+const determineFileHandler = (fileName) => {
+  // Skip file if not a .yml file, unless it's tool-config.json
+  if (fileName.indexOf('.yml') === -1 && fileName !== 'tool-config.json') {
+    return null;
+  }
+  if (fileName === 'tool-config.json') {
+    return loadConfig;
+  }
+  if (fileName.indexOf('skills') === 0) {
+    return loadSkills;
+  }
+  if (fileName.indexOf('classes') === 0) {
+    return loadClasses;
+  }
+  return loadIndividual;
+};
+
 // Examines dropped files and sets up loading applicable ones
 document.addEventListener(
   'drop',
   (e) => {
     e.stopPropagation();
     e.preventDefault();
+
     for (let i = 0; i < e.dataTransfer.files.length; i++) {
       const file = e.dataTransfer.files[i];
       const reader = new FileReader();
-      if (file.name === 'tool-config.json') {
-        reader.onload = loadConfig;
-      } else if (file.name.indexOf('.yml') === -1) {
-        continue;
-      } else if (file.name.indexOf('skills') === 0) {
-        reader.onload = loadSkills;
-      } else if (file.name.indexOf('classes') === 0) {
-        reader.onload = loadClasses;
-      } else {
-        reader.onload = loadIndividual;
+      // Determine the correct handler for the file
+      const handler = determineFileHandler(file.name);
+      if (handler) {
+        reader.onload = handler;
+        reader.readAsText(file);
       }
-      reader.readAsText(file);
     }
   },
   false,
@@ -426,15 +445,15 @@ window.onload = () => {
     return;
   }
 
-  document.getElementById('addTrigger').addEventListener('click', (e) => {
+  document.getElementById('addTrigger').addEventListener('click', () => {
     window.activeComponent = window.activeSkill;
     showSkillPage('triggerChooser');
   });
 
-  document.getElementById('skillTab').addEventListener('click', (e) => {
+  document.getElementById('skillTab').addEventListener('click', () => {
     switchToSkills();
   });
-  document.getElementById('classTab').addEventListener('click', (e) => {
+  document.getElementById('classTab').addEventListener('click', () => {
     switchToClasses();
   });
 
@@ -505,35 +524,36 @@ depend('component', () => {
 });
 depend('data/data', () => {
   depend('skill', () => {
-    document.getElementById('skillList').addEventListener('change', function (e) {
+    document.getElementById('skillList').addEventListener('change', (e) => {
       window.activeSkill.update();
       if (window.activeComponent) {
         window.activeComponent.update();
       }
-      if (this.selectedIndex === this.length - 1) {
+      const skillList = e.currentTarget;
+      if (skillList.selectedIndex === skillList.length - 1) {
         window.newSkill();
       } else {
-        window.activeSkill = window.skills[this.selectedIndex];
+        window.activeSkill = window.skills[skillList.selectedIndex];
         window.activeSkill.apply();
         showSkillPage('builder');
       }
     });
-    document.getElementById('skillDetails').addEventListener('click', (e) => {
+    document.getElementById('skillDetails').addEventListener('click', () => {
       window.activeSkill.createFormHTML();
       showSkillPage('skillForm');
     });
-    document.getElementById('saveButton').addEventListener('click', (e) => {
+    document.getElementById('saveButton').addEventListener('click', () => {
       saveToFile('skills.yml', getSkillSaveData());
     });
-    document.getElementById('saveSkill').addEventListener('click', (e) => {
+    document.getElementById('saveSkill').addEventListener('click', () => {
       saveToFile(`${window.activeSkill.data[0].value}.yml`, window.activeSkill.getSaveString());
     });
-    document.getElementById('deleteSkill').addEventListener('click', (e) => {
+    document.getElementById('deleteSkill').addEventListener('click', () => {
       const list = document.getElementById('skillList');
       let index = list.selectedIndex;
 
       window.skills.splice(index, 1);
-      if (window.skills.length == 0) {
+      if (window.skills.length === 0) {
         window.newSkill();
       }
       list.remove(index);
@@ -547,16 +567,17 @@ depend('data/data', () => {
   });
 
   depend('class', () => {
-    document.getElementById('classList').addEventListener('change', function (e) {
+    document.getElementById('classList').addEventListener('change', (e) => {
+      const classList = e.currentTarget;
       window.activeClass.update();
-      if (this.selectedIndex === this.length - 1) {
+      if (classList.selectedIndex === classList.length - 1) {
         window.newClass();
       } else {
-        window.activeClass = window.classes[this.selectedIndex];
+        window.activeClass = window.classes[classList.selectedIndex];
         window.activeClass.createFormHTML();
       }
     });
-    document.getElementById('saveButton').addEventListener('click', (e) => {
+    document.getElementById('saveButton').addEventListener('click', () => {
       saveToFile('classes.yml', getClassSaveData());
     });
   });
