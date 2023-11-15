@@ -10,7 +10,9 @@ let superConstructorEnabled = true;
  * Must be a function, because arrow functions can't be used with "new"
  */
 function superConstructor(...args) {
-  if (!superConstructorEnabled) return;
+  if (!superConstructorEnabled) {
+    return;
+  }
   superConstructorEnabled = false;
   for (let i = 0; i < this.childConstructors.length; i++) {
     this.childConstructors[i].apply(this, args);
@@ -127,12 +129,12 @@ const depend = (script, callback) => {
   }
   // SECOND CHECK
   // If loaded but not stored, store the script and run the callback
-  const src = `editor/js/${script}.js`;
+  const src = `./src/${script}.js`;
   const scripts = document.querySelectorAll('script');
   const foundScript = _.findWhere(scripts, { src });
   if (foundScript) {
     SCRIPT_TAGS[script] = { tag: foundScript, loaded: true };
-    if (callback) callback();
+    if (callback) {callback();}
     return;
   }
   // Otherwise, load the script
