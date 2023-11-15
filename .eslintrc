@@ -5,7 +5,8 @@
     "no-plusplus": "off",
     "import/extensions": "off",
     "no-param-reassign": ["error", { "props": false }],
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "curly": ["error", "all"]
   },
   "env": {
     "browser": true,
