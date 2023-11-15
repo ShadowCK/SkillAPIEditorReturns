@@ -1,3 +1,4 @@
+// TODO: Externalize this function in utils.js
 function isAttribute(input) {
   return input instanceof window.AttributeValue || input.key === 'incompatible';
 }

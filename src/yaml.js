@@ -1,7 +1,7 @@
 /**
  * RegEx patterns used by the YAML parser
  */
-var Regex = {
+const Regex = {
   INT: /^-?[0-9]+$/,
   FLOAT: /^-?[0-9]+\.[0-9]+$/,
 };
@@ -14,13 +14,13 @@ var Regex = {
  * @returns {YAMLObject} the parsed data
  */
 function parseYAML(text) {
-  text = text
+  const textCleaned = text
     .replace(/\r\n/g, '\n')
     .replace(/\n *\n/g, '\n')
     .replace(/ +\n/g, '\n');
-  var data = new YAMLObject();
-  var index = 0;
-  var lines = text.split('\n');
+  const data = new window.YAMLObject();
+  const index = 0;
+  const lines = textCleaned.split('\n');
   data.parse(lines, index, 0);
   return data;
 }
@@ -33,8 +33,9 @@ function parseYAML(text) {
  * @returns {Number} the number of leading spaces
  */
 function countSpaces(string) {
-  for (var result = 0, characterCode = string.charCodeAt(0); 32 == characterCode; ) {
-    characterCode = string.charCodeAt(++result);
+  let result = 0;
+  while (string.charCodeAt(result) === 32) {
+    result++;
   }
   return result;
 }
@@ -51,7 +52,7 @@ function YAMLObject(key) {}
  *
  * @returns {boolean} true if contains the value, false otherwise
  */
-YAMLObject.prototype.has = function (key) {
+YAMLObject.prototype.has = function has(key) {
   return this[key] !== undefined;
 };
 
@@ -63,7 +64,7 @@ YAMLObject.prototype.has = function (key) {
  *
  * @returns {string} the obtained value
  */
-YAMLObject.prototype.get = function (key, value) {
+YAMLObject.prototype.get = function get(key, value) {
   return this.has(key) ? this[key] : value;
 };
 
@@ -76,65 +77,73 @@ YAMLObject.prototype.get = function (key, value) {
  *
  * @returns {Number} the ending index of the parsed data
  */
-YAMLObject.prototype.parse = function (lines, index, indent) {
-  while (index < lines.length && countSpaces(lines[index]) >= indent) {
+YAMLObject.prototype.parse = function parse(lines, index, indent) {
+  let lineIndex = index;
+  while (lineIndex < lines.length && countSpaces(lines[lineIndex]) >= indent) {
     while (
-      index < lines.length &&
-      (countSpaces(lines[index]) != indent ||
-        lines[index].replace(/ /g, '').charAt(0) == '#' ||
-        lines[index].indexOf(':') == -1)
+      lineIndex < lines.length &&
+      (countSpaces(lines[lineIndex]) !== indent ||
+        lines[lineIndex].replace(/ /g, '').charAt(0) === '#' ||
+        lines[lineIndex].indexOf(':') === -1)
     )
-      index++;
-    if (index == lines.length) return index;
+      lineIndex++;
+    if (lineIndex === lines.length) return lineIndex;
 
-    var key = lines[index].substring(indent, lines[index].indexOf(':'));
+    const key = lines[lineIndex].substring(indent, lines[lineIndex].indexOf(':'));
 
     // New empty section
-    if (lines[index].indexOf(': {}') == lines[index].length - 4 && lines[index].length >= 4) {
+    if (
+      lines[lineIndex].indexOf(': {}') === lines[lineIndex].length - 4 &&
+      lines[lineIndex].length >= 4
+    ) {
       this[key] = {};
     }
 
     // String list
     else if (
-      index < lines.length - 1 &&
-      lines[index + 1].charAt(indent) == '-' &&
-      lines[index + 1].charAt(indent + 1) == ' ' &&
-      countSpaces(lines[index + 1]) == indent
+      lineIndex < lines.length - 1 &&
+      lines[lineIndex + 1].charAt(indent) === '-' &&
+      lines[lineIndex + 1].charAt(indent + 1) === ' ' &&
+      countSpaces(lines[lineIndex + 1]) === indent
     ) {
-      var stringList = [];
-      while (++index < lines.length && lines[index].charAt(indent) == '-') {
-        var str = lines[index].substring(indent + 2);
-        if (str.charAt(0) == "'") str = str.substring(1, str.length - 1);
-        else if (str.charAt(0) == '"') str = str.substring(1, str.length - 1);
+      const stringList = [];
+      while (++lineIndex < lines.length && lines[lineIndex].charAt(indent) === '-') {
+        let str = lines[lineIndex].substring(indent + 2);
+        if (str.charAt(0) === "'") {
+          str = str.substring(1, str.length - 1);
+        } else if (str.charAt(0) === '"') {
+          str = str.substring(1, str.length - 1);
+        }
         stringList.push(str);
       }
       this[key] = stringList;
-      index--;
+      lineIndex--;
     }
 
     // New section with content
-    else if (index < lines.length - 1 && countSpaces(lines[index + 1]) > indent) {
-      index++;
-      var newIndent = countSpaces(lines[index]);
-      var newData = new YAMLObject();
-      index = newData.parse(lines, index, newIndent) - 1;
+    else if (lineIndex < lines.length - 1 && countSpaces(lines[lineIndex + 1]) > indent) {
+      lineIndex++;
+      const newIndent = countSpaces(lines[lineIndex]);
+      const newData = new YAMLObject();
+      lineIndex = newData.parse(lines, lineIndex, newIndent) - 1;
       this[key] = newData;
     }
 
     // Regular value
     else {
-      var value = lines[index].substring(lines[index].indexOf(':') + 2);
-      if (value.charAt(0) == "'") value = value.substring(1, value.length - 1);
-      else if (!isNaN(value)) {
-        if (Regex.INT.test(value)) value = parseInt(value);
+      let value = lines[lineIndex].substring(lines[lineIndex].indexOf(':') + 2);
+      if (value.charAt(0) === "'") {
+        value = value.substring(1, value.length - 1);
+      } else if (!Number.isNaN(value)) {
+        if (Regex.INT.test(value)) value = parseInt(value, 10);
         else value = parseFloat(value);
       }
       this[key] = value;
     }
 
     do {
-      index++;
-    } while (index < lines.length && lines[index].replace(/ /g, '').charAt(0) == '#');
+      lineIndex++;
+    } while (lineIndex < lines.length && lines[lineIndex].replace(/ /g, '').charAt(0) === '#');
   }
-  return index;
+  return lineIndex;
 };
