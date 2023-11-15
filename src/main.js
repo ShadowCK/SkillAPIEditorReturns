@@ -352,7 +352,7 @@ function loadSection(data) {
         if (name.indexOf('-') > 0) {
           name = name.substring(0, name.indexOf('-'));
         }
-        if (list !== undefined) {
+        if (list !== undefined && list !== null) {
           Object.keys(list).forEach((listKey) => {
             if (list[listKey].name.toLowerCase() === name.toLowerCase()) {
               const component = list[listKey].construct

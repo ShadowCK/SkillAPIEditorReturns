@@ -265,19 +265,21 @@ Component.prototype.allowDrop = function allowDrop(e) {
     canDrop(thing, hoverSpace)
   ) {
     hoverSpace.style.marginBottom = '30px';
-    hoverSpace.onmouseout = function () {
-      if (!hoverSpace) {
-        this.onmouseout = undefined;
+    hoverSpace.onmouseout = (mouseEvent) => {
+      if (hoverSpace === undefined || hoverSpace === null) {
+        mouseEvent.currentTarget.onmouseout = null;
         return;
       }
       hoverSpace.style.marginBottom = '0px';
-      hoverSpace.onmouseout = undefined;
-      hoverSpace = undefined;
+      hoverSpace.onmouseout = null;
+      hoverSpace = null;
     };
-  } else hoverSpace = undefined;
+  } else {
+    hoverSpace = null;
+  }
 };
 
-Component.prototype.drag = function (e) {
+Component.prototype.drag = function drag(e) {
   e.dataTransfer.setData('text', 'anything');
   const dragged = document.getElementById('dragComponent');
   if (dragged) {
@@ -286,7 +288,7 @@ Component.prototype.drag = function (e) {
   e.target.id = 'dragComponent';
 };
 
-Component.prototype.drop = function (e) {
+Component.prototype.drop = function drop(e) {
   if (hoverSpace) {
     hoverSpace.style.marginBottom = '0px';
     hoverSpace = undefined;
@@ -321,7 +323,7 @@ Component.prototype.drop = function (e) {
  * Creates the form HTML for editing the component data and
  * applies it to the appropriate part of the page.
  */
-Component.prototype.createFormHTML = function () {
+Component.prototype.createFormHTML = function createFormHTML() {
   const target = document.getElementById('skillForm');
 
   const form = document.createElement('form');
@@ -360,9 +362,9 @@ Component.prototype.createFormHTML = function () {
   done.className = 'doneButton';
   done.innerHTML = 'Done';
   done.component = this;
-  done.addEventListener('click', function (e) {
-    this.component.update();
-    document.getElementById('skillForm').removeChild(this.component.form);
+  done.addEventListener('click', () => {
+    this.update();
+    document.getElementById('skillForm').removeChild(this.form);
     window.showSkillPage('builder');
   });
   form.appendChild(done);
@@ -381,7 +383,7 @@ Component.prototype.createFormHTML = function () {
 /**
  * Updates the component using the form data if it exists
  */
-Component.prototype.update = function () {
+Component.prototype.update = function update() {
   for (let j = 0; j < this.data.length; j++) {
     this.data[j].update();
   }
@@ -392,7 +394,7 @@ Component.prototype.update = function () {
  *
  * @param {string} spacing - spacing to put before the data
  */
-Component.prototype.getSaveString = function (spacing) {
+Component.prototype.getSaveString = function getSaveString(spacing) {
   this.createFormHTML();
 
   let id = '';
