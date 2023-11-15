@@ -150,9 +150,11 @@ function addClass(name) {
  * @returns {Class} the class with the given name or null if not found
  */
 function getClass(name) {
+  const nameLower = name.toLowerCase();
   for (let i = 0; i < window.classes.length; i++) {
-    if (window.classes[i].data[0].value.toLowerCase() === name.toLowerCase())
+    if (window.classes[i].data[0].value.toLowerCase() === nameLower) {
       return window.classes[i];
+    }
   }
   return null;
 }
@@ -288,13 +290,13 @@ Class.prototype.getSaveString = function () {
 
   saveString += `${this.data[0].value}:\n`;
   for (let i = 0; i < this.data.length; i++) {
-    if (!(this.data[i] instanceof window.AttributeValue)) {
+    if (!window.isAttribute(this.data[i])) {
       saveString += this.data[i].getSaveString('  ');
     }
   }
   saveString += '  attributes:\n';
   for (let i = 0; i < this.data.length; i++) {
-    if (this.data[i] instanceof window.AttributeValue) {
+    if (window.isAttribute(this.data[i])) {
       saveString += this.data[i].getSaveString('    ');
     }
   }
