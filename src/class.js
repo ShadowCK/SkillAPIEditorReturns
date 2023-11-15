@@ -277,7 +277,7 @@ Class.prototype.update = function update() {
   }
   const newName = this.data[0].value;
   this.data[0].value = prevName;
-  if (isClassNameTaken(newName)) return;
+  if (isClassNameTaken(newName)) {return;}
   this.data[0].value = newName;
   list[index].text = this.data[0].value;
 };

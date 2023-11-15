@@ -245,7 +245,9 @@ Skill.prototype.update = function update() {
   }
   const newName = this.data[0].value;
   this.data[0].value = prevName;
-  if (isSkillNameTaken(newName)) return;
+  if (isSkillNameTaken(newName)) {
+    return;
+  }
   this.data[0].value = newName;
   list[index].text = this.data[0].value;
 };
@@ -259,7 +261,9 @@ Skill.prototype.update = function update() {
  */
 Skill.prototype.usingTrigger = function usingTrigger(trigger) {
   for (let i = 0; i < this.components.length; i++) {
-    if (this.components[i].name === trigger) return true;
+    if (this.components[i].name === trigger) {
+      return true;
+    }
   }
   return false;
 };

@@ -1,4 +1,4 @@
-var DATA_13 = {
+const DATA_13 = {
   MATERIALS: [
     'Acacia Boat',
     'Acacia Button',
@@ -1829,8 +1829,10 @@ var DATA_13 = {
   ],
 };
 
-var keys = Object.keys(DATA_13);
-for (var i = 0; i < keys.length; i++) {
-  DATA_13[keys[i]].sort();
+{
+  const keys = Object.keys(DATA_13);
+  for (let i = 0; i < keys.length; i++) {
+    DATA_13[keys[i]].sort();
+  }
 }
-DATA_13.ANY_POTION = DATA_13.POTIONS.slice().splice(0, 0, 'Any');
+DATA_13.ANY_POTION = ['Any', ...DATA_13.POTIONS];

@@ -41,12 +41,12 @@ const DAMAGE_TYPES = [
  * @returns {boolean} - Returns false if 'thing' is the same as 'target' or if 'thing' is a parent of 'target'. Otherwise, returns true.
  */
 function canDrop(thing, target) {
-  if (thing === target) return false;
+  if (thing === target) {return false;}
 
   let currentTarget = target;
   while (currentTarget.parentNode) {
     currentTarget = currentTarget.parentNode;
-    if (currentTarget === thing) return false;
+    if (currentTarget === thing) {return false;}
   }
   return true;
 }
@@ -410,7 +410,7 @@ Component.prototype.getSaveString = function getSaveString(spacing) {
   if (this.data.length > 0) {
     result += `${spacing}  data:\n`;
     for (let i = 0; i < this.data.length; i++) {
-      if (!this.data[i].hidden) result += this.data[i].getSaveString(`${spacing}    `);
+      if (!this.data[i].hidden) {result += this.data[i].getSaveString(`${spacing}    `);}
     }
   }
   if (this.components.length > 0) {

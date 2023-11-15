@@ -1,75 +1,38 @@
 let DATA = {};
 
-const version = (localStorage.getItem('server-version') || '1.13').substr(2);
+const version = (localStorage.getItem('server-version') || '1.13').substring(2);
 
-depend('data/1.8', function () {
-  if (version === '8') DATA = DATA_8;
-});
-depend('data/1.9', function () {
-  if (version === '9') DATA = DATA_9;
-});
-depend('data/1.10', function () {
-  if (version === '10') DATA = DATA_10;
-});
-depend('data/1.11', function () {
-  if (version === '11') DATA = DATA_11;
-});
-depend('data/1.12', function () {
-  if (version === '12') DATA = DATA_12;
-});
-depend('data/1.13', function () {
-  if (version === '13') DATA = DATA_13;
+window.depend('data/1.8', () => {
+  if (version === '8') {
+    DATA = window.DATA_8;
+  }
 });
 
-function getMaterials() {
-  return DATA.MATERIALS;
-}
-
-function getAnyMaterials() {
-  return ['Any', ...DATA.MATERIALS];
-}
-
-function getSounds() {
-  return DATA.SOUNDS;
-}
-
-function getEntities() {
-  return DATA.ENTITIES;
-}
-
-function getParticles() {
-  return DATA.PARTICLES || [];
-}
-
-function getBiomes() {
-  return DATA.BIOMES;
-}
-
-function getDamageTypes() {
-  return DATA.DAMAGE_TYPES;
-}
-
-function getPotionTypes() {
-  return DATA.POTIONS;
-}
-
-function getAnyPotion() {
-  return ['Any', ...DATA.POTIONS];
-}
-
-function getGoodPotions() {
-  const list = DATA.POTIONS.filter((type) => GOOD_POTIONS.includes(type));
-  return ['All', 'None', ...list];
-}
-
-function getBadPotions() {
-  const list = DATA.POTIONS.filter((type) => BAD_POTIONS.includes(type));
-  return ['All', 'None', ...list];
-}
-
-function getDyes() {
-  return DYES;
-}
+window.depend('data/1.9', () => {
+  if (version === '9') {
+    DATA = window.DATA_9;
+  }
+});
+window.depend('data/1.10', () => {
+  if (version === '10') {
+    DATA = window.DATA_10;
+  }
+});
+window.depend('data/1.11', () => {
+  if (version === '11') {
+    DATA = window.DATA_11;
+  }
+});
+window.depend('data/1.12', () => {
+  if (version === '12') {
+    DATA = window.DATA_12;
+  }
+});
+window.depend('data/1.13', () => {
+  if (version === '13') {
+    DATA = window.DATA_13;
+  }
+});
 
 const GOOD_POTIONS = [
   'Speed',
@@ -123,3 +86,53 @@ const DYES = [
   'WHITE',
   'YELLOW',
 ];
+
+function getMaterials() {
+  return DATA.MATERIALS;
+}
+
+function getAnyMaterials() {
+  return ['Any', ...DATA.MATERIALS];
+}
+
+function getSounds() {
+  return DATA.SOUNDS;
+}
+
+function getEntities() {
+  return DATA.ENTITIES;
+}
+
+function getParticles() {
+  return DATA.PARTICLES || [];
+}
+
+function getBiomes() {
+  return DATA.BIOMES;
+}
+
+function getDamageTypes() {
+  return DATA.DAMAGE_TYPES;
+}
+
+function getPotionTypes() {
+  return DATA.POTIONS;
+}
+
+function getAnyPotion() {
+  return ['Any', ...DATA.POTIONS];
+}
+
+function getGoodPotions() {
+  const list = DATA.POTIONS.filter((type) => GOOD_POTIONS.includes(type));
+  return ['All', 'None', ...list];
+}
+
+function getBadPotions() {
+  const list = DATA.POTIONS.filter((type) => BAD_POTIONS.includes(type));
+  return ['All', 'None', ...list];
+}
+
+function getDyes() {
+  return DYES;
+}

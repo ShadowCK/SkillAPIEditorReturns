@@ -1,4 +1,4 @@
-var DATA_8 = {
+const DATA_8 = {
   MATERIALS: [
     'Air',
     'Stone',
@@ -764,11 +764,13 @@ var DATA_8 = {
   ],
 };
 
-(() => {
+// Create a scope to prevent variables from being accessible in the global scope
+{
   const keys = Object.keys(DATA_8);
   for (let i = 0; i < keys.length; i++) {
     DATA_8[keys[i]].sort();
   }
-  DATA_8.ANY_POTION = DATA_8.POTIONS.slice().splice(0, 0, 'Any');
-})();
-var DATA_7 = DATA_8;
+}
+DATA_8.ANY_POTION = ['Any', ...DATA_8.POTIONS];
+
+const DATA_7 = DATA_8;

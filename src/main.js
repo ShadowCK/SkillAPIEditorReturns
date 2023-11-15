@@ -52,7 +52,9 @@ function setupOptionList(div, list, type) {
   const keys = Object.keys(list).sort();
   for (let i = 0; i < keys.length; i++) {
     x = keys[i];
-    if (i % 4 === 0) output += '| ';
+    if (i % 4 === 0) {
+      output += '| ';
+    }
     output += `[[${list[x].name}|_${type.substr(0, 1).toUpperCase()}${type.substr(1)} ${
       list[x].name
     }]] | `;
@@ -61,7 +63,9 @@ function setupOptionList(div, list, type) {
     }
 
     const h5 = document.createElement('h5');
-    if (list[x].premium) h5.className = 'premium';
+    if (list[x].premium) {
+      h5.className = 'premium';
+    }
     h5.innerHTML = list[x].name;
     h5.component = list[x];
     h5.addEventListener('click', () => {
@@ -170,8 +174,12 @@ function getSkillSaveData() {
   alphabetic.sort((a, b) => {
     const an = a.data[0].value;
     const bn = b.data[0].value;
-    if (an > bn) return 1;
-    if (an < bn) return -1;
+    if (an > bn) {
+      return 1;
+    }
+    if (an < bn) {
+      return -1;
+    }
     return 0;
   });
   for (let i = 0; i < alphabetic.length; i++) {

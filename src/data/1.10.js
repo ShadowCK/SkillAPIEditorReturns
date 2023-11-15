@@ -1,4 +1,4 @@
-var DATA_10 = {
+const DATA_10 = {
   MATERIALS: [
     'Air',
     'Stone',
@@ -1137,8 +1137,10 @@ var DATA_10 = {
   ],
 };
 
-var keys = Object.keys(DATA_10);
-for (var i = 0; i < keys.length; i++) {
-  DATA_10[keys[i]].sort();
+{
+  const keys = Object.keys(DATA_10);
+  for (let i = 0; i < keys.length; i++) {
+    DATA_10[keys[i]].sort();
+  }
 }
-DATA_10.ANY_POTION = DATA_10.POTIONS.slice().splice(0, 0, 'Any');
+DATA_10.ANY_POTION = ['Any', ...DATA_10.POTIONS];
