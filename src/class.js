@@ -95,7 +95,7 @@ function Class(name) {
 let activeClass = new Class('Class 1');
 const classes = [activeClass];
 
-Class.prototype.updateAttribs = function (i) {
+Class.prototype.updateAttribs = function updateAttribs(i) {
   let j = 0;
   const back = {};
   while (this.data[i + j] instanceof window.AttributeValue) {
@@ -195,7 +195,7 @@ function newClass() {
  * Creates the form HTML for editing the class and applies it to
  * the appropriate area on the page
  */
-Class.prototype.createFormHTML = function () {
+Class.prototype.createFormHTML = function createFormHTML() {
   const form = document.createElement('form');
 
   const header = document.createElement('h4');
@@ -230,16 +230,16 @@ Class.prototype.createFormHTML = function () {
   const save = document.createElement('h5');
   save.innerHTML = 'Save Class';
   save.classData = this;
-  save.addEventListener('click', function (e) {
-    this.classData.update();
-    window.saveToFile(`${this.classData.data[0].value}.yml`, this.classData.getSaveString());
+  save.addEventListener('click', () => {
+    this.update();
+    window.saveToFile(`${this.data[0].value}.yml`, this.getSaveString());
   });
   form.appendChild(save);
 
   const del = document.createElement('h5');
   del.innerHTML = 'Delete';
   del.className = 'cancelButton';
-  del.addEventListener('click', (e) => {
+  del.addEventListener('click', () => {
     const list = document.getElementById('classList');
     let index = list.selectedIndex;
 
@@ -262,7 +262,7 @@ Class.prototype.createFormHTML = function () {
 /**
  * Updates the class data from the details form if it exists
  */
-Class.prototype.update = function () {
+Class.prototype.update = function update() {
   let index;
   const list = document.getElementById('classList');
   for (let i = 0; i < classes.length; i++) {
@@ -285,7 +285,7 @@ Class.prototype.update = function () {
 /**
  * Creates and returns a save string for the class
  */
-Class.prototype.getSaveString = function () {
+Class.prototype.getSaveString = function getSaveString() {
   let saveString = '';
 
   saveString += `${this.data[0].value}:\n`;

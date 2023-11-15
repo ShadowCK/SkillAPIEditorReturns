@@ -64,7 +64,7 @@ function setupOptionList(div, list, type) {
     if (list[x].premium) h5.className = 'premium';
     h5.innerHTML = list[x].name;
     h5.component = list[x];
-    h5.addEventListener('click', (e) => {
+    h5.addEventListener('click', () => {
       if (
         window.activeComponent === window.activeSkill &&
         window.activeSkill.usingTrigger(h5.component.name)
@@ -459,7 +459,7 @@ window.onload = () => {
 
   const cancelButtons = document.querySelectorAll('.cancelButton');
   for (let i = 0; i < cancelButtons.length; i++) {
-    cancelButtons[i].addEventListener('click', (e) => {
+    cancelButtons[i].addEventListener('click', () => {
       showSkillPage('builder');
     });
   }
