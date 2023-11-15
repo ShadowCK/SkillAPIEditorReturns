@@ -8,7 +8,7 @@
  */
 function requireValue(key, values) {
   this.requirements = this.requirements || [];
-  this.requirements.push({ key: key, values: values });
+  this.requirements.push({ key, values });
   return this;
 }
 
@@ -17,24 +17,6 @@ function copyRequirements(source, target) {
     target.requirements = source.requirements;
   }
   return target;
-}
-
-/**
- * Applies the values required from above
- */
-function applyRequireValues() {
-  for (let i = 0; this.requirements && i < this.requirements.length; i++) {
-    const key = this.requirements[i].key;
-    const values = this.requirements[i].values;
-
-    const element = document.getElementById(key);
-    if (element != null) {
-      element.requireLists = element.requireLists || [];
-      element.requireLists.push({ element: this, values: values });
-      element.addEventListener('change', checkRequireValue);
-      checkRequireValue.bind(element)();
-    }
-  }
 }
 
 /**
@@ -48,7 +30,7 @@ function checkRequireValue(e) {
     const requireData = this.requireLists[i];
     let visible = false;
     for (let j = 0; j < requireData.values.length; j++) {
-      if (requireData.values[j] == (this.value || this.selectedIndex)) {
+      if (requireData.values[j] === (this.value || this.selectedIndex)) {
         visible = true;
       }
     }
@@ -61,13 +43,30 @@ function checkRequireValue(e) {
 }
 
 /**
+ * Applies the values required from above
+ */
+function applyRequireValues() {
+  for (let i = 0; this.requirements && i < this.requirements.length; i++) {
+    const { key, values } = this.requirements[i];
+
+    const element = document.getElementById(key);
+    if (element != null) {
+      element.requireLists = element.requireLists || [];
+      element.requireLists.push({ element: this, values });
+      element.addEventListener('change', checkRequireValue);
+      checkRequireValue.bind(element)();
+    }
+  }
+}
+
+/**
  * Sets the tooltip of the input label to show a description of the value
  *
  * @param {string} text - the text to display in the tooltip
  */
 function setTooltip(text) {
-  if (text.charAt(0) == '[') this.tooltip = text;
-  else this.tooltip = '[' + this.key + '] ' + text;
+  if (text.charAt(0) === '[') this.tooltip = text;
+  else this.tooltip = `[${this.key}] ${text}`;
   return this;
 }
 
@@ -94,7 +93,7 @@ function IndexListValue(name, key, list, index) {
   this.hidden = false;
 }
 
-IndexListValue.prototype.dupe = function () {
+IndexListValue.prototype.dupe = function dupe() {
   return new IndexListValue(this.name, this.key, this.list, this.index).setTooltip(this.tooltip);
 };
 
@@ -109,7 +108,7 @@ IndexListValue.prototype.setTooltip = setTooltip;
  *
  * @param {Element} target - the HTML element to append to
  */
-IndexListValue.prototype.createHTML = function (target) {
+IndexListValue.prototype.createHTML = function createHTML(target) {
   this.label = document.createElement('label');
   this.label.innerHTML = this.name;
   if (this.tooltip) {
@@ -132,7 +131,7 @@ IndexListValue.prototype.createHTML = function (target) {
 /**
  * Hides the HTML elements of the value
  */
-IndexListValue.prototype.hide = function () {
+IndexListValue.prototype.hide = function hide() {
   if (this.label && this.select && !this.hidden) {
     this.hidden = true;
     this.label.style.display = 'none';
@@ -143,7 +142,7 @@ IndexListValue.prototype.hide = function () {
 /**
  * Shows the HTML elements of the value
  */
-IndexListValue.prototype.show = function () {
+IndexListValue.prototype.show = function show() {
   if (this.label && this.select && this.hidden) {
     this.hidden = false;
     this.label.style.display = 'block';
@@ -154,7 +153,7 @@ IndexListValue.prototype.show = function () {
 /**
  * Updates the current index of the value using the HTML elements
  */
-IndexListValue.prototype.update = function () {
+IndexListValue.prototype.update = function update() {
   if (this.select) {
     this.index = this.select.selectedIndex;
   }
@@ -165,8 +164,8 @@ IndexListValue.prototype.update = function () {
  *
  * @param {string} spacing - the spacing to go before the value
  */
-IndexListValue.prototype.getSaveString = function (spacing) {
-  return spacing + this.key + ': ' + this.index + '\n';
+IndexListValue.prototype.getSaveString = function getSaveString(spacing) {
+  return `${spacing}${this.key}: ${this.index}\n`;
 };
 
 /**
@@ -174,7 +173,7 @@ IndexListValue.prototype.getSaveString = function (spacing) {
  *
  * @param {integer} value - config int value
  */
-IndexListValue.prototype.load = function (value) {
+IndexListValue.prototype.load = function load(value) {
   this.index = value;
 };
 
@@ -199,7 +198,7 @@ function ListValue(name, key, list, value) {
   this.hidden = false;
 }
 
-ListValue.prototype.dupe = function () {
+ListValue.prototype.dupe = function dupe() {
   return new ListValue(this.name, this.key, this.list, this.value).setTooltip(this.tooltip);
 };
 
@@ -214,7 +213,7 @@ ListValue.prototype.setTooltip = setTooltip;
  *
  * @param {Element} target - the HTML element to append to
  */
-ListValue.prototype.createHTML = function (target) {
+ListValue.prototype.createHTML = function createHTML(target) {
   this.label = document.createElement('label');
   this.label.innerHTML = this.name;
   if (this.tooltip) {
@@ -228,14 +227,14 @@ ListValue.prototype.createHTML = function (target) {
   let selected = -1;
 
   const vLower = this.value.toLowerCase().replace('_', ' ');
-  const list = typeof this.list == 'function' ? this.list() : this.list;
+  const list = typeof this.list === 'function' ? this.list() : this.list;
   for (let i = 0; i < list.length; i++) {
     const option = document.createElement('option');
     option.innerHTML = list[i];
     this.select.add(option);
 
     const lower = list[i].toLowerCase().replace('_', ' ');
-    if (lower === vLower || (selected == -1 && list[i] == 'None')) {
+    if (lower === vLower || (selected === -1 && list[i] === 'None')) {
       selected = i;
     }
   }
@@ -246,7 +245,7 @@ ListValue.prototype.createHTML = function (target) {
 /**
  * Hides the HTML elements of the value
  */
-ListValue.prototype.hide = function () {
+ListValue.prototype.hide = function hide() {
   if (this.label && this.select && !this.hidden) {
     this.hidden = true;
     this.label.style.display = 'none';
@@ -257,7 +256,7 @@ ListValue.prototype.hide = function () {
 /**
  * Shows the HTML elements of the value
  */
-ListValue.prototype.show = function () {
+ListValue.prototype.show = function show() {
   if (this.label && this.select && this.hidden) {
     this.hidden = false;
     this.label.style.display = 'block';
@@ -268,10 +267,10 @@ ListValue.prototype.show = function () {
 /**
  * Updates the current value using the HTML elements
  */
-ListValue.prototype.update = function () {
+ListValue.prototype.update = function update() {
   if (this.select) {
     this.value = this.select[this.select.selectedIndex].innerHTML;
-    if (this.value == 'None') {
+    if (this.value === 'None') {
       this.value = '';
     }
   }
@@ -282,8 +281,8 @@ ListValue.prototype.update = function () {
  *
  * @param {string} spacing - the spacing to go before the value
  */
-ListValue.prototype.getSaveString = function (spacing) {
-  return spacing + this.key + ": '" + this.value + "'\n";
+ListValue.prototype.getSaveString = function getSaveString(spacing) {
+  return `${spacing}${this.key}: '${this.value}'\n`;
 };
 
 /**
@@ -291,7 +290,7 @@ ListValue.prototype.getSaveString = function (spacing) {
  *
  * @param {string} value - config string value
  */
-ListValue.prototype.load = function (value) {
+ListValue.prototype.load = function load(value) {
   this.value = value;
 };
 
@@ -319,7 +318,7 @@ function AttributeValue(name, key, base, scale) {
   this.hidden = false;
 }
 
-AttributeValue.prototype.dupe = function () {
+AttributeValue.prototype.dupe = function dupe() {
   return new AttributeValue(this.name, this.key, this.base, this.scale).setTooltip(this.tooltip);
 };
 
@@ -334,7 +333,7 @@ AttributeValue.prototype.setTooltip = setTooltip;
  *
  * @param {Element} target - the HTML element to append to
  */
-AttributeValue.prototype.createHTML = function (target) {
+AttributeValue.prototype.createHTML = function createHTML(target) {
   this.label = document.createElement('label');
   this.label.innerHTML = this.name;
   if (this.tooltip) {
@@ -344,7 +343,7 @@ AttributeValue.prototype.createHTML = function (target) {
   target.appendChild(this.label);
 
   this.baseBox = document.createElement('input');
-  this.baseBox.id = this.key + '-base';
+  this.baseBox.id = `${this.key}-base`;
   this.baseBox.value = this.base;
   this.baseBox.className = 'base';
   target.appendChild(this.baseBox);
@@ -355,7 +354,7 @@ AttributeValue.prototype.createHTML = function (target) {
   target.appendChild(this.left);
 
   this.scaleBox = document.createElement('input');
-  this.scaleBox.id = this.key + '-scale';
+  this.scaleBox.id = `${this.key}-scale`;
   this.scaleBox.value = this.scale;
   this.scaleBox.className = 'scale';
   target.appendChild(this.scaleBox);
@@ -369,7 +368,7 @@ AttributeValue.prototype.createHTML = function (target) {
 /**
  * Hides the HTML elements of the value
  */
-AttributeValue.prototype.hide = function () {
+AttributeValue.prototype.hide = function hide() {
   if (this.label && this.baseBox && this.scaleBox && this.left && this.right && !this.hidden) {
     this.hidden = true;
     this.label.style.display = 'none';
@@ -383,7 +382,7 @@ AttributeValue.prototype.hide = function () {
 /**
  * Shows the HTML elements of the value
  */
-AttributeValue.prototype.show = function () {
+AttributeValue.prototype.show = function show() {
   if (this.label && this.baseBox && this.scaleBox && this.left && this.right && this.hidden) {
     this.hidden = false;
     this.label.style.display = 'block';
@@ -397,7 +396,7 @@ AttributeValue.prototype.show = function () {
 /**
  * Updates the current values using the HTML elements
  */
-AttributeValue.prototype.update = function () {
+AttributeValue.prototype.update = function update() {
   if (this.baseBox && this.scaleBox) {
     this.base = this.baseBox.value;
     this.scale = this.scaleBox.value;
@@ -409,19 +408,8 @@ AttributeValue.prototype.update = function () {
  *
  * @param {string} spacing - the spacing to go before the value
  */
-AttributeValue.prototype.getSaveString = function (spacing) {
-  return (
-    spacing +
-    this.key +
-    '-base: ' +
-    this.base +
-    '\n' +
-    spacing +
-    this.key +
-    '-scale: ' +
-    this.scale +
-    '\n'
-  );
+AttributeValue.prototype.getSaveString = function getSaveString(spacing) {
+  return `${spacing}${this.key}-base: ${this.base}\n${spacing}${this.key}-scale: ${this.scale}\n`;
 };
 
 /**
@@ -429,7 +417,7 @@ AttributeValue.prototype.getSaveString = function (spacing) {
  *
  * @param {float} value - config double value
  */
-AttributeValue.prototype.loadBase = function (value) {
+AttributeValue.prototype.loadBase = function loadBase(value) {
   this.base = value;
 };
 
@@ -438,7 +426,7 @@ AttributeValue.prototype.loadBase = function (value) {
  *
  * @param {float} value - config double value
  */
-AttributeValue.prototype.loadScale = function (value) {
+AttributeValue.prototype.loadScale = function loadScale(value) {
   this.scale = value;
 };
 
@@ -461,7 +449,7 @@ function DoubleValue(name, key, value) {
   this.hidden = false;
 }
 
-DoubleValue.prototype.dupe = function () {
+DoubleValue.prototype.dupe = function dupe() {
   return new DoubleValue(this.name, this.key, this.value).setTooltip(this.tooltip);
 };
 
@@ -476,7 +464,7 @@ DoubleValue.prototype.setTooltip = setTooltip;
  *
  * @param {Element} target - the HTML element to append to
  */
-DoubleValue.prototype.createHTML = function (target) {
+DoubleValue.prototype.createHTML = function createHTML(target) {
   this.label = document.createElement('label');
   this.label.innerHTML = this.name;
   if (this.tooltip) {
@@ -488,14 +476,14 @@ DoubleValue.prototype.createHTML = function (target) {
   this.box = document.createElement('input');
   this.box.id = this.key;
   this.box.value = this.value;
-  this.box.addEventListener('input', filterDouble);
+  this.box.addEventListener('input', window.filterDouble);
   target.appendChild(this.box);
 };
 
 /**
  * Hides the HTML elements of the value
  */
-DoubleValue.prototype.hide = function () {
+DoubleValue.prototype.hide = function hide() {
   if (this.label && this.box && !this.hidden) {
     this.hidden = true;
     this.label.style.display = 'none';
@@ -506,7 +494,7 @@ DoubleValue.prototype.hide = function () {
 /**
  * Shows the HTML elements of the value
  */
-DoubleValue.prototype.show = function () {
+DoubleValue.prototype.show = function show() {
   if (this.label && this.box && this.hidden) {
     this.hidden = false;
     this.label.style.display = 'block';
@@ -517,7 +505,7 @@ DoubleValue.prototype.show = function () {
 /**
  * Updates the current value using the HTML elements
  */
-DoubleValue.prototype.update = function () {
+DoubleValue.prototype.update = function update() {
   if (this.box) {
     this.value = Number(this.box.value);
   }
@@ -528,8 +516,8 @@ DoubleValue.prototype.update = function () {
  *
  * @param {string} spacing - the spacing to go before the value
  */
-DoubleValue.prototype.getSaveString = function (spacing) {
-  return spacing + this.key + ': ' + this.value + '\n';
+DoubleValue.prototype.getSaveString = function getSaveString(spacing) {
+  return `${spacing}${this.key}: ${this.value}\n`;
 };
 
 /**
@@ -537,7 +525,7 @@ DoubleValue.prototype.getSaveString = function (spacing) {
  *
  * @param {float} value - config double value
  */
-DoubleValue.prototype.load = function (value) {
+DoubleValue.prototype.load = function load(value) {
   this.value = value;
 };
 
@@ -560,7 +548,7 @@ function IntValue(name, key, value) {
   this.hidden = false;
 }
 
-IntValue.prototype.dupe = function () {
+IntValue.prototype.dupe = function dupe() {
   return new IntValue(this.name, this.key, this.value).setTooltip(this.tooltip);
 };
 
@@ -575,7 +563,7 @@ IntValue.prototype.setTooltip = setTooltip;
  *
  * @param {Element} target - the HTML element to append to
  */
-IntValue.prototype.createHTML = function (target) {
+IntValue.prototype.createHTML = function createHTML(target) {
   this.label = document.createElement('label');
   this.label.innerHTML = this.name;
   if (this.tooltip) {
@@ -587,14 +575,14 @@ IntValue.prototype.createHTML = function (target) {
   this.box = document.createElement('input');
   this.box.id = this.key;
   this.box.value = this.value;
-  this.box.addEventListener('input', filterInt);
+  this.box.addEventListener('input', window.filterInt);
   target.appendChild(this.box);
 };
 
 /**
  * Hides the HTML elements of the value
  */
-IntValue.prototype.hide = function () {
+IntValue.prototype.hide = function hide() {
   if (this.label && this.box && !this.hidden) {
     this.hidden = true;
     this.label.style.display = 'none';
@@ -605,7 +593,7 @@ IntValue.prototype.hide = function () {
 /**
  * Shows the HTML elements of the value
  */
-IntValue.prototype.show = function () {
+IntValue.prototype.show = function show() {
   if (this.label && this.box && this.hidden) {
     this.hidden = false;
     this.label.style.display = 'block';
@@ -616,7 +604,7 @@ IntValue.prototype.show = function () {
 /**
  * Updates the current value using the HTML elements
  */
-IntValue.prototype.update = function () {
+IntValue.prototype.update = function update() {
   if (this.box) {
     this.value = Number(this.box.value);
   }
@@ -627,8 +615,8 @@ IntValue.prototype.update = function () {
  *
  * @param {string} spacing - the spacing to go before the value
  */
-IntValue.prototype.getSaveString = function (spacing) {
-  return spacing + this.key + ': ' + this.value + '\n';
+IntValue.prototype.getSaveString = function getSaveString(spacing) {
+  return `${spacing}${this.key}: ${this.value}\n`;
 };
 
 /**
@@ -636,7 +624,7 @@ IntValue.prototype.getSaveString = function (spacing) {
  *
  * @param {integer} value - config int value
  */
-IntValue.prototype.load = function (value) {
+IntValue.prototype.load = function load(value) {
   this.value = value;
 };
 
@@ -659,7 +647,7 @@ function StringValue(name, key, value) {
   this.hidden = false;
 }
 
-StringValue.prototype.dupe = function () {
+StringValue.prototype.dupe = function dupe() {
   return new StringValue(this.name, this.key, this.value).setTooltip(this.tooltip);
 };
 
@@ -674,7 +662,7 @@ StringValue.prototype.setTooltip = setTooltip;
  *
  * @param {Element} target - the HTML element to append to
  */
-StringValue.prototype.createHTML = function (target) {
+StringValue.prototype.createHTML = function createHTML(target) {
   this.label = document.createElement('label');
   this.label.innerHTML = this.name;
   if (this.tooltip) {
@@ -692,7 +680,7 @@ StringValue.prototype.createHTML = function (target) {
 /**
  * Hides the HTML elements of the value
  */
-StringValue.prototype.hide = function () {
+StringValue.prototype.hide = function hide() {
   if (this.label && this.box && !this.hidden) {
     this.hidden = true;
     this.label.style.display = 'none';
@@ -703,7 +691,7 @@ StringValue.prototype.hide = function () {
 /**
  * Shows the HTML elements of the value
  */
-StringValue.prototype.show = function () {
+StringValue.prototype.show = function show() {
   if (this.label && this.box && this.hidden) {
     this.hidden = false;
     this.label.style.display = 'block';
@@ -714,7 +702,7 @@ StringValue.prototype.show = function () {
 /**
  * Updates the current value using the HTML elements
  */
-StringValue.prototype.update = function () {
+StringValue.prototype.update = function update() {
   if (this.box) {
     this.value = this.box.value;
   }
@@ -725,13 +713,13 @@ StringValue.prototype.update = function () {
  *
  * @param {string} spacing - the spacing to go before the value
  */
-StringValue.prototype.getSaveString = function (spacing) {
+StringValue.prototype.getSaveString = function getSaveString(spacing) {
   let enclosing = "'";
   if (this.value.indexOf("'") >= 0) {
     if (this.value.indexOf('"') >= 0) this.value = this.value.replace("'", '');
     else enclosing = '"';
   }
-  return spacing + this.key + ': ' + enclosing + this.value + enclosing + '\n';
+  return `${spacing}${this.key}: ${enclosing}${this.value}${enclosing}\n`;
 };
 
 /**
@@ -739,7 +727,7 @@ StringValue.prototype.getSaveString = function (spacing) {
  *
  * @param {string} value - config string value
  */
-StringValue.prototype.load = function (value) {
+StringValue.prototype.load = function load(value) {
   this.value = value;
 };
 
@@ -762,7 +750,7 @@ function StringListValue(name, key, value) {
   this.hidden = false;
 }
 
-StringListValue.prototype.dupe = function () {
+StringListValue.prototype.dupe = function dupe() {
   return new StringListValue(this.name, this.key, this.value).setTooltip(this.tooltip);
 };
 
@@ -777,7 +765,7 @@ StringListValue.prototype.setTooltip = setTooltip;
  *
  * @param {Element} target - the HTML element to append to
  */
-StringListValue.prototype.createHTML = function (target) {
+StringListValue.prototype.createHTML = function createHTML(target) {
   this.label = document.createElement('label');
   this.label.innerHTML = this.name;
   this.label.className = 'areaLabel';
@@ -790,7 +778,7 @@ StringListValue.prototype.createHTML = function (target) {
   let content = '';
   for (let i = 0; i < this.value.length; i++) {
     content += this.value[i];
-    if (i != this.value.length - 1) content += '\n';
+    if (i !== this.value.length - 1) content += '\n';
   }
 
   this.box = document.createElement('textarea');
@@ -802,7 +790,7 @@ StringListValue.prototype.createHTML = function (target) {
 /**
  * Hides the HTML elements of the value
  */
-StringListValue.prototype.hide = function () {
+StringListValue.prototype.hide = function hide() {
   if (this.label && this.box && !this.hidden) {
     this.hidden = true;
     this.label.style.display = 'none';
@@ -813,7 +801,7 @@ StringListValue.prototype.hide = function () {
 /**
  * Shows the HTML elements of the value
  */
-StringListValue.prototype.show = function () {
+StringListValue.prototype.show = function show() {
   if (this.label && this.box && this.hidden) {
     this.hidden = false;
     this.label.style.display = 'block';
@@ -824,7 +812,7 @@ StringListValue.prototype.show = function () {
 /**
  * Updates the current value using the HTML elements
  */
-StringListValue.prototype.update = function () {
+StringListValue.prototype.update = function update() {
   if (this.box) {
     this.value = this.box.value.split('\n');
   }
@@ -835,15 +823,15 @@ StringListValue.prototype.update = function () {
  *
  * @param {string} spacing - the spacing to go before the value
  */
-StringListValue.prototype.getSaveString = function (spacing) {
-  let result = spacing + this.key + ':\n';
+StringListValue.prototype.getSaveString = function getSaveString(spacing) {
+  let result = `${spacing}${this.key}:\n`;
   for (let i = 0; i < this.value.length; i++) {
     let enclosing = "'";
     if (this.value[i].indexOf("'") >= 0) {
       if (this.value[i].indexOf('"') >= 0) this.value[i] = this.value[i].replace("'", '');
       else enclosing = '"';
     }
-    result += spacing + '- ' + enclosing + this.value[i] + enclosing + '\n';
+    result += `${spacing}- ${enclosing}${this.value[i]}${enclosing}\n`;
   }
   return result;
 };
@@ -853,7 +841,7 @@ StringListValue.prototype.getSaveString = function (spacing) {
  *
  * @param {Array} value - config string list value
  */
-StringListValue.prototype.load = function (value) {
+StringListValue.prototype.load = function load(value) {
   this.value = value;
 };
 
@@ -880,7 +868,7 @@ function MultiListValue(name, key, list, values) {
   this.hidden = false;
 }
 
-MultiListValue.prototype.dupe = function () {
+MultiListValue.prototype.dupe = function dupe() {
   return new MultiListValue(this.name, this.key, this.list, this.values).setTooltip(this.tooltip);
 };
 
@@ -895,7 +883,7 @@ MultiListValue.prototype.setTooltip = setTooltip;
  *
  * @param {Element} target - the HTML element to append to
  */
-MultiListValue.prototype.createHTML = function (target) {
+MultiListValue.prototype.createHTML = function createHTML(target) {
   this.label = document.createElement('label');
   this.label.innerHTML = this.name;
   if (this.tooltip) {
@@ -904,26 +892,27 @@ MultiListValue.prototype.createHTML = function (target) {
   }
   target.appendChild(this.label);
 
-  this.select = document.createElement('select');
-  this.select.id = this.key;
+  const select = document.createElement('select');
+  this.select = select;
+  select.id = this.key;
 
   let option = document.createElement('option');
   option.innerHTML = '- Select -';
-  this.select.add(option);
-  const list = typeof this.list == 'function' ? this.list() : this.list;
+  select.add(option);
+  const list = typeof this.list === 'function' ? this.list() : this.list;
   for (let i = 0; i < list.length; i++) {
     option = document.createElement('option');
     option.innerHTML = list[i];
-    this.select.add(option);
+    select.add(option);
   }
-  this.select.selectedIndex = 0;
-  this.select.inputRef = this;
-  this.select.addEventListener('change', function (e) {
-    if (this.selectedIndex != 0) {
-      const val = this[this.selectedIndex].innerHTML;
-      //this.inputRef.values.add(val);
-      this.inputRef.populate(val);
-      this.selectedIndex = 0;
+  select.selectedIndex = 0;
+  select.inputRef = this;
+  select.addEventListener('change', () => {
+    if (select.selectedIndex !== 0) {
+      const val = select[select.selectedIndex].innerHTML;
+      // this.inputRef.values.add(val);
+      select.inputRef.populate(val);
+      select.selectedIndex = 0;
     }
   });
   target.appendChild(this.select);
@@ -942,12 +931,12 @@ MultiListValue.prototype.createHTML = function (target) {
   }
 };
 
-MultiListValue.prototype.populate = function (value) {
+MultiListValue.prototype.populate = function populate(value) {
   const entry = document.createElement('div');
   entry.className = 'multilist';
   entry.innerHTML = value;
-  entry.addEventListener('click', function (e) {
-    this.parentNode.removeChild(this);
+  entry.addEventListener('click', () => {
+    entry.parentNode.removeChild(entry);
   });
   this.div.appendChild(entry);
 };
@@ -955,7 +944,7 @@ MultiListValue.prototype.populate = function (value) {
 /**
  * Hides the HTML elements of the value
  */
-MultiListValue.prototype.hide = function () {
+MultiListValue.prototype.hide = function hide() {
   if (this.label && this.select && !this.hidden) {
     this.hidden = true;
     this.label.style.display = 'none';
@@ -967,7 +956,7 @@ MultiListValue.prototype.hide = function () {
 /**
  * Shows the HTML elements of the value
  */
-MultiListValue.prototype.show = function () {
+MultiListValue.prototype.show = function show() {
   if (this.label && this.select && this.hidden) {
     this.hidden = false;
     this.label.style.display = 'block';
@@ -979,7 +968,7 @@ MultiListValue.prototype.show = function () {
 /**
  * Updates the current value using the HTML elements
  */
-MultiListValue.prototype.update = function () {
+MultiListValue.prototype.update = function update() {
   this.values = [];
   for (let entry = this.div.firstChild; entry !== null; entry = entry.nextSibling) {
     this.values.push(entry.innerHTML);
@@ -991,15 +980,15 @@ MultiListValue.prototype.update = function () {
  *
  * @param {string} spacing - the spacing to go before the value
  */
-MultiListValue.prototype.getSaveString = function (spacing) {
-  let result = spacing + this.key + ':\n';
+MultiListValue.prototype.getSaveString = function getSaveString(spacing) {
+  let result = `${spacing}${this.key}:\n`;
   for (let i = 0; i < this.values.length; i++) {
     let enclosing = "'";
     if (this.values[i].indexOf("'") >= 0) {
       if (this.values[i].indexOf('"') >= 0) this.values[i] = this.values[i].replace("'", '');
       else enclosing = '"';
     }
-    result += spacing + '- ' + enclosing + this.values[i] + enclosing + '\n';
+    result += `${spacing}- ${enclosing}${this.values[i]}${enclosing}\n`;
   }
   return result;
 };
@@ -1009,7 +998,7 @@ MultiListValue.prototype.getSaveString = function (spacing) {
  *
  * @param {Array} value - config array value
  */
-MultiListValue.prototype.load = function (value) {
+MultiListValue.prototype.load = function load(value) {
   this.values = value;
 };
 
@@ -1034,7 +1023,7 @@ function ByteListValue(name, key, values, value) {
   this.hidden = false;
 }
 
-ByteListValue.prototype.dupe = function () {
+ByteListValue.prototype.dupe = function dupe() {
   return new ByteListValue(this.name, this.key, this.values, this.value).setTooltip(this.tooltip);
 };
 
@@ -1049,7 +1038,7 @@ ByteListValue.prototype.setTooltip = setTooltip;
  *
  * @param {Element} target - the HTML element to append to
  */
-ByteListValue.prototype.createHTML = function (target) {
+ByteListValue.prototype.createHTML = function createHTML(target) {
   this.label = document.createElement('label');
   this.label.innerHTML = this.name;
   this.label.className = 'areaLabel';
@@ -1064,22 +1053,14 @@ ByteListValue.prototype.createHTML = function (target) {
   this.div = document.createElement('div');
   this.div.className = 'byteList';
   let html = '';
-  for (var i = 0; i < this.values.length; i++) {
-    const id = this.key + '-' + this.values[i].replace(' ', '-').toLowerCase();
+  for (let i = 0; i < this.values.length; i++) {
+    const id = `${this.key}-${this.values[i].replace(' ', '-').toLowerCase()}`;
+    // eslint-disable-next-line no-bitwise
     const checked = this.value & (1 << i) ? ' checked' : '';
-    html +=
-      '<input type="checkbox" name="byte' +
-      i +
-      '" id="' +
-      id +
-      '"' +
-      checked +
-      '>' +
-      this.values[i] +
-      '<br>';
+    html += `<input type="checkbox" name="byte${i}" id="${id}"${checked}>${this.values[i]}<br>`;
   }
   this.div.innerHTML = html;
-  for (var i = 0; i < this.div.childNodes.length; i += 3) {
+  for (let i = 0; i < this.div.childNodes.length; i += 3) {
     this.checkboxes[i / 3] = this.div.childNodes[i];
   }
   target.appendChild(this.div);
@@ -1088,7 +1069,7 @@ ByteListValue.prototype.createHTML = function (target) {
 /**
  * Hides the HTML elements of the value
  */
-ByteListValue.prototype.hide = function () {
+ByteListValue.prototype.hide = function hide() {
   if (this.label && this.div && !this.hidden) {
     this.hidden = true;
     this.label.style.display = 'none';
@@ -1099,7 +1080,7 @@ ByteListValue.prototype.hide = function () {
 /**
  * Shows the HTML elements of the value
  */
-ByteListValue.prototype.show = function () {
+ByteListValue.prototype.show = function show() {
   if (this.label && this.div && this.hidden) {
     this.hidden = false;
     this.label.style.display = 'block';
@@ -1110,11 +1091,12 @@ ByteListValue.prototype.show = function () {
 /**
  * Updates the current value using the HTML elements
  */
-ByteListValue.prototype.update = function () {
+ByteListValue.prototype.update = function update() {
   if (this.div) {
     this.value = 0;
     for (let i = 0; i < this.checkboxes.length; i++) {
       if (this.checkboxes[i].checked) {
+        // eslint-disable-next-line no-bitwise
         this.value += 1 << i;
       }
     }
@@ -1126,8 +1108,8 @@ ByteListValue.prototype.update = function () {
  *
  * @param {string} spacing - the spacing to go before the value
  */
-ByteListValue.prototype.getSaveString = function (spacing) {
-  const result = spacing + this.key + ': ' + this.value + '\n';
+ByteListValue.prototype.getSaveString = function getSaveString(spacing) {
+  const result = `${spacing}${this.key}: ${this.value}\n`;
   return result;
 };
 
@@ -1136,6 +1118,6 @@ ByteListValue.prototype.getSaveString = function (spacing) {
  *
  * @param {Array} value - config string list value
  */
-ByteListValue.prototype.load = function (value) {
+ByteListValue.prototype.load = function load(value) {
   this.value = value;
 };
