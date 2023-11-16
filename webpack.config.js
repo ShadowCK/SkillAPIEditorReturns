@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: './src/main.js',
-  mode: 'production',
+  mode: 'development',
   watchOptions: {
     aggregateTimeout: 200,
   },
