@@ -1,3 +1,6 @@
+let activeClass;
+let classes;
+
 /**
  * Represents the data for a dynamic class
  *
@@ -91,9 +94,6 @@ function Class(name) {
 
   this.updateAttribs(10);
 }
-
-let activeClass = new Class('Class 1');
-const classes = [activeClass];
 
 Class.prototype.updateAttribs = function updateAttribs(i) {
   let j = 0;
@@ -277,7 +277,9 @@ Class.prototype.update = function update() {
   }
   const newName = this.data[0].value;
   this.data[0].value = prevName;
-  if (isClassNameTaken(newName)) {return;}
+  if (isClassNameTaken(newName)) {
+    return;
+  }
   this.data[0].value = newName;
   list[index].text = this.data[0].value;
 };
@@ -312,4 +314,6 @@ Class.prototype.getSaveString = function getSaveString() {
  */
 Class.prototype.load = window.loadSection;
 
+activeClass = new Class('Class 1');
+classes = [activeClass];
 activeClass.createFormHTML();

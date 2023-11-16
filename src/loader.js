@@ -119,7 +119,7 @@ const depend = (script, callback) => {
   if (SCRIPT_TAGS[script]) {
     const data = SCRIPT_TAGS[script];
     if (data.loaded) {
-      if (callback) {
+            if (callback) {
         callback();
       }
     } else {
@@ -137,13 +137,13 @@ const depend = (script, callback) => {
     if (callback) {callback();}
     return;
   }
-  // Otherwise, load the script
+    // Otherwise, load the script
   const scriptTag = document.createElement('script');
   scriptTag.id = script;
   scriptTag.type = 'text/javascript';
   if (callback) {
-    scriptTag.addEventListener('load', callback);
-  }
+        scriptTag.addEventListener('load', callback);
+      }
   scriptTag.addEventListener('load', SCRIPT_TAGS.onload);
   SCRIPT_TAGS[script] = { tag: scriptTag, loaded: false };
   scriptTag.src = src;
@@ -152,3 +152,12 @@ const depend = (script, callback) => {
 };
 
 export { extend, depend };
+
+Object.defineProperties(window, {
+  depend: {
+    get: () => depend,
+  },
+  extend: {
+    get: () => extend,
+  },
+});

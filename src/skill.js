@@ -87,11 +87,9 @@ function Skill(name) {
   ];
 }
 
-/* eslint-disable */
+// eslint-disable-next-line prefer-const
 let activeSkill = new Skill('Skill 1');
-let activeComponent = null;
 const skills = [activeSkill];
-/* eslint-enable */
 
 /**
  * Adds a skill to the editor without switching the view to it

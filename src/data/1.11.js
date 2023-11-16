@@ -1211,3 +1211,9 @@ const DATA_11 = {
   }
 }
 DATA_11.ANY_POTION = ['Any', ...DATA_11.POTIONS];
+
+Object.defineProperties(window, {
+  DATA_11: {
+    get: () => DATA_11,
+  },
+});

@@ -259,9 +259,9 @@ function loadSkillText(text) {
         if (window.getSkill(key) === window.activeSkill) {
           window.activeSkill.apply();
           showSkillPage('builder');
-        } else {
-          window.addSkill(key).load(value);
         }
+      } else {
+        window.addSkill(key).load(value);
       }
     }
   });
@@ -601,3 +601,15 @@ depend('data/data', () => {
   }
 });
 // #endregion
+
+Object.defineProperties(window, {
+  ATTRIBS: {
+    get: () => ATTRIBS,
+  },
+  showSkillPage: {
+    get: () => showSkillPage,
+  },
+  loadSection: {
+    get: () => loadSection,
+  },
+});
