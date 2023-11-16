@@ -323,3 +323,30 @@ newClass = () => {
 activeClass = new Class('Class 1');
 classes = [activeClass];
 activeClass.createFormHTML();
+
+Object.defineProperties(window, {
+  activeClass: {
+    get: () => activeClass,
+    set: (value) => {
+      activeClass = value;
+    },
+  },
+  classes: {
+    get: () => classes,
+    set: (value) => {
+      classes = value;
+    },
+  },
+  getClass: {
+    get: () => getClass,
+  },
+  isClassNameTaken: {
+    get: () => isClassNameTaken,
+  },
+  addClass: {
+    get: () => addClass,
+  },
+  newClass: {
+    get: () => newClass,
+  },
+});
