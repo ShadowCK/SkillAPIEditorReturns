@@ -76,8 +76,8 @@ function setupOptionList(div, list, type) {
         showSkillPage('builder');
       } else {
         showSkillPage('skillForm');
-        const component = h5.component.construct
-          ? new h5.component.construct()
+        const component = h5.component.constructor
+          ? new h5.component.constructor()
           : h5.component.supplier();
         component.parent = window.activeComponent;
         window.activeComponent.components.push(component);
@@ -363,8 +363,8 @@ function loadSection(data) {
         if (list !== undefined && list !== null) {
           Object.keys(list).forEach((listKey) => {
             if (list[listKey].name.toLowerCase() === name.toLowerCase()) {
-              const component = list[listKey].construct
-                ? new list[listKey].construct()
+              const component = list[listKey].constructor
+                ? new list[listKey].constructor()
                 : list[listKey].supplier();
               component.parent = this;
               this.components.push(component);
