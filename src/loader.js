@@ -114,48 +114,56 @@ const extend = (sub, base) => {
  * @param {string}   script   - name of the script to load
  * @param {function} [callback] - callback for when it's done loading
  */
-const depend = (script, callback) => {
-  // If the script is already loaded, run the callback
-  if (SCRIPT_TAGS[script]) {
-    const data = SCRIPT_TAGS[script];
-    if (data.loaded) {
+const depend = (script, callback) =>
+  new Promise((resolve, reject) => {
+    // If the script is already loaded, run the callback
+    if (SCRIPT_TAGS[script]) {
+      const data = SCRIPT_TAGS[script];
+      if (data.loaded) {
+        if (callback) {
+          callback();
+        }
+      } else {
+        data.tag.addEventListener('load', callback);
+      }
+      return;
+    }
+    // SECOND CHECK
+    // If loaded but not stored, store the script and run the callback
+    const src = `./src/${script}.js`;
+    const scripts = document.querySelectorAll('script');
+    const foundScript = _.findWhere(scripts, { src });
+    if (foundScript) {
+      SCRIPT_TAGS[script] = { tag: foundScript, loaded: true };
       if (callback) {
         callback();
       }
-    } else {
-      data.tag.addEventListener('load', callback);
+      return;
     }
-    return;
-  }
-  // SECOND CHECK
-  // If loaded but not stored, store the script and run the callback
-  const src = `./src/${script}.js`;
-  const scripts = document.querySelectorAll('script');
-  const foundScript = _.findWhere(scripts, { src });
-  if (foundScript) {
-    SCRIPT_TAGS[script] = { tag: foundScript, loaded: true };
+    // Otherwise, load the script
+    const scriptTag = document.createElement('script');
+    scriptTag.id = script;
+    scriptTag.type = 'text/javascript';
     if (callback) {
-      callback();
+      scriptTag.addEventListener('load', callback);
     }
-    return;
-  }
-  // Otherwise, load the script
-  const scriptTag = document.createElement('script');
-  scriptTag.id = script;
-  scriptTag.type = 'text/javascript';
-  if (callback) {
-    scriptTag.addEventListener('load', callback);
-  }
-  scriptTag.addEventListener('load', SCRIPT_TAGS.onload);
-  SCRIPT_TAGS[script] = { tag: scriptTag, loaded: false };
-  scriptTag.src = src;
-  document.querySelector('head').appendChild(scriptTag);
-  SCRIPT_TAGS.scriptCount++;
-};
+    scriptTag.addEventListener('load', SCRIPT_TAGS.onload);
+    SCRIPT_TAGS[script] = { tag: scriptTag, loaded: false };
+    scriptTag.src = src;
+    document.querySelector('head').appendChild(scriptTag);
+    SCRIPT_TAGS.scriptCount++;
+
+    scriptTag.addEventListener('load', () => {
+      resolve();
+    });
+  });
 
 export { extend, depend };
 
 Object.defineProperties(window, {
+  SCRIPT_TAGS: {
+    get: () => SCRIPT_TAGS,
+  },
   depend: {
     get: () => depend,
   },
