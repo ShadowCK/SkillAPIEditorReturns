@@ -144,21 +144,57 @@ const depend = (script, callback) =>
     const scriptTag = document.createElement('script');
     scriptTag.id = script;
     scriptTag.type = 'text/javascript';
-    if (callback) {
-      scriptTag.addEventListener('load', callback);
-    }
-    scriptTag.addEventListener('load', SCRIPT_TAGS.onload);
+    scriptTag.addEventListener(
+      'load',
+      (e) => {
+        if (callback) {
+          callback();
+        }
+        SCRIPT_TAGS.onload(e);
+        resolve();
+      },
+      { once: true },
+    );
     SCRIPT_TAGS[script] = { tag: scriptTag, loaded: false };
     scriptTag.src = src;
     document.querySelector('head').appendChild(scriptTag);
     SCRIPT_TAGS.scriptCount++;
-
-    scriptTag.addEventListener('load', () => {
-      resolve();
-    });
   });
 
-export { extend, depend };
+const waitForScript = (script, callback) =>
+  new Promise((resolve, reject) => {
+    if (SCRIPT_TAGS[script]) {
+      const data = SCRIPT_TAGS[script];
+      if (data.loaded) {
+        if (callback) {
+          callback();
+        }
+        resolve();
+      } else {
+        data.tag.addEventListener(
+          'load',
+          () => {
+            if (callback) {
+              callback();
+            }
+            resolve();
+          },
+          { once: true },
+        );
+      }
+    } else {
+      reject(new Error(`Script ${script} not found`));
+    }
+  });
+
+const waitForScripts = (scripts, callback) =>
+  Promise.all(scripts.map((script) => waitForScript(script))).then(() => {
+    if (callback) {
+      callback();
+    }
+  });
+
+export { extend, depend, waitForScript, waitForScripts };
 
 Object.defineProperties(window, {
   SCRIPT_TAGS: {

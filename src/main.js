@@ -23,7 +23,7 @@
  */
 
 import _ from 'underscore';
-import { depend } from './loader.js';
+import { depend, waitForScripts } from './loader.js';
 
 // Default attributes
 let ATTRIBS = ['vitality', 'spirit', 'intelligence', 'dexterity', 'strength'];
@@ -531,14 +531,16 @@ depend('component', () => {
   refreshOptions();
 });
 
-await depend('data/1.8');
-await depend('data/1.9');
-await depend('data/1.10');
-await depend('data/1.11');
-await depend('data/1.12');
-await depend('data/1.13');
+depend('data/data', async () => {
+  await waitForScripts([
+    'data/1.8',
+    'data/1.9',
+    'data/1.10',
+    'data/1.11',
+    'data/1.12',
+    'data/1.13',
+  ]);
 
-depend('data/data', () => {
   depend('skill', () => {
     document.getElementById('skillList').addEventListener('change', (e) => {
       window.activeSkill.update();
