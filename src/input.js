@@ -65,8 +65,11 @@ function applyRequireValues() {
  * @param {string} text - the text to display in the tooltip
  */
 function setTooltip(text) {
-  if (text.charAt(0) === '[') {this.tooltip = text;}
-  else {this.tooltip = `[${this.key}] ${text}`;}
+  if (text.charAt(0) === '[') {
+    this.tooltip = text;
+  } else {
+    this.tooltip = `[${this.key}] ${text}`;
+  }
   return this;
 }
 
@@ -716,8 +719,11 @@ StringValue.prototype.update = function update() {
 StringValue.prototype.getSaveString = function getSaveString(spacing) {
   let enclosing = "'";
   if (this.value.indexOf("'") >= 0) {
-    if (this.value.indexOf('"') >= 0) {this.value = this.value.replace("'", '');}
-    else {enclosing = '"';}
+    if (this.value.indexOf('"') >= 0) {
+      this.value = this.value.replace("'", '');
+    } else {
+      enclosing = '"';
+    }
   }
   return `${spacing}${this.key}: ${enclosing}${this.value}${enclosing}\n`;
 };
@@ -778,7 +784,9 @@ StringListValue.prototype.createHTML = function createHTML(target) {
   let content = '';
   for (let i = 0; i < this.value.length; i++) {
     content += this.value[i];
-    if (i !== this.value.length - 1) {content += '\n';}
+    if (i !== this.value.length - 1) {
+      content += '\n';
+    }
   }
 
   this.box = document.createElement('textarea');
@@ -828,8 +836,11 @@ StringListValue.prototype.getSaveString = function getSaveString(spacing) {
   for (let i = 0; i < this.value.length; i++) {
     let enclosing = "'";
     if (this.value[i].indexOf("'") >= 0) {
-      if (this.value[i].indexOf('"') >= 0) {this.value[i] = this.value[i].replace("'", '');}
-      else {enclosing = '"';}
+      if (this.value[i].indexOf('"') >= 0) {
+        this.value[i] = this.value[i].replace("'", '');
+      } else {
+        enclosing = '"';
+      }
     }
     result += `${spacing}- ${enclosing}${this.value[i]}${enclosing}\n`;
   }
@@ -985,8 +996,11 @@ MultiListValue.prototype.getSaveString = function getSaveString(spacing) {
   for (let i = 0; i < this.values.length; i++) {
     let enclosing = "'";
     if (this.values[i].indexOf("'") >= 0) {
-      if (this.values[i].indexOf('"') >= 0) {this.values[i] = this.values[i].replace("'", '');}
-      else {enclosing = '"';}
+      if (this.values[i].indexOf('"') >= 0) {
+        this.values[i] = this.values[i].replace("'", '');
+      } else {
+        enclosing = '"';
+      }
     }
     result += `${spacing}- ${enclosing}${this.values[i]}${enclosing}\n`;
   }
