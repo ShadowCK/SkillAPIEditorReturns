@@ -514,7 +514,7 @@ window.onload = () => {
 window.onbeforeunload = () => {
   localStorage.setItem('skillData', getSkillSaveData());
   localStorage.setItem('classData', getClassSaveData());
-  localStorage.setItem('skillsActive', this.skillsActive ? 'true' : 'false');
+  localStorage.setItem('skillsActive', skillsActive ? 'true' : 'false');
   localStorage.setItem('skillIndex', document.getElementById('skillList').selectedIndex);
   localStorage.setItem('classIndex', document.getElementById('classList').selectedIndex);
 };
