@@ -530,6 +530,14 @@ depend('component', () => {
   }
   refreshOptions();
 });
+
+await depend('data/1.8');
+await depend('data/1.9');
+await depend('data/1.10');
+await depend('data/1.11');
+await depend('data/1.12');
+await depend('data/1.13');
+
 depend('data/data', () => {
   depend('skill', () => {
     document.getElementById('skillList').addEventListener('change', (e) => {
