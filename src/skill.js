@@ -327,6 +327,9 @@ Object.defineProperties(window, {
       skills = value;
     },
   },
+  isAttribute: {
+    get: () => isAttribute,
+  },
   getSkill: {
     get: () => getSkill,
   },
