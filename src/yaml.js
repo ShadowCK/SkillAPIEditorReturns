@@ -85,9 +85,12 @@ YAMLObject.prototype.parse = function parse(lines, index, indent) {
       (countSpaces(lines[lineIndex]) !== indent ||
         lines[lineIndex].replace(/ /g, '').charAt(0) === '#' ||
         lines[lineIndex].indexOf(':') === -1)
-    )
-      {lineIndex++;}
-    if (lineIndex === lines.length) {return lineIndex;}
+    ) {
+      lineIndex++;
+    }
+    if (lineIndex === lines.length) {
+      return lineIndex;
+    }
 
     const key = lines[lineIndex].substring(indent, lines[lineIndex].indexOf(':'));
 
@@ -135,8 +138,11 @@ YAMLObject.prototype.parse = function parse(lines, index, indent) {
       if (value.charAt(0) === "'") {
         value = value.substring(1, value.length - 1);
       } else if (!Number.isNaN(value)) {
-        if (Regex.INT.test(value)) {value = parseInt(value, 10);}
-        else {value = parseFloat(value);}
+        if (Regex.INT.test(value)) {
+          value = parseInt(value, 10);
+        } else {
+          value = parseFloat(value);
+        }
       }
       this[key] = value;
     }
