@@ -17,8 +17,8 @@ const updateLoader = () => {
   }
 
   // Done event
-  if (window.onLoaderDone) {
-    window.onLoaderDone();
+  if (onLoaderDone) {
+    onLoaderDone();
   }
 };
 

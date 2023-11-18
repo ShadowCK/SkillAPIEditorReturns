@@ -18,7 +18,7 @@ const parseYAML = (text) => {
     .replace(/\r\n/g, '\n')
     .replace(/\n *\n/g, '\n')
     .replace(/ +\n/g, '\n');
-  const data = new window.YAMLObject();
+  const data = new YAMLObject();
   const index = 0;
   const lines = textCleaned.split('\n');
   data.parse(lines, index, 0);
@@ -156,14 +156,4 @@ class YAMLObject {
   }
 }
 
-Object.defineProperties(window, {
-  parseYAML: {
-    get: () => parseYAML,
-  },
-  countSpaces: {
-    get: () => countSpaces,
-  },
-  YAMLObject: {
-    get: () => YAMLObject,
-  },
-});
+export { parseYAML, countSpaces, YAMLObject };

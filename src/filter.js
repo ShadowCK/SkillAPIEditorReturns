@@ -86,3 +86,5 @@ const filterDouble = () => {
     element.value += '0';
   }
 };
+
+export { filterInt, filterDouble };

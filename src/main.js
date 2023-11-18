@@ -24,6 +24,13 @@
 
 import _ from 'underscore';
 import { depend, waitForScripts } from './loader.js';
+import * as _filter from './filter.js';
+import * as _input from './input.js';
+import * as _yaml from './yaml.js';
+import * as _component from './component.js';
+import * as _data from './data';
+import * as _skill from './skill.js';
+import * as _class from './class.js';
 
 // Default attributes
 let ATTRIBS = ['vitality', 'spirit', 'intelligence', 'dexterity', 'strength'];
@@ -69,19 +76,16 @@ const setupOptionList = (div, list, type) => {
     h5.innerHTML = list[x].name;
     h5.component = list[x];
     h5.addEventListener('click', () => {
-      if (
-        window.activeComponent === window.activeSkill &&
-        window.activeSkill.usingTrigger(h5.component.name)
-      ) {
+      if (activeComponent === activeSkill && activeSkill.usingTrigger(h5.component.name)) {
         showSkillPage('builder');
       } else {
         showSkillPage('skillForm');
         const component = h5.component.constructor
           ? new h5.component.constructor()
           : h5.component.supplier();
-        component.parent = window.activeComponent;
-        window.activeComponent.components.push(component);
-        component.createBuilderHTML(window.activeComponent.html);
+        component.parent = activeComponent;
+        activeComponent.components.push(component);
+        component.createBuilderHTML(activeComponent.html);
         component.createFormHTML();
       }
     });
@@ -93,27 +97,19 @@ const setupOptionList = (div, list, type) => {
 
 const refreshOptions = () => {
   // Set up component option lists
-  setupOptionList(document.getElementById('triggerOptions'), window.Trigger, window.Type.TRIGGER);
-  setupOptionList(document.getElementById('targetOptions'), window.Target, window.Type.TARGET);
-  setupOptionList(
-    document.getElementById('conditionOptions'),
-    window.Condition,
-    window.Type.CONDITION,
-  );
-  setupOptionList(
-    document.getElementById('mechanicOptions'),
-    window.Mechanic,
-    window.Type.MECHANIC,
-  );
+  setupOptionList(document.getElementById('triggerOptions'), Trigger, Type.TRIGGER);
+  setupOptionList(document.getElementById('targetOptions'), Target, Type.TARGET);
+  setupOptionList(document.getElementById('conditionOptions'), Condition, Type.CONDITION);
+  setupOptionList(document.getElementById('mechanicOptions'), Mechanic, Type.MECHANIC);
 };
 
 const parseConfig = (text) => {
   const data = JSON.parse(text);
   const mapping = {
-    CONDITION: window.Condition,
-    MECHANIC: window.Mechanic,
-    TARGET: window.Target,
-    TRIGGER: window.Trigger,
+    CONDITION: Condition,
+    MECHANIC: Mechanic,
+    TARGET: Target,
+    TRIGGER: Trigger,
   };
   for (let i = 0; i < data.length; i++) {
     const entry = data[i];
@@ -121,7 +117,7 @@ const parseConfig = (text) => {
       name: entry.display,
       container: entry.container,
       supplier() {
-        return new window.CustomComponent(entry);
+        return new CustomComponent(entry);
       },
     };
   }
@@ -165,12 +161,12 @@ const saveToFile = (file, data) => {
 };
 
 const getSkillSaveData = () => {
-  window.activeSkill.update();
-  if (window.activeComponent) {
-    window.activeComponent.update();
+  activeSkill.update();
+  if (activeComponent) {
+    activeComponent.update();
   }
   let data = 'loaded: false\n';
-  const alphabetic = window.skills.slice(0);
+  const alphabetic = skills.slice(0);
   alphabetic.sort((a, b) => {
     const an = a.data[0].value;
     const bn = b.data[0].value;
@@ -189,10 +185,10 @@ const getSkillSaveData = () => {
 };
 
 const getClassSaveData = () => {
-  window.activeClass.update();
+  activeClass.update();
   let data = 'loaded: false\n';
-  for (let i = 0; i < window.classes.length; i++) {
-    data += window.classes[i].getSaveString();
+  for (let i = 0; i < classes.length; i++) {
+    data += classes[i].getSaveString();
   }
   return data;
 };
@@ -240,11 +236,11 @@ class Attribute {
 const loadAttributes = (e) => {
   const text = e.target.result;
   document.activeElement.blur();
-  const yaml = window.parseYAML(text);
+  const yaml = parseYAML(text);
   ATTRIBS = Object.keys(yaml);
   if (!skillsActive) {
-    window.activeClass.update();
-    window.activeClass.createFormHTML();
+    activeClass.update();
+    activeClass.createFormHTML();
   }
   localStorage.setItem('attribs', ATTRIBS);
 };
@@ -252,17 +248,17 @@ const loadAttributes = (e) => {
 // Loads skill data from a string
 const loadSkillText = (text) => {
   // Load new skills
-  const data = window.parseYAML(text);
+  const data = parseYAML(text);
   Object.entries(data).forEach(([key, value]) => {
-    if (value instanceof window.YAMLObject && key !== 'loaded') {
-      if (window.isSkillNameTaken(key)) {
-        window.getSkill(key).load(value);
-        if (window.getSkill(key) === window.activeSkill) {
-          window.activeSkill.apply();
+    if (value instanceof YAMLObject && key !== 'loaded') {
+      if (isSkillNameTaken(key)) {
+        getSkill(key).load(value);
+        if (getSkill(key) === activeSkill) {
+          activeSkill.apply();
           showSkillPage('builder');
         }
       } else {
-        window.addSkill(key).load(value);
+        addSkill(key).load(value);
       }
     }
   });
@@ -279,17 +275,17 @@ const loadSkills = (e) => {
 // Loads class data from a string
 const loadClassText = (text) => {
   // Load new classes
-  const data = window.parseYAML(text);
+  const data = parseYAML(text);
   // Change below to be using Object.keys() instead of for...in
   Object.entries(data).forEach(([key, value]) => {
-    if (value instanceof window.YAMLObject && key !== 'loaded' && !window.isClassNameTaken(key)) {
-      if (window.isClassNameTaken(key)) {
-        window.getClass(key).load(value);
-        if (window.getClass(key) === window.activeClass) {
-          window.activeClass.createFormHTML();
+    if (value instanceof YAMLObject && key !== 'loaded' && !isClassNameTaken(key)) {
+      if (isClassNameTaken(key)) {
+        getClass(key).load(value);
+        if (getClass(key) === activeClass) {
+          activeClass.createFormHTML();
         }
       } else {
-        window.addClass(key).load(value);
+        addClass(key).load(value);
       }
     }
   });
@@ -348,14 +344,14 @@ function loadSection(data) {
       Object.keys(components).forEach((componentKey) => {
         const { type } = components[componentKey];
         let list;
-        if (type === window.Type.TRIGGER) {
-          list = window.Trigger;
-        } else if (type === window.Type.TARGET) {
-          list = window.Target;
-        } else if (type === window.Type.CONDITION) {
-          list = window.Condition;
-        } else if (type === window.Type.MECHANIC) {
-          list = window.Mechanic;
+        if (type === Type.TRIGGER) {
+          list = Trigger;
+        } else if (type === Type.TARGET) {
+          list = Target;
+        } else if (type === Type.CONDITION) {
+          list = Condition;
+        } else if (type === Type.MECHANIC) {
+          list = Mechanic;
         }
 
         let name = componentKey;
@@ -444,6 +440,83 @@ document.addEventListener(
   false,
 );
 
+const init = () => {
+  // component.js
+  const config = localStorage.getItem('config');
+  if (config) {
+    parseConfig(config);
+  }
+  refreshOptions();
+
+  // data.js
+  document.getElementById('version-select').onchange = (e) => {
+    DATA = [`DATA_${e.target.value.substr(2)}`];
+    localStorage.setItem('server-version', e.target.value);
+  };
+
+  const previousValue = localStorage.getItem('server-version');
+  if (previousValue) {
+    document.getElementById('version-select').value = previousValue;
+  }
+
+  // skill.js
+  document.getElementById('skillList').addEventListener('change', (e) => {
+    activeSkill.update();
+    if (activeComponent) {
+      activeComponent.update();
+    }
+    const skillList = e.currentTarget;
+    if (skillList.selectedIndex === skillList.length - 1) {
+      newSkill();
+    } else {
+      activeSkill = skills[skillList.selectedIndex];
+      activeSkill.apply();
+      showSkillPage('builder');
+    }
+  });
+  document.getElementById('skillDetails').addEventListener('click', () => {
+    activeSkill.createFormHTML();
+    showSkillPage('skillForm');
+  });
+  document.getElementById('saveButton').addEventListener('click', () => {
+    saveToFile('skills.yml', getSkillSaveData());
+  });
+  document.getElementById('saveSkill').addEventListener('click', () => {
+    saveToFile(`${activeSkill.data[0].value}.yml`, activeSkill.getSaveString());
+  });
+  document.getElementById('deleteSkill').addEventListener('click', () => {
+    const list = document.getElementById('skillList');
+    let index = list.selectedIndex;
+
+    skills.splice(index, 1);
+    if (skills.length === 0) {
+      newSkill();
+    }
+    list.remove(index);
+    index = Math.min(index, skills.length - 1);
+    activeSkill = skills[index];
+    list.selectedIndex = index;
+
+    activeSkill.apply();
+    showSkillPage('builder');
+  });
+
+  // class.js
+  document.getElementById('classList').addEventListener('change', (e) => {
+    const classList = e.currentTarget;
+    activeClass.update();
+    if (classList.selectedIndex === classList.length - 1) {
+      newClass();
+    } else {
+      activeClass = classes[classList.selectedIndex];
+      activeClass.createFormHTML();
+    }
+  });
+  document.getElementById('saveButton').addEventListener('click', () => {
+    saveToFile('classes.yml', getClassSaveData());
+  });
+};
+
 // Set up event listeners when the page loads
 window.onload = () => {
   const isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
@@ -455,8 +528,10 @@ window.onload = () => {
     return;
   }
 
+  init();
+
   document.getElementById('addTrigger').addEventListener('click', () => {
-    window.activeComponent = window.activeSkill;
+    activeComponent = activeSkill;
     showSkillPage('triggerChooser');
   });
 
@@ -483,26 +558,24 @@ window.onload = () => {
     ATTRIBS = attribs.split(',');
   }
   if (skillData) {
-    window.skills = [];
+    skills = [];
     document.getElementById('skillList').remove(0);
     loadSkillText(skillData);
     if (skillIndex) {
       document.getElementById('skillList').selectedIndex = parseInt(skillIndex, 10);
-      window.activeSkill =
-        window.skills[Math.max(0, Math.min(window.skills.length - 1, parseInt(skillIndex, 10)))];
-      window.activeSkill.apply();
+      activeSkill = skills[Math.max(0, Math.min(skills.length - 1, parseInt(skillIndex, 10)))];
+      activeSkill.apply();
       showSkillPage('builder');
     }
   }
   if (classData) {
-    window.classes = [];
+    classes = [];
     document.getElementById('classList').remove(0);
     loadClassText(classData);
     if (classIndex) {
       document.getElementById('classList').selectedIndex = parseInt(classIndex, 10);
-      window.activeClass =
-        window.classes[Math.max(0, Math.min(window.classes.length - 1, parseInt(classIndex, 10)))];
-      window.activeClass.createFormHTML();
+      activeClass = classes[Math.max(0, Math.min(classes.length - 1, parseInt(classIndex, 10)))];
+      activeClass.createFormHTML();
     }
   }
   if (localStorage.getItem('skillsActive') === 'false') {
@@ -520,99 +593,6 @@ window.onbeforeunload = () => {
   localStorage.setItem('skillIndex', document.getElementById('skillList').selectedIndex);
   localStorage.setItem('classIndex', document.getElementById('classList').selectedIndex);
 };
-
-// #region Load Other Scripts
-depend('filter');
-depend('input');
-depend('yaml');
-depend('component', () => {
-  const config = localStorage.getItem('config');
-  if (config) {
-    parseConfig(config);
-  }
-  refreshOptions();
-});
-
-depend('data/data', async () => {
-  await waitForScripts([
-    'data/1.8',
-    'data/1.9',
-    'data/1.10',
-    'data/1.11',
-    'data/1.12',
-    'data/1.13',
-  ]);
-
-  depend('skill', () => {
-    document.getElementById('skillList').addEventListener('change', (e) => {
-      window.activeSkill.update();
-      if (window.activeComponent) {
-        window.activeComponent.update();
-      }
-      const skillList = e.currentTarget;
-      if (skillList.selectedIndex === skillList.length - 1) {
-        window.newSkill();
-      } else {
-        window.activeSkill = window.skills[skillList.selectedIndex];
-        window.activeSkill.apply();
-        showSkillPage('builder');
-      }
-    });
-    document.getElementById('skillDetails').addEventListener('click', () => {
-      window.activeSkill.createFormHTML();
-      showSkillPage('skillForm');
-    });
-    document.getElementById('saveButton').addEventListener('click', () => {
-      saveToFile('skills.yml', getSkillSaveData());
-    });
-    document.getElementById('saveSkill').addEventListener('click', () => {
-      saveToFile(`${window.activeSkill.data[0].value}.yml`, window.activeSkill.getSaveString());
-    });
-    document.getElementById('deleteSkill').addEventListener('click', () => {
-      const list = document.getElementById('skillList');
-      let index = list.selectedIndex;
-
-      window.skills.splice(index, 1);
-      if (window.skills.length === 0) {
-        window.newSkill();
-      }
-      list.remove(index);
-      index = Math.min(index, window.skills.length - 1);
-      window.activeSkill = window.skills[index];
-      list.selectedIndex = index;
-
-      window.activeSkill.apply();
-      showSkillPage('builder');
-    });
-  });
-
-  depend('class', () => {
-    document.getElementById('classList').addEventListener('change', (e) => {
-      const classList = e.currentTarget;
-      window.activeClass.update();
-      if (classList.selectedIndex === classList.length - 1) {
-        window.newClass();
-      } else {
-        window.activeClass = window.classes[classList.selectedIndex];
-        window.activeClass.createFormHTML();
-      }
-    });
-    document.getElementById('saveButton').addEventListener('click', () => {
-      saveToFile('classes.yml', getClassSaveData());
-    });
-  });
-
-  document.getElementById('version-select').onchange = (e) => {
-    window.DATA = window[`DATA_${e.target.value.substr(2)}`];
-    localStorage.setItem('server-version', e.target.value);
-  };
-
-  const previousValue = localStorage.getItem('server-version');
-  if (previousValue) {
-    document.getElementById('version-select').value = previousValue;
-  }
-});
-// #endregion
 
 Object.defineProperties(window, {
   ATTRIBS: {

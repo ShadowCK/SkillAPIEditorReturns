@@ -775,11 +775,4 @@ DATA_8.ANY_POTION = ['Any', ...DATA_8.POTIONS];
 
 const DATA_7 = DATA_8;
 
-Object.defineProperties(window, {
-  DATA_7: {
-    get: () => DATA_7,
-  },
-  DATA_8: {
-    get: () => DATA_8,
-  },
-});
+export { DATA_7, DATA_8 };

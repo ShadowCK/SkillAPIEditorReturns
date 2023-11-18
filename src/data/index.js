@@ -1,38 +1,40 @@
+import { DATA_7, DATA_8 } from './1.8.js';
+import DATA_9 from './1.9.js';
+import DATA_10 from './1.10.js';
+import DATA_11 from './1.11.js';
+import DATA_12 from './1.12.js';
+import DATA_13 from './1.13.js';
+
 let DATA = {};
 
 const version = (localStorage.getItem('server-version') || '1.13').substring(2);
 
-window.depend('data/1.8', () => {
-  if (version === '8') {
-    DATA = window.DATA_8;
-  }
-});
-
-window.depend('data/1.9', () => {
-  if (version === '9') {
-    DATA = window.DATA_9;
-  }
-});
-window.depend('data/1.10', () => {
-  if (version === '10') {
-    DATA = window.DATA_10;
-  }
-});
-window.depend('data/1.11', () => {
-  if (version === '11') {
-    DATA = window.DATA_11;
-  }
-});
-window.depend('data/1.12', () => {
-  if (version === '12') {
-    DATA = window.DATA_12;
-  }
-});
-window.depend('data/1.13', () => {
-  if (version === '13') {
-    DATA = window.DATA_13;
-  }
-});
+switch (version) {
+  case '7':
+    DATA = DATA_7;
+    break;
+  case '8':
+    DATA = DATA_8;
+    break;
+  case '9':
+    DATA = DATA_9;
+    break;
+  case '10':
+    DATA = DATA_10;
+    break;
+  case '11':
+    DATA = DATA_11;
+    break;
+  case '12':
+    DATA = DATA_12;
+    break;
+  case '13':
+    DATA = DATA_13;
+    break;
+  default:
+    DATA = DATA_13;
+    break;
+}
 
 const GOOD_POTIONS = [
   'Speed',
@@ -117,41 +119,17 @@ const getBadPotions = () => {
 
 const getDyes = () => DYES;
 
-Object.defineProperties(window, {
-  getMaterials: {
-    get: () => getMaterials,
-  },
-  getAnyMaterials: {
-    get: () => getAnyMaterials,
-  },
-  getSounds: {
-    get: () => getSounds,
-  },
-  getEntities: {
-    get: () => getEntities,
-  },
-  getParticles: {
-    get: () => getParticles,
-  },
-  getBiomes: {
-    get: () => getBiomes,
-  },
-  getDamageTypes: {
-    get: () => getDamageTypes,
-  },
-  getPotionTypes: {
-    get: () => getPotionTypes,
-  },
-  getAnyPotion: {
-    get: () => getAnyPotion,
-  },
-  getGoodPotions: {
-    get: () => getGoodPotions,
-  },
-  getBadPotions: {
-    get: () => getBadPotions,
-  },
-  getDyes: {
-    get: () => getDyes,
-  },
-});
+export {
+  getMaterials,
+  getAnyMaterials,
+  getSounds,
+  getEntities,
+  getParticles,
+  getBiomes,
+  getDamageTypes,
+  getPotionTypes,
+  getAnyPotion,
+  getGoodPotions,
+  getBadPotions,
+  getDyes,
+};

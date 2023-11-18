@@ -3,7 +3,7 @@ let skills;
 
 // TODO: Externalize this function in utils.js
 const isAttribute = (input) =>
-  input instanceof window.AttributeValue || input.key === 'incompatible';
+  input instanceof AttributeValue || input.key === 'incompatible';
 
 /**
  * Retrieves a skill by name
@@ -48,55 +48,53 @@ class Skill {
 
     // Skill data
     this.data = [
-      new window.StringValue('Name', 'name', name).setTooltip(
+      new StringValue('Name', 'name', name).setTooltip(
         'The name of the skill. This should not contain color codes',
       ),
-      new window.StringValue('Type', 'type', 'Dynamic').setTooltip(
+      new StringValue('Type', 'type', 'Dynamic').setTooltip(
         'The flavor text describing the skill such as "AOE utility" or whatever you want it to be',
       ),
-      new window.IntValue('Max Level', 'max-level', 5).setTooltip(
-        'The maximum level the skill can reach',
-      ),
-      new window.ListValue('Skill Req', 'skill-req', ['None'], 'None').setTooltip(
+      new IntValue('Max Level', 'max-level', 5).setTooltip('The maximum level the skill can reach'),
+      new ListValue('Skill Req', 'skill-req', ['None'], 'None').setTooltip(
         'The skill that needs to be upgraded before this one can be unlocked',
       ),
-      new window.IntValue('Skill Req Level', 'skill-req-lvl', 1).setTooltip(
+      new IntValue('Skill Req Level', 'skill-req-lvl', 1).setTooltip(
         'The level that the required skill needs to reach before this one can be unlocked',
       ),
-      new window.ListValue('Permission', 'needs-permission', ['True', 'False'], 'False').setTooltip(
+      new ListValue('Permission', 'needs-permission', ['True', 'False'], 'False').setTooltip(
         'Whether or not this skill requires a permission to unlock. The permission would be "skillapi.skill.{skillName}"',
       ),
-      new window.AttributeValue('Level Req', 'level', 1, 0).setTooltip(
+      new AttributeValue('Level Req', 'level', 1, 0).setTooltip(
         'The class level the player needs to be before unlocking or upgrading this skill',
       ),
-      new window.AttributeValue('Cost', 'cost', 1, 0).setTooltip(
+      new AttributeValue('Cost', 'cost', 1, 0).setTooltip(
         'The amount of skill points needed to unlock and upgrade this skill',
       ),
-      new window.AttributeValue('Cooldown', 'cooldown', 0, 0).setTooltip(
+      new AttributeValue('Cooldown', 'cooldown', 0, 0).setTooltip(
         'The time in seconds before the skill can be cast again (only works with the Cast trigger)',
       ),
-      new window.AttributeValue('Mana', 'mana', 0, 0).setTooltip(
+      new AttributeValue('Mana', 'mana', 0, 0).setTooltip(
         'The amount of mana it takes to cast the skill (only works with the Cast trigger)',
       ),
-      new window.AttributeValue('Min Spent', 'points-spent-req', 0, 0).setTooltip(
+      new AttributeValue('Min Spent', 'points-spent-req', 0, 0).setTooltip(
         'The amount of skill points that need to be spent before upgrading this skill',
       ),
-      new window.StringValue('Cast Message', 'msg', '&6{player} &2has cast &6{skill}').setTooltip(
+      new StringValue('Cast Message', 'msg', '&6{player} &2has cast &6{skill}').setTooltip(
         'The message to display to players around the caster when the skill is cast. The radius of the area is in the config.yml options',
       ),
-      new window.StringValue('Combo', 'combo', '').setTooltip(
+      new StringValue('Combo', 'combo', '').setTooltip(
         'The click combo to assign the skill (if enabled). Use L, R, S, LS, RS, P, and Q for the types of clicks separated by spaces. For example, "L L R R" would work for 4 click combos.',
       ),
-      new window.ListValue('Indicator', 'indicator', ['2D', '3D', 'None'], '2D').setTooltip(
+      new ListValue('Indicator', 'indicator', ['2D', '3D', 'None'], '2D').setTooltip(
         '[PREMIUM] What sort of display to use for cast previews. This applies to the "hover bar" in the casting bars setup.',
       ),
-      new window.ListValue('Icon', 'icon', window.getMaterials, 'Jack O Lantern').setTooltip(
+      new ListValue('Icon', 'icon', getMaterials, 'Jack O Lantern').setTooltip(
         'The item used to represent the skill in skill trees',
       ),
-      new window.IntValue('Icon Data', 'icon-data', 0).setTooltip(
+      new IntValue('Icon Data', 'icon-data', 0).setTooltip(
         'The data/durability value of the item used to represent the skill in skill trees',
       ),
-      new window.StringListValue('Icon Lore', 'icon-lore', [
+      new StringListValue('Icon Lore', 'icon-lore', [
         '&d{name} &7({level}/{max})',
         '&2Type: &6{type}',
         '',
@@ -108,7 +106,7 @@ class Skill {
       ]).setTooltip(
         'The description shown for the item in skill trees. Include values of mechanics such as damage dealt using their "Icon Key" values',
       ),
-      new window.StringListValue('Incompatible', 'incompatible', []).setTooltip(
+      new StringListValue('Incompatible', 'incompatible', []).setTooltip(
         'List of skill names that must not be upgraded in order to upgrade this skill',
       ),
     ];
@@ -173,7 +171,7 @@ class Skill {
       const list = document.getElementById('skillList');
       list[list.selectedIndex].text = done.skill.data[0].value;
       done.form.parentNode.removeChild(done.form);
-      window.showSkillPage('builder');
+      showSkillPage('builder');
     });
     return done;
   }
@@ -239,7 +237,7 @@ class Skill {
     }
     if (this.components.length > 0) {
       saveString += '  components:\n';
-      window.saveIndex = 0;
+      saveIndex = 0;
       for (let i = 0; i < this.components.length; i++) {
         saveString += this.components[i].getSaveString('    ');
       }
@@ -300,17 +298,17 @@ const newSkill = () => {
 
   activeSkill.apply();
   activeSkill.createFormHTML();
-  window.showSkillPage('skillForm');
+  showSkillPage('skillForm');
 
   return activeSkill;
 };
 
-Skill.prototype.loadBase = window.loadSection;
+Skill.prototype.loadBase = loadSection;
 
 activeSkill = new Skill('Skill 1');
 skills = [activeSkill];
 activeSkill.createFormHTML();
-window.showSkillPage('skillForm');
+showSkillPage('skillForm');
 
 Object.defineProperties(window, {
   activeSkill: {

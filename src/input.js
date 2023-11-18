@@ -475,7 +475,7 @@ class DoubleValue {
     this.box = document.createElement('input');
     this.box.id = this.key;
     this.box.value = this.value;
-    this.box.addEventListener('input', window.filterDouble);
+    this.box.addEventListener('input', filterDouble);
     target.appendChild(this.box);
   }
 
@@ -574,7 +574,7 @@ class IntValue {
     this.box = document.createElement('input');
     this.box.id = this.key;
     this.box.value = this.value;
-    this.box.addEventListener('input', window.filterInt);
+    this.box.addEventListener('input', filterInt);
     target.appendChild(this.box);
   }
 
@@ -1138,35 +1138,15 @@ ByteListValue.prototype.requireValue = requireValue;
 ByteListValue.prototype.applyRequireValues = applyRequireValues;
 ByteListValue.prototype.setTooltip = setTooltip;
 
-Object.defineProperties(window, {
-  copyRequirements: {
-    get: () => copyRequirements,
-  },
-  IndexListValue: {
-    get: () => IndexListValue,
-  },
-  ListValue: {
-    get: () => ListValue,
-  },
-  AttributeValue: {
-    get: () => AttributeValue,
-  },
-  DoubleValue: {
-    get: () => DoubleValue,
-  },
-  IntValue: {
-    get: () => IntValue,
-  },
-  StringValue: {
-    get: () => StringValue,
-  },
-  StringListValue: {
-    get: () => StringListValue,
-  },
-  MultiListValue: {
-    get: () => MultiListValue,
-  },
-  ByteListValue: {
-    get: () => ByteListValue,
-  },
-});
+export {
+  copyRequirements,
+  IndexListValue,
+  ListValue,
+  AttributeValue,
+  DoubleValue,
+  IntValue,
+  StringValue,
+  StringListValue,
+  MultiListValue,
+  ByteListValue,
+};
