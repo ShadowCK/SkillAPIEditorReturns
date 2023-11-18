@@ -14,7 +14,7 @@ let superConstructorEnabled = true;
  * @param {Function} Class - The ES6 class constructor.
  * @param {...any} args - The arguments to pass to the class constructor.
  */
-function applyES6ConstructorToObject(obj, Class, ...args) {
+const applyES6ConstructorToObject = (obj, Class, ...args) => {
   // Manually assign properties and methods from the class instance to the object
   const instance = new Class(...args);
   Object.getOwnPropertyNames(instance).forEach((prop) => {
@@ -27,7 +27,7 @@ function applyES6ConstructorToObject(obj, Class, ...args) {
       obj[prop] = Class.prototype[prop];
     }
   });
-}
+};
 
 /**
  * Super constructor function for extended classes
@@ -236,6 +236,9 @@ const waitForScripts = (scripts, callback) =>
 export { extend, depend, waitForScript, waitForScripts };
 
 Object.defineProperties(window, {
+  applyES6ConstructorToObject: {
+    get: () => applyES6ConstructorToObject,
+  },
   SCRIPT_TAGS: {
     get: () => SCRIPT_TAGS,
   },

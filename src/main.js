@@ -31,21 +31,21 @@ let ATTRIBS = ['vitality', 'spirit', 'intelligence', 'dexterity', 'strength'];
 /**
  * Sets the style for the page based on the current visible one
  */
-function setPageStyle(name, visible) {
+const setPageStyle = (name, visible) => {
   document.getElementById(name).style.display = visible === name ? 'block' : 'none';
-}
+};
 
 /**
  * Returns the view back to the skill builder when in the skill tab
  */
-function showSkillPage(name) {
+const showSkillPage = (name) => {
   setPageStyle('builder', name);
   setPageStyle('skillForm', name);
   setPageStyle('componentChooser', name);
   setPageStyle('triggerChooser', name);
-}
+};
 
-function setupOptionList(div, list, type) {
+const setupOptionList = (div, list, type) => {
   div.innerHTML = '';
   let x;
   let output = '';
@@ -89,9 +89,9 @@ function setupOptionList(div, list, type) {
   }
 
   // saveToFile('wiki_' + type + '.txt', output);
-}
+};
 
-function refreshOptions() {
+const refreshOptions = () => {
   // Set up component option lists
   setupOptionList(document.getElementById('triggerOptions'), window.Trigger, window.Type.TRIGGER);
   setupOptionList(document.getElementById('targetOptions'), window.Target, window.Type.TARGET);
@@ -105,9 +105,9 @@ function refreshOptions() {
     window.Mechanic,
     window.Type.MECHANIC,
   );
-}
+};
 
-function parseConfig(text) {
+const parseConfig = (text) => {
   const data = JSON.parse(text);
   const mapping = {
     CONDITION: window.Condition,
@@ -125,14 +125,14 @@ function parseConfig(text) {
       },
     };
   }
-}
+};
 
-function loadConfig(e) {
+const loadConfig = (e) => {
   const text = e.target.result;
   localStorage.setItem('config', text);
   parseConfig(text);
   refreshOptions();
-}
+};
 
 /**
  * Saves text data to a file locally
@@ -140,7 +140,7 @@ function loadConfig(e) {
  * Code slightly modified from this page:
  * https://thiscouldbebetter.wordpress.com/2012/12/18/loading-editing-and-saving-a-text-file-in-html5-using-javascrip/
  */
-function saveToFile(file, data) {
+const saveToFile = (file, data) => {
   const textFileAsBlob = new Blob([data], { type: 'text/plain;charset=utf-8' });
 
   const downloadLink = document.createElement('a');
@@ -162,9 +162,9 @@ function saveToFile(file, data) {
   }
 
   downloadLink.click();
-}
+};
 
-function getSkillSaveData() {
+const getSkillSaveData = () => {
   window.activeSkill.update();
   if (window.activeComponent) {
     window.activeComponent.update();
@@ -186,20 +186,20 @@ function getSkillSaveData() {
     data += alphabetic[i].getSaveString();
   }
   return data;
-}
+};
 
-function getClassSaveData() {
+const getClassSaveData = () => {
   window.activeClass.update();
   let data = 'loaded: false\n';
   for (let i = 0; i < window.classes.length; i++) {
     data += window.classes[i].getSaveString();
   }
   return data;
-}
+};
 
 let skillsActive = true;
 
-function switchToSkills() {
+const switchToSkills = () => {
   if (!skillsActive) {
     document.getElementById('skillTab').className = 'tab tabLeft tabActive';
     document.getElementById('classTab').className = 'tab tabRight';
@@ -207,9 +207,9 @@ function switchToSkills() {
     document.getElementById('classes').style.display = 'none';
     skillsActive = true;
   }
-}
+};
 
-function switchToClasses() {
+const switchToClasses = () => {
   if (skillsActive) {
     document.getElementById('classTab').className = 'tab tabRight tabActive';
     document.getElementById('skillTab').className = 'tab tabLeft';
@@ -217,7 +217,7 @@ function switchToClasses() {
     document.getElementById('skills').style.display = 'none';
     skillsActive = false;
   }
-}
+};
 
 /**
  * Represents an attribute of a skill or class
@@ -226,17 +226,18 @@ function switchToClasses() {
  * @param {double} base  - the starting value for the attribute
  * @param {double} scale - the increase of the value per level
  *
- * @constructor
  */
-function Attribute(key, base, scale) {
-  this.key = key;
-  this.base = base;
-  this.scale = scale;
+class Attribute {
+  constructor(key, base, scale) {
+    this.key = key;
+    this.base = base;
+    this.scale = scale;
+  }
 }
 
 // Loads attribute data from a file
 // e - event details
-function loadAttributes(e) {
+const loadAttributes = (e) => {
   const text = e.target.result;
   document.activeElement.blur();
   const yaml = window.parseYAML(text);
@@ -246,10 +247,10 @@ function loadAttributes(e) {
     window.activeClass.createFormHTML();
   }
   localStorage.setItem('attribs', ATTRIBS);
-}
+};
 
 // Loads skill data from a string
-function loadSkillText(text) {
+const loadSkillText = (text) => {
   // Load new skills
   const data = window.parseYAML(text);
   Object.entries(data).forEach(([key, value]) => {
@@ -265,18 +266,18 @@ function loadSkillText(text) {
       }
     }
   });
-}
+};
 
 // Loads skill data from a file after it has been read
 // e - event details
-function loadSkills(e) {
+const loadSkills = (e) => {
   const text = e.target.result;
   document.activeElement.blur();
   loadSkillText(text);
-}
+};
 
 // Loads class data from a string
-function loadClassText(text) {
+const loadClassText = (text) => {
   // Load new classes
   const data = window.parseYAML(text);
   // Change below to be using Object.keys() instead of for...in
@@ -292,18 +293,18 @@ function loadClassText(text) {
       }
     }
   });
-}
+};
 
 // Loads class data from a file after it has been read
 // e - event details
-function loadClasses(e) {
+const loadClasses = (e) => {
   const text = e.target.result;
   document.activeElement.blur();
   loadClassText(text);
-}
+};
 
 // Loads an individual skill or class file
-function loadIndividual(e) {
+const loadIndividual = (e) => {
   const text = e.target.result;
   if (text.indexOf('global:') >= 0) {
     loadAttributes(e);
@@ -317,7 +318,7 @@ function loadIndividual(e) {
   } else {
     loadClasses(e);
   }
-}
+};
 
 /**
  * Loads a section of config data
@@ -325,18 +326,19 @@ function loadIndividual(e) {
 function loadSection(data) {
   this.components = [];
   Object.keys(data).forEach((key) => {
+    const inputs = this.data;
     if (key === this.datakey) {
       const attribs = data[key];
       Object.keys(attribs).forEach((attribKey) => {
-        for (let i = 0; i < this.data.length; i++) {
-          if (this.data[i].key === attribKey && this.data[i].load) {
-            this.data[i].load(attribs[attribKey]);
+        for (let i = 0; i < inputs.length; i++) {
+          if (inputs[i].key === attribKey && inputs[i].load) {
+            inputs[i].load(attribs[attribKey]);
             break;
-          } else if (`${this.data[i].key}-base` === attribKey && this.data[i].loadBase) {
-            this.data[i].loadBase(attribs[attribKey]);
+          } else if (`${inputs[i].key}-base` === attribKey && inputs[i].loadBase) {
+            inputs[i].loadBase(attribs[attribKey]);
             break;
-          } else if (`${this.data[i].key}-scale` === attribKey && this.data[i].loadScale) {
-            this.data[i].loadScale(attribs[attribKey]);
+          } else if (`${inputs[i].key}-scale` === attribKey && inputs[i].loadScale) {
+            inputs[i].loadScale(attribs[attribKey]);
             break;
           }
         }
@@ -615,6 +617,9 @@ depend('data/data', async () => {
 Object.defineProperties(window, {
   ATTRIBS: {
     get: () => ATTRIBS,
+  },
+  saveToFile: {
+    get: () => saveToFile,
   },
   showSkillPage: {
     get: () => showSkillPage,

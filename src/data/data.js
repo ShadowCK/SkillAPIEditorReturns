@@ -87,52 +87,71 @@ const DYES = [
   'YELLOW',
 ];
 
-function getMaterials() {
-  return DATA.MATERIALS;
-}
+const getMaterials = () => DATA.MATERIALS;
 
-function getAnyMaterials() {
-  return ['Any', ...DATA.MATERIALS];
-}
+const getAnyMaterials = () => ['Any', ...DATA.MATERIALS];
 
-function getSounds() {
-  return DATA.SOUNDS;
-}
+const getSounds = () => DATA.SOUNDS;
 
-function getEntities() {
-  return DATA.ENTITIES;
-}
+const getEntities = () => DATA.ENTITIES;
 
-function getParticles() {
-  return DATA.PARTICLES || [];
-}
+const getParticles = () => DATA.PARTICLES || [];
 
-function getBiomes() {
-  return DATA.BIOMES;
-}
+const getBiomes = () => DATA.BIOMES;
 
-function getDamageTypes() {
-  return DATA.DAMAGE_TYPES;
-}
+const getDamageTypes = () => DATA.DAMAGE_TYPES;
 
-function getPotionTypes() {
-  return DATA.POTIONS;
-}
+const getPotionTypes = () => DATA.POTIONS;
 
-function getAnyPotion() {
-  return ['Any', ...DATA.POTIONS];
-}
+const getAnyPotion = () => ['Any', ...DATA.POTIONS];
 
-function getGoodPotions() {
+const getGoodPotions = () => {
   const list = DATA.POTIONS.filter((type) => GOOD_POTIONS.includes(type));
   return ['All', 'None', ...list];
-}
+};
 
-function getBadPotions() {
+const getBadPotions = () => {
   const list = DATA.POTIONS.filter((type) => BAD_POTIONS.includes(type));
   return ['All', 'None', ...list];
-}
+};
 
-function getDyes() {
-  return DYES;
-}
+const getDyes = () => DYES;
+
+Object.defineProperties(window, {
+  getMaterials: {
+    get: () => getMaterials,
+  },
+  getAnyMaterials: {
+    get: () => getAnyMaterials,
+  },
+  getSounds: {
+    get: () => getSounds,
+  },
+  getEntities: {
+    get: () => getEntities,
+  },
+  getParticles: {
+    get: () => getParticles,
+  },
+  getBiomes: {
+    get: () => getBiomes,
+  },
+  getDamageTypes: {
+    get: () => getDamageTypes,
+  },
+  getPotionTypes: {
+    get: () => getPotionTypes,
+  },
+  getAnyPotion: {
+    get: () => getAnyPotion,
+  },
+  getGoodPotions: {
+    get: () => getGoodPotions,
+  },
+  getBadPotions: {
+    get: () => getBadPotions,
+  },
+  getDyes: {
+    get: () => getDyes,
+  },
+});

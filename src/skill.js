@@ -35,8 +35,6 @@ const isSkillNameTaken = (name) => getSkill(name) != null;
  * Represents the data for a dynamic skill
  *
  * @param {string} name - the name of the skill
- *
- * @constructor
  */
 class Skill {
   constructor(name) {

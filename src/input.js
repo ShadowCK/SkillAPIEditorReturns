@@ -1,5 +1,12 @@
 /* eslint-disable max-classes-per-file */
 
+const copyRequirements = (source, target) => {
+  if (source.requirements) {
+    target.requirements = source.requirements;
+  }
+  return target;
+};
+
 /**
  * Requires one of the given values to be active for the
  * value with the given key for this input to be visible.
@@ -12,13 +19,6 @@ function requireValue(key, values) {
   this.requirements = this.requirements || [];
   this.requirements.push({ key, values });
   return this;
-}
-
-function copyRequirements(source, target) {
-  if (source.requirements) {
-    target.requirements = source.requirements;
-  }
-  return target;
 }
 
 /**
@@ -84,8 +84,6 @@ function setTooltip(text) {
  * @param {string} key   - the config key for the value
  * @param {Array}  list  - the list of available options
  * @param {Number} index - the current selected index
- *
- * @constructor
  */
 class IndexListValue {
   constructor(name, key, list, index) {
@@ -191,8 +189,6 @@ IndexListValue.prototype.setTooltip = setTooltip;
  * @param {string} key   - the config key for the value
  * @param {string[]}  list  - the list of available options
  * @param {string} value - the current selected value
- *
- * @constructor
  */
 class ListValue {
   constructor(name, key, list, value) {
@@ -310,8 +306,6 @@ ListValue.prototype.setTooltip = setTooltip;
  * @param {string} key   - the config key of the value
  * @param {Number} base  - the current starting value
  * @param {Number} scale - the current scale of the value
- *
- * @constructor
  */
 class AttributeValue {
   constructor(name, key, base, scale) {
@@ -447,8 +441,6 @@ AttributeValue.prototype.setTooltip = setTooltip;
  * @param {string} name  - the display name of the value
  * @param {string} key   - the config key of the value
  * @param {Number} value - the current value
- *
- * @constructor
  */
 class DoubleValue {
   constructor(name, key, value) {
@@ -548,8 +540,6 @@ DoubleValue.prototype.setTooltip = setTooltip;
  * @param {string} name  - the display name of the value
  * @param {string} key   - the config key of the value
  * @param {Number} value - the current value
- *
- * @constructor
  */
 class IntValue {
   constructor(name, key, value) {
@@ -649,8 +639,6 @@ IntValue.prototype.setTooltip = setTooltip;
  * @param {string} name  - the display name of the value
  * @param {string} key   - the config key of the value
  * @param {string} value - the current value
- *
- * @constructor
  */
 class StringValue {
   constructor(name, key, value) {
@@ -757,8 +745,6 @@ StringValue.prototype.setTooltip = setTooltip;
  * @param {string} name  - the display name of the value
  * @param {string} key   - the config key of the value
  * @param {Array}  value - the current value
- *
- * @constructor
  */
 class StringListValue {
   constructor(name, key, value) {
@@ -879,8 +865,6 @@ StringListValue.prototype.setTooltip = setTooltip;
  * @param {string} key   - the config key for the value
  * @param {Array|function}  list  - the list of available options
  * @param {Array} [values] - the default values to include
- *
- * @constructor
  */
 class MultiListValue {
   constructor(name, key, list, values) {
@@ -1041,8 +1025,6 @@ MultiListValue.prototype.setTooltip = setTooltip;
  * @param {string} key    - the config key of the value
  * @param {Array}  values - the list of names for the values
  * @param {number} value  - the current value
- *
- * @constructor
  */
 class ByteListValue {
   constructor(name, key, values, value) {
@@ -1157,6 +1139,9 @@ ByteListValue.prototype.applyRequireValues = applyRequireValues;
 ByteListValue.prototype.setTooltip = setTooltip;
 
 Object.defineProperties(window, {
+  copyRequirements: {
+    get: () => copyRequirements,
+  },
   IndexListValue: {
     get: () => IndexListValue,
   },

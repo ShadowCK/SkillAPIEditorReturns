@@ -146,8 +146,6 @@ const Type = {
  * @param {string}    type      - type of the component
  * @param {boolean}   container - whether or not the component can contain others
  * @param {Component} [parent]  - parent of the component if any
- *
- * @constructor
  */
 class Component {
   constructor(name, type, container, parent) {

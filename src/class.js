@@ -35,8 +35,6 @@ const isClassNameTaken = (name) => getClass(name) != null;
  * Represents the data for a dynamic class
  *
  * @param {string} name - name of the class
- *
- * @constructor
  */
 class Class {
   constructor(name) {
