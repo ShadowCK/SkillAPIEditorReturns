@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+
 import _ from 'underscore';
 
 // The pending extensions
@@ -5,6 +7,28 @@ const EXTENSIONS = {};
 
 /** 防止多次调用一个构造函数。所有的父类构造函数已经包括在子类的baseConstructors中 */
 let superConstructorEnabled = true;
+
+/**
+ * Applies an ES6 constructor to an object by manually assigning properties and methods from the class instance and prototype.
+ * @param {Object} obj - The object to apply the constructor to.
+ * @param {Function} Class - The ES6 class constructor.
+ * @param {...any} args - The arguments to pass to the class constructor.
+ */
+function applyES6ConstructorToObject(obj, Class, ...args) {
+  // Manually assign properties and methods from the class instance to the object
+  const instance = new Class(...args);
+  Object.getOwnPropertyNames(instance).forEach((prop) => {
+    obj[prop] = instance[prop];
+  });
+
+  // Manually assign properties and methods from the prototype to the object
+  Object.getOwnPropertyNames(Class.prototype).forEach((prop) => {
+    if (prop !== 'constructor') {
+      obj[prop] = Class.prototype[prop];
+    }
+  });
+}
+
 /**
  * Super constructor function for extended classes
  * Must be a function, because arrow functions can't be used with "new"
@@ -15,10 +39,40 @@ function superConstructor(...args) {
   }
   superConstructorEnabled = false;
   for (let i = 0; i < this.childConstructors.length; i++) {
-    this.childConstructors[i].apply(this, args);
+    const baseCtor = this.childConstructors[i];
+    if (/^class\s/.test(String(baseCtor))) {
+      // baseCtor is a ES6 class constructor
+      applyES6ConstructorToObject(this, baseCtor, ...args);
+    } else {
+      // baseCtor is a constructor function
+      baseCtor.apply(this, args);
+    }
   }
   superConstructorEnabled = true;
 }
+
+const extendSubConstructor = (baseName, subCtor) => {
+  const baseCtor = window[baseName];
+  if (!baseCtor || typeof baseCtor !== 'function') {
+    return;
+  }
+  subCtor.prototype.super = superConstructor;
+  subCtor.prototype.childConstructors = subCtor.prototype.childConstructors || [];
+  for (
+    let i = 0;
+    baseCtor.prototype.childConstructors && i < baseCtor.prototype.childConstructors.length;
+    i++
+  ) {
+    subCtor.prototype.childConstructors.push(baseCtor.prototype.childConstructors[i]);
+  }
+  subCtor.prototype.childConstructors.push(baseCtor);
+  // Copy over the base class's prototype/inherited properties
+  Object.entries(baseCtor.prototype).forEach(([key, value]) => {
+    if (!subCtor.prototype[key]) {
+      subCtor.prototype[key] = value;
+    }
+  });
+};
 
 /**
  * Applies the queued extensions for the class name
@@ -29,6 +83,9 @@ function superConstructor(...args) {
  */
 const applyExtensions = (className) => {
   const subCtor = window[className];
+  if (!subCtor) {
+    throw new Error(`Class ${className} not found`);
+  }
   const list = EXTENSIONS[className];
   // For each base class registered in the extension list, apply the extension
   for (let i = 0; i < list.length; i++) {
@@ -36,25 +93,7 @@ const applyExtensions = (className) => {
     if (EXTENSIONS[baseName]) {
       applyExtensions(baseName);
     }
-    const baseCtor = window[baseName];
-    if (baseCtor && subCtor) {
-      subCtor.prototype.super = superConstructor;
-      subCtor.prototype.childConstructors = subCtor.prototype.childConstructors || [];
-      for (
-        let j = 0;
-        baseCtor.prototype.childConstructors && j < baseCtor.prototype.childConstructors.length;
-        j++
-      ) {
-        subCtor.prototype.childConstructors.push(baseCtor.prototype.childConstructors[j]);
-      }
-      subCtor.prototype.childConstructors.push(baseCtor);
-      // Copy over the base class's prototype/inherited properties
-      Object.entries(baseCtor.prototype).forEach(([key, value]) => {
-        if (!subCtor.prototype[key]) {
-          subCtor.prototype[key] = value;
-        }
-      });
-    }
+    extendSubConstructor(baseName, subCtor);
   }
 };
 
