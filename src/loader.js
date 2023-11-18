@@ -17,8 +17,8 @@ const updateLoader = () => {
   }
 
   // Done event
-  if (onLoaderDone) {
-    onLoaderDone();
+  if (window.onLoaderDone) {
+    window.onLoaderDone();
   }
 };
 
@@ -119,12 +119,3 @@ const waitForScripts = (scripts, callback) =>
   });
 
 export { depend, waitForScript, waitForScripts };
-
-Object.defineProperties(window, {
-  SCRIPT_TAGS: {
-    get: () => SCRIPT_TAGS,
-  },
-  depend: {
-    get: () => depend,
-  },
-});

@@ -1,9 +1,40 @@
 /* eslint-disable max-classes-per-file */
+import { showSkillPage } from './main.js';
+import { loadSection } from './yaml.js';
+import {
+  copyRequirements,
+  ListValue,
+  AttributeValue,
+  DoubleValue,
+  IntValue,
+  StringValue,
+  StringListValue,
+  MultiListValue,
+} from './input.js';
+import {
+  getMaterials,
+  getAnyMaterials,
+  getSounds,
+  getEntities,
+  getParticles,
+  getBiomes,
+  getDamageTypes,
+  getPotionTypes,
+  getAnyPotion,
+  getGoodPotions,
+  getBadPotions,
+  getDyes,
+} from './data';
 
 let hoverSpace;
 // The active component being edited or added to
 let activeComponent = null;
 let saveIndex;
+
+const getSaveIndex = () => saveIndex;
+const setSaveIndex = (value) => {
+  saveIndex = value;
+};
 
 const DAMAGE_TYPES = [
   'Block Explosion',
@@ -139,6 +170,7 @@ const Type = {
     MECHANIC  : 'mechanic'
 };
 
+// #region -- Component data ------------------------------------------------------ //
 /**
  * Represents a component of a dynamic skill
  *
@@ -4252,4 +4284,23 @@ const Mechanic = {
     WARP_TARGET:         { name: 'Warp Target',         container: false, constructor: MechanicWarpTarget         },
     WARP_VALUE:          { name: 'Warp Value',          container: false, constructor: MechanicWarpValue          },
     WOLF:                { name: 'Wolf',                container: true,  constructor: MechanicWolf               }
+};
+
+// #endregion
+
+const getActiveComponent = () => activeComponent;
+const setActiveComponent = (value) => {
+  activeComponent = value;
+};
+export {
+  setSaveIndex,
+  getSaveIndex,
+  CustomComponent,
+  getActiveComponent,
+  setActiveComponent,
+  Type,
+  Trigger,
+  Target,
+  Condition,
+  Mechanic,
 };

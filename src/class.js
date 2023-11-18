@@ -8,6 +8,10 @@ import {
   AttributeValue,
 } from './input.js';
 
+import { getMaterials } from './data';
+import { getATTRIBS, saveToFile, loadSection } from './main.js';
+import { isAttribute } from './skill.js';
+
 /** @type {Class} */
 let activeClass;
 /** @type {Class[]} */
@@ -133,6 +137,8 @@ class Class {
   }
 
   updateAttribs(i) {
+    const ATTRIBS = getATTRIBS();
+
     let j = 0;
     const back = {};
     while (this.data[i + j] instanceof AttributeValue) {
@@ -308,7 +314,7 @@ const addClass = (name) => {
  *
  * @returns {Class} the new class
  */
-newClass = () => {
+const _newClass = () => {
   let id = 1;
   while (isClassNameTaken(`Class ${id}`)) {
     id++;
@@ -323,34 +329,32 @@ newClass = () => {
 
   return activeClass;
 };
+// The use of `let newClass`, `const _newClass` and `newClass=_newClass` is to comply with several ESLint rules
+// 1. no-use-before-define
+// 2. import/no-mutable-exports
+newClass = _newClass;
 
 activeClass = new Class('Class 1');
 classes = [activeClass];
 activeClass.createFormHTML();
 
-Object.defineProperties(window, {
-  activeClass: {
-    get: () => activeClass,
-    set: (value) => {
-      activeClass = value;
-    },
-  },
-  classes: {
-    get: () => classes,
-    set: (value) => {
-      classes = value;
-    },
-  },
-  getClass: {
-    get: () => getClass,
-  },
-  isClassNameTaken: {
-    get: () => isClassNameTaken,
-  },
-  addClass: {
-    get: () => addClass,
-  },
-  newClass: {
-    get: () => newClass,
-  },
-});
+const getActiveClass = () => activeClass;
+const setActiveClass = (value) => {
+  activeClass = value;
+};
+const getClasses = () => classes;
+const setClasses = (value) => {
+  classes = value;
+};
+
+export {
+  Class,
+  getActiveClass,
+  setActiveClass,
+  getClasses,
+  setClasses,
+  getClass,
+  isClassNameTaken,
+  addClass,
+  _newClass as newClass,
+};

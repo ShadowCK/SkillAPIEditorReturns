@@ -5,10 +5,25 @@ import DATA_11 from './1.11.js';
 import DATA_12 from './1.12.js';
 import DATA_13 from './1.13.js';
 
+const versionDataMap = {
+  7: DATA_7,
+  8: DATA_8,
+  9: DATA_9,
+  10: DATA_10,
+  11: DATA_11,
+  12: DATA_12,
+  13: DATA_13,
+};
+const getVersionData = (version) => versionDataMap[version];
+
 let DATA = {};
+const getActiveData = () => DATA;
+const setActiveData = (value) => {
+  DATA = value;
+};
 
 const version = (localStorage.getItem('server-version') || '1.13').substring(2);
-
+// Initialize DATA when the page is loaded
 switch (version) {
   case '7':
     DATA = DATA_7;
@@ -120,6 +135,9 @@ const getBadPotions = () => {
 const getDyes = () => DYES;
 
 export {
+  getVersionData,
+  getActiveData,
+  setActiveData,
   getMaterials,
   getAnyMaterials,
   getSounds,

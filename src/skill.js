@@ -1,9 +1,13 @@
+import { ListValue, AttributeValue, IntValue, StringValue, StringListValue } from './input.js';
+import { showSkillPage, loadSection } from './main.js';
+import { setSaveIndex } from './component.js';
+import { getMaterials } from './data';
+
 let activeSkill;
 let skills;
 
 // TODO: Externalize this function in utils.js
-const isAttribute = (input) =>
-  input instanceof AttributeValue || input.key === 'incompatible';
+const isAttribute = (input) => input instanceof AttributeValue || input.key === 'incompatible';
 
 /**
  * Retrieves a skill by name
@@ -237,7 +241,7 @@ class Skill {
     }
     if (this.components.length > 0) {
       saveString += '  components:\n';
-      saveIndex = 0;
+      setSaveIndex(0);
       for (let i = 0; i < this.components.length; i++) {
         saveString += this.components[i].getSaveString('    ');
       }
@@ -310,32 +314,23 @@ skills = [activeSkill];
 activeSkill.createFormHTML();
 showSkillPage('skillForm');
 
-Object.defineProperties(window, {
-  activeSkill: {
-    get: () => activeSkill,
-    set: (value) => {
-      activeSkill = value;
-    },
-  },
-  skills: {
-    get: () => skills,
-    set: (value) => {
-      skills = value;
-    },
-  },
-  isAttribute: {
-    get: () => isAttribute,
-  },
-  getSkill: {
-    get: () => getSkill,
-  },
-  isSkillNameTaken: {
-    get: () => isSkillNameTaken,
-  },
-  addSkill: {
-    get: () => addSkill,
-  },
-  newSkill: {
-    get: () => newSkill,
-  },
-});
+const getActiveSkill = () => activeSkill;
+const setActiveSkill = (value) => {
+  activeSkill = value;
+};
+const getSkills = () => skills;
+const setSkills = (value) => {
+  skills = value;
+};
+
+export {
+  getActiveSkill,
+  setActiveSkill,
+  getSkills,
+  setSkills,
+  isAttribute,
+  getSkill,
+  isSkillNameTaken,
+  addSkill,
+  newSkill,
+};

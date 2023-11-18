@@ -1,5 +1,7 @@
 /* eslint-disable max-classes-per-file */
 
+import { filterInt, filterDouble } from './filter.js';
+
 const copyRequirements = (source, target) => {
   if (source.requirements) {
     target.requirements = source.requirements;

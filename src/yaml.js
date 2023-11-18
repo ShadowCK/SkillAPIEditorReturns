@@ -7,25 +7,6 @@ const Regex = {
 };
 
 /**
- * Parses the YAML data string
- *
- * @param {string} text - the YAML data string
- *
- * @returns {YAMLObject} the parsed data
- */
-const parseYAML = (text) => {
-  const textCleaned = text
-    .replace(/\r\n/g, '\n')
-    .replace(/\n *\n/g, '\n')
-    .replace(/ +\n/g, '\n');
-  const data = new YAMLObject();
-  const index = 0;
-  const lines = textCleaned.split('\n');
-  data.parse(lines, index, 0);
-  return data;
-};
-
-/**
  * Counts the number of leading spaces in a string
  *
  * @param {string} string - the string to check
@@ -155,5 +136,24 @@ class YAMLObject {
     return lineIndex;
   }
 }
+
+/**
+ * Parses the YAML data string
+ *
+ * @param {string} text - the YAML data string
+ *
+ * @returns {YAMLObject} the parsed data
+ */
+const parseYAML = (text) => {
+  const textCleaned = text
+    .replace(/\r\n/g, '\n')
+    .replace(/\n *\n/g, '\n')
+    .replace(/ +\n/g, '\n');
+  const data = new YAMLObject();
+  const index = 0;
+  const lines = textCleaned.split('\n');
+  data.parse(lines, index, 0);
+  return data;
+};
 
 export { parseYAML, countSpaces, YAMLObject };
