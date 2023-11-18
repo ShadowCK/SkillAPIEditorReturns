@@ -971,10 +971,9 @@ const addEffectOptions = (component, optional) => {
 
 // -- Custom constructor ------------------------------------------------------- //
 
-window.extend('CustomComponent', 'Component');
-class CustomComponent {
+class CustomComponent extends Component {
   constructor(data) {
-    this.super(data.display, data.type.toLowerCase(), data.container);
+    super(data.display, data.type.toLowerCase(), data.container);
     this.description = data.description;
 
     for (let i = 0; i < data.options.length; i++) {
@@ -1023,10 +1022,9 @@ class CustomComponent {
 
 // -- Trigger constructors ----------------------------------------------------- //
 
-window.extend('TriggerBlockBreak', 'Component');
-class TriggerBlockBreak {
+class TriggerBlockBreak extends Component {
   constructor() {
-    this.super('Block Break', Type.TRIGGER, true);
+    super('Block Break', Type.TRIGGER, true);
     this.description =
       'Applies skill effects when a player breaks a block matching  the given details';
 
@@ -1043,10 +1041,9 @@ class TriggerBlockBreak {
   }
 }
 
-window.extend('TriggerBlockPlace', 'Component');
-class TriggerBlockPlace {
+class TriggerBlockPlace extends Component {
   constructor() {
-    this.super('Block Place', Type.TRIGGER, true);
+    super('Block Place', Type.TRIGGER, true);
     this.description =
       'Applies skill effects when a player places a block matching  the given details';
 
@@ -1063,30 +1060,27 @@ class TriggerBlockPlace {
   }
 }
 
-window.extend('TriggerCast', 'Component');
-class TriggerCast {
+class TriggerCast extends Component {
   constructor() {
-    this.super('Cast', Type.TRIGGER, true);
+    super('Cast', Type.TRIGGER, true);
 
     this.description =
       'Applies skill effects when a player casts the skill using either the cast command, the skill bar, or click combos.';
   }
 }
 
-window.extend('TriggerCleanup', 'Component');
-class TriggerCleanup {
+class TriggerCleanup extends Component {
   constructor() {
-    this.super('Cleanup', Type.TRIGGER, true);
+    super('Cleanup', Type.TRIGGER, true);
 
     this.description =
       'Applies skill effects when the player disconnects or unlearns the skill. This is always applied with a skill level of 1 just for the sake of math.';
   }
 }
 
-window.extend('TriggerCrouch', 'Component');
-class TriggerCrouch {
+class TriggerCrouch extends Component {
   constructor() {
-    this.super('Crouch', Type.TRIGGER, true);
+    super('Crouch', Type.TRIGGER, true);
 
     this.description =
       'Applies skill effects when a player starts or stops crouching using the shift key.';
@@ -1102,19 +1096,17 @@ class TriggerCrouch {
   }
 }
 
-window.extend('TriggerDeath', 'Component');
-class TriggerDeath {
+class TriggerDeath extends Component {
   constructor() {
-    this.super('Death', Type.TRIGGER, true);
+    super('Death', Type.TRIGGER, true);
 
     this.description = 'Applies skill effects when a player dies.';
   }
 }
 
-window.extend('TriggerEnvironmentDamage', 'Component');
-class TriggerEnvironmentDamage {
+class TriggerEnvironmentDamage extends Component {
   constructor() {
-    this.super('Environment Damage', Type.TRIGGER, true);
+    super('Environment Damage', Type.TRIGGER, true);
 
     this.description = 'Applies skill effects when a player takes environmental damage.';
 
@@ -1126,28 +1118,25 @@ class TriggerEnvironmentDamage {
   }
 }
 
-window.extend('TriggerInitialize', 'Component');
-class TriggerInitialize {
+class TriggerInitialize extends Component {
   constructor() {
-    this.super('Initialize', Type.TRIGGER, true);
+    super('Initialize', Type.TRIGGER, true);
 
     this.description = 'Applies skill effects immediately. This can be used for passive abilities.';
   }
 }
 
-window.extend('TriggerKill', 'Component');
-class TriggerKill {
+class TriggerKill extends Component {
   constructor() {
-    this.super('Kill', Type.TRIGGER, true);
+    super('Kill', Type.TRIGGER, true);
 
     this.description = 'Applies skill effects upon killing something';
   }
 }
 
-window.extend('TriggerLand', 'Component');
-class TriggerLand {
+class TriggerLand extends Component {
   constructor() {
-    this.super('Land', Type.TRIGGER, true);
+    super('Land', Type.TRIGGER, true);
 
     this.description = 'Applies skill effects when a player lands on the ground.';
 
@@ -1159,10 +1148,9 @@ class TriggerLand {
   }
 }
 
-window.extend('TriggerLaunch', 'Component');
-class TriggerLaunch {
+class TriggerLaunch extends Component {
   constructor() {
-    this.super('Launch', Type.TRIGGER, true);
+    super('Launch', Type.TRIGGER, true);
 
     this.description = 'Applies skill effects when a player launches a projectile.';
 
@@ -1177,20 +1165,18 @@ class TriggerLaunch {
   }
 }
 
-window.extend('TriggerMove', 'Component');
-class TriggerMove {
+class TriggerMove extends Component {
   constructor() {
-    this.super('Move', Type.TRIGGER, true);
+    super('Move', Type.TRIGGER, true);
 
     this.description =
       'Applies skill effects when a player moves around. This triggers every tick the player is moving, so use this sparingly. Use the "api-moved" value to check/use the distance traveled.';
   }
 }
 
-window.extend('TriggerPhysicalDamage', 'Component');
-class TriggerPhysicalDamage {
+class TriggerPhysicalDamage extends Component {
   constructor() {
-    this.super('Physical Damage', Type.TRIGGER, true);
+    super('Physical Damage', Type.TRIGGER, true);
 
     this.description =
       'Applies skill effects when a player deals physical (or non-skill) damage. This includes melee attacks and firing a bow.';
@@ -1218,10 +1204,9 @@ class TriggerPhysicalDamage {
   }
 }
 
-window.extend('TriggerSkillDamage', 'Component');
-class TriggerSkillDamage {
+class TriggerSkillDamage extends Component {
   constructor() {
-    this.super('Skill Damage', Type.TRIGGER, true);
+    super('Skill Damage', Type.TRIGGER, true);
 
     this.description = 'Applies skill effects when a player deals damage with a skill.';
 
@@ -1248,10 +1233,9 @@ class TriggerSkillDamage {
   }
 }
 
-window.extend('TriggerTookPhysicalDamage', 'Component');
-class TriggerTookPhysicalDamage {
+class TriggerTookPhysicalDamage extends Component {
   constructor() {
-    this.super('Took Physical Damage', Type.TRIGGER, true);
+    super('Took Physical Damage', Type.TRIGGER, true);
 
     this.description =
       'Applies skill effects when a player takes physical (or non-skill) damage. This includes melee attacks and projectiles not fired by a skill.';
@@ -1279,10 +1263,9 @@ class TriggerTookPhysicalDamage {
   }
 }
 
-window.extend('TriggerTookSkillDamage', 'Component');
-class TriggerTookSkillDamage {
+class TriggerTookSkillDamage extends Component {
   constructor() {
-    this.super('Took Skill Damage', Type.TRIGGER, true);
+    super('Took Skill Damage', Type.TRIGGER, true);
 
     this.description =
       'Applies skill effects when a player takes damage from a skill other than their own.';
@@ -1312,10 +1295,9 @@ class TriggerTookSkillDamage {
 
 // -- Target constructors ------------------------------------------------------ //
 
-window.extend('TargetArea', 'Component');
-class TargetArea {
+class TargetArea extends Component {
   constructor() {
-    this.super('Area', Type.TARGET, true);
+    super('Area', Type.TARGET, true);
 
     this.description =
       'Targets all units in a radius from the current target (the casting player is the default target).';
@@ -1353,10 +1335,9 @@ class TargetArea {
   }
 }
 
-window.extend('TargetCone', 'Component');
-class TargetCone {
+class TargetCone extends Component {
   constructor() {
-    this.super('Cone', Type.TARGET, true);
+    super('Cone', Type.TARGET, true);
 
     this.description =
       'Targets all units in a line in front of the current target (the casting player is the default target). If you include the caster, that counts towards the max amount.';
@@ -1394,10 +1375,9 @@ class TargetCone {
   }
 }
 
-window.extend('TargetLinear', 'Component');
-class TargetLinear {
+class TargetLinear extends Component {
   constructor() {
-    this.super('Linear', Type.TARGET, true);
+    super('Linear', Type.TARGET, true);
 
     this.description =
       'Targets all units in a line in front of the current target (the casting player is the default target).';
@@ -1435,10 +1415,9 @@ class TargetLinear {
   }
 }
 
-window.extend('TargetLocation', 'Component');
-class TargetLocation {
+class TargetLocation extends Component {
   constructor() {
-    this.super('Location', Type.TARGET, true);
+    super('Location', Type.TARGET, true);
 
     this.description =
       'Targets the reticle location of the target or caster. Combine this with another targeting type for ranged area effects.';
@@ -1456,10 +1435,9 @@ class TargetLocation {
   }
 }
 
-window.extend('TargetNearest', 'Component');
-class TargetNearest {
+class TargetNearest extends Component {
   constructor() {
-    this.super('Nearest', Type.TARGET, true);
+    super('Nearest', Type.TARGET, true);
 
     this.description =
       'Targets the closest unit(s) in a radius from the current target (the casting player is the default target). If you include the caster, that counts towards the max number.';
@@ -1492,10 +1470,9 @@ class TargetNearest {
   }
 }
 
-window.extend('TargetOffset', 'Component');
-class TargetOffset {
+class TargetOffset extends Component {
   constructor() {
-    this.super('Offset', Type.TARGET, true);
+    super('Offset', Type.TARGET, true);
 
     this.description = 'Targets a location that is the given offset away from each target.';
 
@@ -1517,10 +1494,9 @@ class TargetOffset {
   }
 }
 
-window.extend('TargetRemember', 'Component');
-class TargetRemember {
+class TargetRemember extends Component {
   constructor() {
-    this.super('Remember', Type.TARGET, true);
+    super('Remember', Type.TARGET, true);
 
     this.description =
       'Targets entities stored using the "Remember Targets" mechanic for the matching key. If it was never set, this will fail.';
@@ -1533,19 +1509,17 @@ class TargetRemember {
   }
 }
 
-window.extend('TargetSelf', 'Component');
-class TargetSelf {
+class TargetSelf extends Component {
   constructor() {
-    this.super('Self', Type.TARGET, true);
+    super('Self', Type.TARGET, true);
 
     this.description = 'Returns the current target back to the caster.';
   }
 }
 
-window.extend('TargetSingle', 'Component');
-class TargetSingle {
+class TargetSingle extends Component {
   constructor() {
-    this.super('Single', Type.TARGET, true);
+    super('Single', Type.TARGET, true);
 
     this.description =
       'Targets a single unit in front of the current target (the casting player is the default target).';
@@ -1575,10 +1549,9 @@ class TargetSingle {
 
 // -- Condition constructors --------------------------------------------------- //
 
-window.extend('ConditionArmor', 'Component');
-class ConditionArmor {
+class ConditionArmor extends Component {
   constructor() {
-    this.super('Armor', Type.CONDITION, true);
+    super('Armor', Type.CONDITION, true);
     this.description =
       'Applies child components when the target is wearing an armor item matching the given details.';
 
@@ -1595,10 +1568,9 @@ class ConditionArmor {
   }
 }
 
-window.extend('ConditionAttribute', 'Component');
-class ConditionAttribute {
+class ConditionAttribute extends Component {
   constructor() {
-    this.super('Attribute', Type.CONDITION, true);
+    super('Attribute', Type.CONDITION, true);
 
     this.description = 'Requires the target to have a given number of attributes';
 
@@ -1620,10 +1592,9 @@ class ConditionAttribute {
   }
 }
 
-window.extend('ConditionBiome', 'Component');
-class ConditionBiome {
+class ConditionBiome extends Component {
   constructor() {
-    this.super('Biome', Type.CONDITION, true);
+    super('Biome', Type.CONDITION, true);
 
     this.description = 'Applies child components when in a specified biome.';
 
@@ -1640,10 +1611,9 @@ class ConditionBiome {
   }
 }
 
-window.extend('ConditionBlock', 'Component');
-class ConditionBlock {
+class ConditionBlock extends Component {
   constructor() {
-    this.super('Block', Type.CONDITION, true);
+    super('Block', Type.CONDITION, true);
 
     this.description =
       'Applies child components if the target is currently standing on a block of the given type.';
@@ -1666,10 +1636,9 @@ class ConditionBlock {
   }
 }
 
-window.extend('ConditionCeiling', 'Component');
-class ConditionCeiling {
+class ConditionCeiling extends Component {
   constructor() {
-    this.super('Ceiling', Type.CONDITION, true);
+    super('Ceiling', Type.CONDITION, true);
 
     this.description = 'Checks the height of the ceiling above each target';
 
@@ -1686,10 +1655,9 @@ class ConditionCeiling {
   }
 }
 
-window.extend('ConditionChance', 'Component');
-class ConditionChance {
+class ConditionChance extends Component {
   constructor() {
-    this.super('Chance', Type.CONDITION, true);
+    super('Chance', Type.CONDITION, true);
 
     this.description = 'Rolls a chance to apply child components.';
 
@@ -1701,10 +1669,9 @@ class ConditionChance {
   }
 }
 
-window.extend('ConditionClass', 'Component');
-class ConditionClass {
+class ConditionClass extends Component {
   constructor() {
-    this.super('Class', Type.CONDITION, true);
+    super('Class', Type.CONDITION, true);
 
     this.description =
       'Applies child components when the target is the given class or optionally a profession of that class. For example, if you check for "Fighter" which professes into "Warrior", a "Warrior" will pass the check if you do not enable "exact".';
@@ -1722,10 +1689,9 @@ class ConditionClass {
   }
 }
 
-window.extend('ConditionClassLevel', 'Component');
-class ConditionClassLevel {
+class ConditionClassLevel extends Component {
   constructor() {
-    this.super('Class Level', Type.CONDITION, true);
+    super('Class Level', Type.CONDITION, true);
 
     this.description =
       'Applies child components when the level of the class with this skill is within the range. This only checks the level of the caster, not the targets.';
@@ -1743,10 +1709,9 @@ class ConditionClassLevel {
   }
 }
 
-window.extend('ConditionCombat', 'Component');
-class ConditionCombat {
+class ConditionCombat extends Component {
   constructor() {
-    this.super('Combat', Type.CONDITION, true);
+    super('Combat', Type.CONDITION, true);
 
     this.description =
       'Applies child components to targets that are in/out of combat, depending on the settings.';
@@ -1764,10 +1729,9 @@ class ConditionCombat {
   }
 }
 
-window.extend('ConditionCrouch', 'Component');
-class ConditionCrouch {
+class ConditionCrouch extends Component {
   constructor() {
-    this.super('Crouch', Type.CONDITION, true);
+    super('Crouch', Type.CONDITION, true);
 
     this.description = 'Applies child components if the target player(s) are crouching';
 
@@ -1779,10 +1743,9 @@ class ConditionCrouch {
   }
 }
 
-window.extend('ConditionDirection', 'Component');
-class ConditionDirection {
+class ConditionDirection extends Component {
   constructor() {
-    this.super('Direction', Type.CONDITION, true);
+    super('Direction', Type.CONDITION, true);
 
     this.description =
       'Applies child components when the target or caster is facing the correct direction relative to the other.';
@@ -1800,10 +1763,9 @@ class ConditionDirection {
   }
 }
 
-window.extend('ConditionElevation', 'Component');
-class ConditionElevation {
+class ConditionElevation extends Component {
   constructor() {
-    this.super('Elevation', Type.CONDITION, true);
+    super('Elevation', Type.CONDITION, true);
 
     this.description =
       'Applies child components when the elevation of the target matches the settings.';
@@ -1826,20 +1788,18 @@ class ConditionElevation {
   }
 }
 
-window.extend('ConditionElse', 'Component');
-class ConditionElse {
+class ConditionElse extends Component {
   constructor() {
-    this.super('Else', Type.CONDITION, true);
+    super('Else', Type.CONDITION, true);
 
     this.description =
       'Applies child elements if the previous component failed to execute. This not only applies for conditions not passing, but mechanics failing due to no target or other cases.';
   }
 }
 
-window.extend('ConditionEntityType', 'Component');
-class ConditionEntityType {
+class ConditionEntityType extends Component {
   constructor() {
-    this.super('Entity Type', Type.CONDITION, true);
+    super('Entity Type', Type.CONDITION, true);
 
     this.description =
       'Applies child elements if the target matches one of the selected entity types';
@@ -1852,10 +1812,9 @@ class ConditionEntityType {
   }
 }
 
-window.extend('ConditionFire', 'Component');
-class ConditionFire {
+class ConditionFire extends Component {
   constructor() {
-    this.super('Fire', Type.CONDITION, true);
+    super('Fire', Type.CONDITION, true);
 
     this.description = 'Applies child components when the target is on fire.';
 
@@ -1867,10 +1826,9 @@ class ConditionFire {
   }
 }
 
-window.extend('ConditionFlag', 'Component');
-class ConditionFlag {
+class ConditionFlag extends Component {
   constructor() {
-    this.super('Flag', Type.CONDITION, true);
+    super('Flag', Type.CONDITION, true);
 
     this.description =
       'Applies child components when the target is marked by the appropriate flag.';
@@ -1888,10 +1846,9 @@ class ConditionFlag {
   }
 }
 
-window.extend('ConditionGround', 'Component');
-class ConditionGround {
+class ConditionGround extends Component {
   constructor() {
-    this.super('Ground', Type.CONDITION, true);
+    super('Ground', Type.CONDITION, true);
 
     this.description = 'Applies child components when the target is on the ground';
 
@@ -1903,10 +1860,9 @@ class ConditionGround {
   }
 }
 
-window.extend('ConditionHealth', 'Component');
-class ConditionHealth {
+class ConditionHealth extends Component {
   constructor() {
-    this.super('Health', Type.CONDITION, true);
+    super('Health', Type.CONDITION, true);
 
     this.description = "Applies child components when the target's health matches the settings.";
 
@@ -1933,10 +1889,9 @@ class ConditionHealth {
   }
 }
 
-window.extend('ConditionItem', 'Component');
-class ConditionItem {
+class ConditionItem extends Component {
   constructor() {
-    this.super('Item', Type.CONDITION, true);
+    super('Item', Type.CONDITION, true);
     this.description =
       'Applies child components when the target is wielding an item matching the given material.';
 
@@ -1944,10 +1899,9 @@ class ConditionItem {
   }
 }
 
-window.extend('ConditionInventory', 'Component');
-class ConditionInventory {
+class ConditionInventory extends Component {
   constructor() {
-    this.super('Inventory', Type.CONDITION, true);
+    super('Inventory', Type.CONDITION, true);
 
     this.description =
       'Applies child components when the target player contains the given item in their inventory. This does not work on mobs.';
@@ -1962,10 +1916,9 @@ class ConditionInventory {
   }
 }
 
-window.extend('ConditionLight', 'Component');
-class ConditionLight {
+class ConditionLight extends Component {
   constructor() {
-    this.super('Light', Type.CONDITION, true);
+    super('Light', Type.CONDITION, true);
 
     this.description =
       "Applies child components when the light level at the target's location matches the settings.";
@@ -1983,10 +1936,9 @@ class ConditionLight {
   }
 }
 
-window.extend('ConditionMana', 'Component');
-class ConditionMana {
+class ConditionMana extends Component {
   constructor() {
-    this.super('Mana', Type.CONDITION, true);
+    super('Mana', Type.CONDITION, true);
 
     this.description = "Applies child components when the target's mana matches the settings.";
 
@@ -2013,10 +1965,9 @@ class ConditionMana {
   }
 }
 
-window.extend('ConditionName', 'Component');
-class ConditionName {
+class ConditionName extends Component {
   constructor() {
-    this.super('Name', Type.CONDITION, true);
+    super('Name', Type.CONDITION, true);
 
     this.description = 'Applies child components when the target has a name matching the settings.';
 
@@ -2038,10 +1989,9 @@ class ConditionName {
   }
 }
 
-window.extend('ConditionOffhand', 'Component');
-class ConditionOffhand {
+class ConditionOffhand extends Component {
   constructor() {
-    this.super('Offhand', Type.CONDITION, true);
+    super('Offhand', Type.CONDITION, true);
     this.description =
       'Applies child components when the target is wielding an item matching the given material as an offhand item. This is for v1.9+ servers only.';
 
@@ -2049,10 +1999,9 @@ class ConditionOffhand {
   }
 }
 
-window.extend('ConditionPermission', 'Component');
-class ConditionPermission {
+class ConditionPermission extends Component {
   constructor() {
-    this.super('Permission', Type.CONDITION, true);
+    super('Permission', Type.CONDITION, true);
 
     this.description = 'Applies child components if the caster has the required permission';
 
@@ -2064,10 +2013,9 @@ class ConditionPermission {
   }
 }
 
-window.extend('ConditionPotion', 'Component');
-class ConditionPotion {
+class ConditionPotion extends Component {
   constructor() {
-    this.super('Potion', Type.CONDITION, true);
+    super('Potion', Type.CONDITION, true);
 
     this.description = 'Applies child components when the target has the potion effect.';
 
@@ -2094,10 +2042,9 @@ class ConditionPotion {
   }
 }
 
-window.extend('ConditionSkillLevel', 'Component');
-class ConditionSkillLevel {
+class ConditionSkillLevel extends Component {
   constructor(skill) {
-    this.super('Skill Level', Type.CONDITION, true);
+    super('Skill Level', Type.CONDITION, true);
 
     this.description =
       'Applies child components when the skill level is with the range. This checks the skill level of the caster, not the targets.';
@@ -2120,10 +2067,9 @@ class ConditionSkillLevel {
   }
 }
 
-window.extend('ConditionSlot', 'Component');
-class ConditionSlot {
+class ConditionSlot extends Component {
   constructor() {
-    this.super('Slot', Type.CONDITION, true);
+    super('Slot', Type.CONDITION, true);
     this.description =
       'Applies child components when the target player has a matching item in the given slot.';
 
@@ -2137,10 +2083,9 @@ class ConditionSlot {
   }
 }
 
-window.extend('ConditionStatus', 'Component');
-class ConditionStatus {
+class ConditionStatus extends Component {
   constructor() {
-    this.super('Status', Type.CONDITION, true);
+    super('Status', Type.CONDITION, true);
 
     this.description = 'Applies child components when the target has the status condition.';
 
@@ -2160,10 +2105,9 @@ class ConditionStatus {
   }
 }
 
-window.extend('ConditionTime', 'Component');
-class ConditionTime {
+class ConditionTime extends Component {
   constructor() {
-    this.super('Time', Type.CONDITION, true);
+    super('Time', Type.CONDITION, true);
 
     this.description = 'Applies child components when the server time matches the settings.';
 
@@ -2175,10 +2119,9 @@ class ConditionTime {
   }
 }
 
-window.extend('ConditionTool', 'Component');
-class ConditionTool {
+class ConditionTool extends Component {
   constructor() {
-    this.super('Tool', Type.CONDITION, true);
+    super('Tool', Type.CONDITION, true);
 
     this.description = 'Applies child components when the target is wielding a matching tool.';
 
@@ -2201,10 +2144,9 @@ class ConditionTool {
   }
 }
 
-window.extend('ConditionValue', 'Component');
-class ConditionValue {
+class ConditionValue extends Component {
   constructor() {
-    this.super('Value', Type.CONDITION, true);
+    super('Value', Type.CONDITION, true);
 
     this.description = 'Applies child components if a stored value is within the given range.';
 
@@ -2226,10 +2168,9 @@ class ConditionValue {
   }
 }
 
-window.extend('ConditionWater', 'Component');
-class ConditionWater {
+class ConditionWater extends Component {
   constructor() {
-    this.super('Water', Type.CONDITION, true);
+    super('Water', Type.CONDITION, true);
 
     this.description =
       'Applies child components when the target is in or out of water, depending on the settings.';
@@ -2242,10 +2183,9 @@ class ConditionWater {
   }
 }
 
-window.extend('ConditionWeather', 'Component');
-class ConditionWeather {
+class ConditionWeather extends Component {
   constructor() {
-    this.super('Weather', Type.CONDITION, true);
+    super('Weather', Type.CONDITION, true);
 
     this.description =
       "Applies child components when the target's location has the given weather condition";
@@ -2260,10 +2200,9 @@ class ConditionWeather {
 
 // -- Mechanic constructors ---------------------------------------------------- //
 
-window.extend('MechanicAttribute', 'Component');
-class MechanicAttribute {
+class MechanicAttribute extends Component {
   constructor() {
-    this.super('Attribute', Type.MECHANIC, false);
+    super('Attribute', Type.MECHANIC, false);
 
     this.description = 'Gives a player bonus attributes temporarily.';
 
@@ -2290,10 +2229,9 @@ class MechanicAttribute {
   }
 }
 
-window.extend('MechanicBlock', 'Component');
-class MechanicBlock {
+class MechanicBlock extends Component {
   constructor() {
-    this.super('Block', Type.MECHANIC, false);
+    super('Block', Type.MECHANIC, false);
 
     this.description = 'Changes blocks to the given type of block for a limited duration.';
 
@@ -2364,10 +2302,9 @@ class MechanicBlock {
   }
 }
 
-window.extend('MechanicBuff', 'Component');
-class MechanicBuff {
+class MechanicBuff extends Component {
   constructor() {
-    this.super('Buff', Type.MECHANIC, false);
+    super('Buff', Type.MECHANIC, false);
 
     this.description = 'Buffs combat stats of the target';
 
@@ -2413,20 +2350,18 @@ class MechanicBuff {
   }
 }
 
-window.extend('MechanicCancel', 'Component');
-class MechanicCancel {
+class MechanicCancel extends Component {
   constructor() {
-    this.super('Cancel', Type.MECHANIC, false);
+    super('Cancel', Type.MECHANIC, false);
 
     this.description =
       'Cancels the event that caused the trigger this is under to go off. For example, damage based triggers will stop the damage that was dealt while the Launch trigger would stop the projectile from firing.';
   }
 }
 
-window.extend('MechanicCancelEffect', 'Component');
-class MechanicCancelEffect {
+class MechanicCancelEffect extends Component {
   constructor() {
-    this.super('Cancel Effect', Type.MECHANIC, false);
+    super('Cancel Effect', Type.MECHANIC, false);
 
     this.description = 'Stops a particle effect prematurely.';
 
@@ -2438,10 +2373,9 @@ class MechanicCancelEffect {
   }
 }
 
-window.extend('MechanicChannel', 'Component');
-class MechanicChannel {
+class MechanicChannel extends Component {
   constructor() {
-    this.super('Channel', Type.MECHANIC, true);
+    super('Channel', Type.MECHANIC, true);
 
     this.description =
       'Applies child effects after a duration which can be interrupted. During the channel, the player cannot move, attack, or use other spells.';
@@ -2459,10 +2393,9 @@ class MechanicChannel {
   }
 }
 
-window.extend('MechanicCleanse', 'Component');
-class MechanicCleanse {
+class MechanicCleanse extends Component {
   constructor() {
-    this.super('Cleanse', Type.MECHANIC, false);
+    super('Cleanse', Type.MECHANIC, false);
 
     this.description = 'Cleanses negative potion or status effects from the targets.';
 
@@ -2482,10 +2415,9 @@ class MechanicCleanse {
   }
 }
 
-window.extend('MechanicCommand', 'Component');
-class MechanicCommand {
+class MechanicCommand extends Component {
   constructor() {
-    this.super('Command', Type.MECHANIC, false);
+    super('Command', Type.MECHANIC, false);
 
     this.description =
       'Executes a command for each of the targets either from them directly by oping them or via the console using their name.';
@@ -2501,10 +2433,9 @@ class MechanicCommand {
   }
 }
 
-window.extend('MechanicCooldown', 'Component');
-class MechanicCooldown {
+class MechanicCooldown extends Component {
   constructor() {
-    this.super('Cooldown', Type.MECHANIC, false);
+    super('Cooldown', Type.MECHANIC, false);
 
     this.description =
       "Lowers the cooldowns of the target's skill(s). If you provide a negative amount, it will increase the cooldown.";
@@ -2527,10 +2458,9 @@ class MechanicCooldown {
   }
 }
 
-window.extend('MechanicDamage', 'Component');
-class MechanicDamage {
+class MechanicDamage extends Component {
   constructor() {
-    this.super('Damage', Type.MECHANIC, false);
+    super('Damage', Type.MECHANIC, false);
 
     this.description =
       'Inflicts skill damage to each target. Multiplier type would be a percentage of the target health.';
@@ -2561,10 +2491,9 @@ class MechanicDamage {
   }
 }
 
-window.extend('MechanicDamageBuff', 'Component');
-class MechanicDamageBuff {
+class MechanicDamageBuff extends Component {
   constructor() {
-    this.super('Damage Buff', Type.MECHANIC, false);
+    super('Damage Buff', Type.MECHANIC, false);
 
     this.description =
       'Modifies the physical damage dealt by each target by a multiplier or a flat amount for a limited duration. Negative flat amounts or multipliers less than one will reduce damage dealt while the opposite will increase damage dealt. (e.g. a 5% damage buff would be a multiplier or 1.05)';
@@ -2592,10 +2521,9 @@ class MechanicDamageBuff {
   }
 }
 
-window.extend('MechanicDamageLore', 'Component');
-class MechanicDamageLore {
+class MechanicDamageLore extends Component {
   constructor() {
-    this.super('Damage Lore', Type.MECHANIC, false);
+    super('Damage Lore', Type.MECHANIC, false);
 
     this.description =
       'Damages each target based on a value found in the lore of the item held by the caster.';
@@ -2628,10 +2556,9 @@ class MechanicDamageLore {
   }
 }
 
-window.extend('MechanicDefenseBuff', 'Component');
-class MechanicDefenseBuff {
+class MechanicDefenseBuff extends Component {
   constructor() {
-    this.super('Defense Buff', Type.MECHANIC, false);
+    super('Defense Buff', Type.MECHANIC, false);
 
     this.description =
       'Modifies the physical damage taken by each target by a multiplier or a flat amount for a limited duration. Negative flag amounts or multipliers less than one will reduce damage taken while the opposite will increase damage taken. (e.g. a 5% defense buff would be a multiplier or 0.95, since you would be taking 95% damage)';
@@ -2659,10 +2586,9 @@ class MechanicDefenseBuff {
   }
 }
 
-window.extend('MechanicDelay', 'Component');
-class MechanicDelay {
+class MechanicDelay extends Component {
   constructor() {
-    this.super('Delay', Type.MECHANIC, true);
+    super('Delay', Type.MECHANIC, true);
 
     this.description = 'Applies child components after a delay.';
 
@@ -2674,10 +2600,9 @@ class MechanicDelay {
   }
 }
 
-window.extend('MechanicDisguise', 'Component');
-class MechanicDisguise {
+class MechanicDisguise extends Component {
   constructor() {
-    this.super('Disguise', Type.MECHANIC, false);
+    super('Disguise', Type.MECHANIC, false);
 
     this.description =
       'Disguises each target according to the settings. This mechanic requires the LibsDisguise plugin to be installed on your server.';
@@ -2809,10 +2734,9 @@ class MechanicDisguise {
   }
 }
 
-window.extend('MechanicDurability', 'Component');
-class MechanicDurability {
+class MechanicDurability extends Component {
   constructor() {
-    this.super('Durability', Type.MECHANIC, false);
+    super('Durability', Type.MECHANIC, false);
 
     this.description = 'Lowers the durability of a held item';
 
@@ -2829,10 +2753,9 @@ class MechanicDurability {
   }
 }
 
-window.extend('MechanicExplosion', 'Component');
-class MechanicExplosion {
+class MechanicExplosion extends Component {
   constructor() {
-    this.super('Explosion', Type.MECHANIC, false);
+    super('Explosion', Type.MECHANIC, false);
 
     this.description = "Causes an explosion at the current target's position";
 
@@ -2852,10 +2775,9 @@ class MechanicExplosion {
   }
 }
 
-window.extend('MechanicFire', 'Component');
-class MechanicFire {
+class MechanicFire extends Component {
   constructor() {
-    this.super('Fire', Type.MECHANIC, false);
+    super('Fire', Type.MECHANIC, false);
 
     this.description = 'Sets the target on fire for a duration.';
 
@@ -2867,10 +2789,9 @@ class MechanicFire {
   }
 }
 
-window.extend('MechanicFlag', 'Component');
-class MechanicFlag {
+class MechanicFlag extends Component {
   constructor() {
-    this.super('Flag', Type.MECHANIC, false);
+    super('Flag', Type.MECHANIC, false);
 
     this.description =
       'Marks the target with a flag for a duration. Flags can be checked by other triggers, spells or the related for interesting synergies and effects.';
@@ -2888,10 +2809,9 @@ class MechanicFlag {
   }
 }
 
-window.extend('MechanicFlagClear', 'Component');
-class MechanicFlagClear {
+class MechanicFlagClear extends Component {
   constructor() {
-    this.super('Flag Clear', Type.MECHANIC, false);
+    super('Flag Clear', Type.MECHANIC, false);
 
     this.description = 'Clears a flag from the target.';
 
@@ -2903,10 +2823,9 @@ class MechanicFlagClear {
   }
 }
 
-window.extend('MechanicFlagToggle', 'Component');
-class MechanicFlagToggle {
+class MechanicFlagToggle extends Component {
   constructor() {
-    this.super('Flag Toggle', Type.MECHANIC, false);
+    super('Flag Toggle', Type.MECHANIC, false);
 
     this.description =
       'Toggles a flag on or off for the target. This can be used to make toggle effects.';
@@ -2919,10 +2838,9 @@ class MechanicFlagToggle {
   }
 }
 
-window.extend('MechanicFood', 'Component');
-class MechanicFood {
+class MechanicFood extends Component {
   constructor() {
-    this.super('Food', Type.MECHANIC, false);
+    super('Food', Type.MECHANIC, false);
 
     this.description = "Adds or removes to a player's hunger and saturation";
 
@@ -2939,10 +2857,9 @@ class MechanicFood {
   }
 }
 
-window.extend('MechanicForgetTargets', 'Component');
-class MechanicForgetTargets {
+class MechanicForgetTargets extends Component {
   constructor() {
-    this.super('Forget Targets', Type.MECHANIC, false);
+    super('Forget Targets', Type.MECHANIC, false);
 
     this.description = 'Clears targets stored by the "Remember Targets" mechanic';
 
@@ -2954,10 +2871,9 @@ class MechanicForgetTargets {
   }
 }
 
-window.extend('MechanicHeal', 'Component');
-class MechanicHeal {
+class MechanicHeal extends Component {
   constructor() {
-    this.super('Heal', Type.MECHANIC, false);
+    super('Heal', Type.MECHANIC, false);
 
     this.description = 'Restores health to each target.';
 
@@ -2974,10 +2890,9 @@ class MechanicHeal {
   }
 }
 
-window.extend('MechanicHealthSet', 'Component');
-class MechanicHealthSet {
+class MechanicHealthSet extends Component {
   constructor() {
-    this.super('Health Set', Type.MECHANIC, false);
+    super('Health Set', Type.MECHANIC, false);
 
     this.description =
       "Sets the target's health to the specified amount, ignoring resistances, damage buffs, and so on";
@@ -2988,10 +2903,9 @@ class MechanicHealthSet {
   }
 }
 
-window.extend('MechanicHeldItem', 'Component');
-class MechanicHeldItem {
+class MechanicHeldItem extends Component {
   constructor() {
-    this.super('Held Item', Type.MECHANIC, false);
+    super('Held Item', Type.MECHANIC, false);
 
     this.description =
       'Sets the held item slot of the target player. This will do nothing if trying to set it to a skill slot.';
@@ -3002,10 +2916,9 @@ class MechanicHeldItem {
   }
 }
 
-window.extend('MechanicImmunity', 'Component');
-class MechanicImmunity {
+class MechanicImmunity extends Component {
   constructor() {
-    this.super('Immunity', Type.MECHANIC, false);
+    super('Immunity', Type.MECHANIC, false);
 
     this.description = 'Provides damage immunity from one source for a duration.';
 
@@ -3027,19 +2940,17 @@ class MechanicImmunity {
   }
 }
 
-window.extend('MechanicInterrupt', 'Component');
-class MechanicInterrupt {
+class MechanicInterrupt extends Component {
   constructor() {
-    this.super('Interrupt', Type.MECHANIC, false);
+    super('Interrupt', Type.MECHANIC, false);
 
     this.description = 'Interrupts any channeling being done by each target if applicable.';
   }
 }
 
-window.extend('MechanicItem', 'Component');
-class MechanicItem {
+class MechanicItem extends Component {
   constructor() {
-    this.super('Item', Type.MECHANIC, false);
+    super('Item', Type.MECHANIC, false);
 
     this.description = 'Gives each player target the item defined by the settings.';
 
@@ -3082,10 +2993,9 @@ class MechanicItem {
   }
 }
 
-window.extend('MechanicItemProjectile', 'Component');
-class MechanicItemProjectile {
+class MechanicItemProjectile extends Component {
   constructor() {
-    this.super('Item Projectile', Type.MECHANIC, true);
+    super('Item Projectile', Type.MECHANIC, true);
 
     this.description =
       'Launches a projectile using an item as its visual that applies child components upon landing. The target passed on will be the collided target or the location where it landed if it missed.';
@@ -3105,10 +3015,9 @@ class MechanicItemProjectile {
   }
 }
 
-window.extend('MechanicItemRemove', 'Component');
-class MechanicItemRemove {
+class MechanicItemRemove extends Component {
   constructor() {
-    this.super('Item Remove', Type.MECHANIC, false);
+    super('Item Remove', Type.MECHANIC, false);
 
     this.description = 'Removes an item from a player inventory. This does nothing to mobs.';
 
@@ -3122,10 +3031,9 @@ class MechanicItemRemove {
   }
 }
 
-window.extend('MechanicLaunch', 'Component');
-class MechanicLaunch {
+class MechanicLaunch extends Component {
   constructor() {
-    this.super('Launch', Type.MECHANIC, false);
+    super('Launch', Type.MECHANIC, false);
 
     this.description =
       'Launches the target relative to their forward direction. Use negative values to go in the opposite direction (e.g. negative forward makes the target go backwards)';
@@ -3158,10 +3066,9 @@ class MechanicLaunch {
   }
 }
 
-window.extend('MechanicLightning', 'Component');
-class MechanicLightning {
+class MechanicLightning extends Component {
   constructor() {
-    this.super('Lightning', Type.MECHANIC, false);
+    super('Lightning', Type.MECHANIC, false);
 
     this.description =
       'Strikes lightning on or near the target. Negative offsets will offset it in the opposite direction (e.g. negative forward offset puts it behind the target).';
@@ -3184,10 +3091,9 @@ class MechanicLightning {
   }
 }
 
-window.extend('MechanicMana', 'Component');
-class MechanicMana {
+class MechanicMana extends Component {
   constructor() {
-    this.super('Mana', Type.MECHANIC, false);
+    super('Mana', Type.MECHANIC, false);
 
     this.description = 'Restores or deducts mana from the target.';
 
@@ -3204,10 +3110,9 @@ class MechanicMana {
   }
 }
 
-window.extend('MechanicMessage', 'Component');
-class MechanicMessage {
+class MechanicMessage extends Component {
   constructor() {
-    this.super('Message', Type.MECHANIC, false);
+    super('Message', Type.MECHANIC, false);
 
     this.description =
       'Sends a message to each player target. To include numbers from Value mechanics, use the filters {<key>} where <key> is the key the value is stored under.';
@@ -3218,10 +3123,9 @@ class MechanicMessage {
   }
 }
 
-window.extend('MechanicParticle', 'Component');
-class MechanicParticle {
+class MechanicParticle extends Component {
   constructor() {
-    this.super('Particle', Type.MECHANIC, false);
+    super('Particle', Type.MECHANIC, false);
 
     this.description = 'Plays a particle effect about the target.';
 
@@ -3245,10 +3149,9 @@ class MechanicParticle {
   }
 }
 
-window.extend('MechanicParticleAnimation', 'Component');
-class MechanicParticleAnimation {
+class MechanicParticleAnimation extends Component {
   constructor() {
-    this.super('Particle Animation', Type.MECHANIC, false);
+    super('Particle Animation', Type.MECHANIC, false);
 
     this.description =
       'Plays an animated particle effect at the location of each target over time by applying various transformations.';
@@ -3319,10 +3222,9 @@ class MechanicParticleAnimation {
   }
 }
 
-window.extend('MechanicParticleEffect', 'Component');
-class MechanicParticleEffect {
+class MechanicParticleEffect extends Component {
   constructor() {
-    this.super('Particle Effect', Type.MECHANIC, false);
+    super('Particle Effect', Type.MECHANIC, false);
 
     this.description =
       'Plays a particle effect that follows the current target, using formulas to determine shape, size, and motion';
@@ -3331,10 +3233,9 @@ class MechanicParticleEffect {
   }
 }
 
-window.extend('MechanicParticleProjectile', 'Component');
-class MechanicParticleProjectile {
+class MechanicParticleProjectile extends Component {
   constructor() {
-    this.super('Particle Projectile', Type.MECHANIC, true);
+    super('Particle Projectile', Type.MECHANIC, true);
 
     this.description =
       'Launches a projectile using particles as its visual that applies child components upon landing. The target passed on will be the collided target or the location where it landed if it missed.';
@@ -3369,10 +3270,9 @@ class MechanicParticleProjectile {
   }
 }
 
-window.extend('MechanicPassive', 'Component');
-class MechanicPassive {
+class MechanicPassive extends Component {
   constructor() {
-    this.super('Passive', Type.MECHANIC, true);
+    super('Passive', Type.MECHANIC, true);
 
     this.description =
       'Applies child components continuously every period. The seconds value below is the period or how often it applies.';
@@ -3385,10 +3285,9 @@ class MechanicPassive {
   }
 }
 
-window.extend('MechanicPermission', 'Component');
-class MechanicPermission {
+class MechanicPermission extends Component {
   constructor() {
-    this.super('Permission', Type.MECHANIC, true);
+    super('Permission', Type.MECHANIC, true);
 
     this.description =
       'Grants each player target a permission for a limited duration. This mechanic requires Vault with an accompanying permissions plugin in order to work.';
@@ -3406,10 +3305,9 @@ class MechanicPermission {
   }
 }
 
-window.extend('MechanicPotion', 'Component');
-class MechanicPotion {
+class MechanicPotion extends Component {
   constructor() {
-    this.super('Potion', Type.MECHANIC, false);
+    super('Potion', Type.MECHANIC, false);
 
     this.description = 'Applies a potion effect to the target for a duration.';
 
@@ -3434,10 +3332,9 @@ class MechanicPotion {
   }
 }
 
-window.extend('MechanicPotionProjectile', 'Component');
-class MechanicPotionProjectile {
+class MechanicPotionProjectile extends Component {
   constructor() {
-    this.super('Potion Projectile', Type.MECHANIC, true);
+    super('Potion Projectile', Type.MECHANIC, true);
 
     this.description =
       'Drops a splash potion from each target that does not apply potion effects by default. This will apply child elements when the potion lands. The targets supplied will be everything hit by the potion. If nothing is hit by the potion, the target will be the location it landed.';
@@ -3460,10 +3357,9 @@ class MechanicPotionProjectile {
   }
 }
 
-window.extend('MechanicProjectile', 'Component');
-class MechanicProjectile {
+class MechanicProjectile extends Component {
   constructor() {
-    this.super('Projectile', Type.MECHANIC, true);
+    super('Projectile', Type.MECHANIC, true);
 
     this.description =
       'Launches a projectile that applies child components on hit. The target supplied will be the struck target.';
@@ -3492,10 +3388,9 @@ class MechanicProjectile {
   }
 }
 
-window.extend('MechanicPurge', 'Component');
-class MechanicPurge {
+class MechanicPurge extends Component {
   constructor() {
-    this.super('Purge', Type.MECHANIC, false);
+    super('Purge', Type.MECHANIC, false);
 
     this.description = 'Purges the target of positive potion effects or statuses';
 
@@ -3515,10 +3410,9 @@ class MechanicPurge {
   }
 }
 
-window.extend('MechanicPush', 'Component');
-class MechanicPush {
+class MechanicPush extends Component {
   constructor() {
-    this.super('Push', Type.MECHANIC, false);
+    super('Push', Type.MECHANIC, false);
 
     this.description =
       'Pushes the target relative to the caster. This will do nothing if used with the caster as the target. Positive numbers apply knockback while negative numbers pull them in.';
@@ -3541,10 +3435,9 @@ class MechanicPush {
   }
 }
 
-window.extend('MechanicRememberTargets', 'Component');
-class MechanicRememberTargets {
+class MechanicRememberTargets extends Component {
   constructor() {
-    this.super('Remember Targets', Type.MECHANIC, false);
+    super('Remember Targets', Type.MECHANIC, false);
 
     this.description = 'Stores the current targets for later use under a specified key';
 
@@ -3556,10 +3449,9 @@ class MechanicRememberTargets {
   }
 }
 
-window.extend('MechanicRepeat', 'Component');
-class MechanicRepeat {
+class MechanicRepeat extends Component {
   constructor() {
-    this.super('Repeat', Type.MECHANIC, true);
+    super('Repeat', Type.MECHANIC, true);
 
     this.description =
       'Applies child components multiple times. When it applies them is determined by the delay (seconds before the first application) and period (seconds between successive applications).';
@@ -3587,10 +3479,9 @@ class MechanicRepeat {
   }
 }
 
-window.extend('MechanicSound', 'Component');
-class MechanicSound {
+class MechanicSound extends Component {
   constructor() {
-    this.super('Sound', Type.MECHANIC, false);
+    super('Sound', Type.MECHANIC, false);
 
     this.description = "Plays a sound at the target's location.";
 
@@ -3612,10 +3503,9 @@ class MechanicSound {
   }
 }
 
-window.extend('MechanicSpeed', 'Component');
-class MechanicSpeed {
+class MechanicSpeed extends Component {
   constructor() {
-    this.super('Speed', Type.MECHANIC, false);
+    super('Speed', Type.MECHANIC, false);
 
     this.description =
       'Modifies the base speed of a player using a multiplier (stacks with potions)';
@@ -3633,10 +3523,9 @@ class MechanicSpeed {
   }
 }
 
-window.extend('MechanicStatus', 'Component');
-class MechanicStatus {
+class MechanicStatus extends Component {
   constructor() {
-    this.super('Status', Type.MECHANIC, false);
+    super('Status', Type.MECHANIC, false);
 
     this.description = 'Applies a status effect to the target for a duration.';
 
@@ -3656,10 +3545,9 @@ class MechanicStatus {
   }
 }
 
-window.extend('MechanicTaunt', 'Component');
-class MechanicTaunt {
+class MechanicTaunt extends Component {
   constructor() {
-    this.super('Taunt', Type.MECHANIC, false);
+    super('Taunt', Type.MECHANIC, false);
 
     this.description =
       'Draws aggro of targeted creatures. Regular mobs are set to attack the caster. The Spigot/Bukkit API for this was not functional on older versions, so it may not work on older servers. For MythicMobs, this uses their aggro system using the amount chosen below.';
@@ -3672,10 +3560,9 @@ class MechanicTaunt {
   }
 }
 
-window.extend('MechanicTrigger', 'Component');
-class MechanicTrigger {
+class MechanicTrigger extends Component {
   constructor() {
-    this.super('Trigger', Type.MECHANIC, true);
+    super('Trigger', Type.MECHANIC, true);
 
     this.description = 'Listens for a trigger on the current targets for a duration.';
 
@@ -3795,10 +3682,9 @@ class MechanicTrigger {
   }
 }
 
-window.extend('MechanicValueAdd', 'Component');
-class MechanicValueAdd {
+class MechanicValueAdd extends Component {
   constructor() {
-    this.super('Value Add', Type.MECHANIC, false);
+    super('Value Add', Type.MECHANIC, false);
 
     this.description =
       "Adds to a stored value under a unique key for the caster. If the value wasn't set before, this will set the value to the given amount.";
@@ -3816,10 +3702,9 @@ class MechanicValueAdd {
   }
 }
 
-window.extend('MechanicValueAttribute', 'Component');
-class MechanicValueAttribute {
+class MechanicValueAttribute extends Component {
   constructor() {
-    this.super('Value Attribute', Type.MECHANIC, false);
+    super('Value Attribute', Type.MECHANIC, false);
 
     this.description =
       "Loads a player's attribute count for a specific attribute as a stored value to be used in other mechanics.";
@@ -3837,10 +3722,9 @@ class MechanicValueAttribute {
   }
 }
 
-window.extend('MechanicValueCopy', 'Component');
-class MechanicValueCopy {
+class MechanicValueCopy extends Component {
   constructor() {
-    this.super('Value Copy', Type.MECHANIC, false);
+    super('Value Copy', Type.MECHANIC, false);
 
     this.description = 'Copies a stored value from the caster to the target or vice versa';
 
@@ -3862,10 +3746,9 @@ class MechanicValueCopy {
   }
 }
 
-window.extend('MechanicValueDistance', 'Component');
-class MechanicValueDistance {
+class MechanicValueDistance extends Component {
   constructor() {
-    this.super('Value Distance', Type.MECHANIC, false);
+    super('Value Distance', Type.MECHANIC, false);
 
     this.description = 'Stores the distance between the target and the caster into a value';
 
@@ -3877,10 +3760,9 @@ class MechanicValueDistance {
   }
 }
 
-window.extend('MechanicValueHealth', 'Component');
-class MechanicValueHealth {
+class MechanicValueHealth extends Component {
   constructor() {
-    this.super('Value Health', Type.MECHANIC, false);
+    super('Value Health', Type.MECHANIC, false);
 
     this.description =
       "Stores the target's current health as a value under a given key for the caster";
@@ -3903,10 +3785,9 @@ class MechanicValueHealth {
   }
 }
 
-window.extend('MechanicValueLocation', 'Component');
-class MechanicValueLocation {
+class MechanicValueLocation extends Component {
   constructor() {
-    this.super('Value Location', Type.MECHANIC, false);
+    super('Value Location', Type.MECHANIC, false);
 
     this.description =
       "Loads the first target's current location into a stored value for use at a later time.";
@@ -3919,10 +3800,9 @@ class MechanicValueLocation {
   }
 }
 
-window.extend('MechanicValueLore', 'Component');
-class MechanicValueLore {
+class MechanicValueLore extends Component {
   constructor() {
-    this.super('Value Lore', Type.MECHANIC, false);
+    super('Value Lore', Type.MECHANIC, false);
 
     this.description =
       "Loads a value from a held item's lore into a stored value under the given unique key for the caster.";
@@ -3950,10 +3830,9 @@ class MechanicValueLore {
   }
 }
 
-window.extend('MechanicValueLoreSlot', 'Component');
-class MechanicValueLoreSlot {
+class MechanicValueLoreSlot extends Component {
   constructor() {
-    this.super('Value Lore Slot', Type.MECHANIC, false);
+    super('Value Lore Slot', Type.MECHANIC, false);
 
     this.description =
       "Loads a value from an item's lore into a stored value under the given unique key for the caster.";
@@ -3981,10 +3860,9 @@ class MechanicValueLoreSlot {
   }
 }
 
-window.extend('MechanicValueMana', 'Component');
-class MechanicValueMana {
+class MechanicValueMana extends Component {
   constructor() {
-    this.super('Value Mana', Type.MECHANIC, false);
+    super('Value Mana', Type.MECHANIC, false);
 
     this.description =
       "Stores the target player's current mana as a value under a given key for the caster";
@@ -4007,10 +3885,9 @@ class MechanicValueMana {
   }
 }
 
-window.extend('MechanicValueMultiply', 'Component');
-class MechanicValueMultiply {
+class MechanicValueMultiply extends Component {
   constructor() {
-    this.super('Value Multiply', Type.MECHANIC, false);
+    super('Value Multiply', Type.MECHANIC, false);
 
     this.description =
       "Multiplies a stored value under a unique key for the caster. If the value wasn't set before, this will not do anything.";
@@ -4028,10 +3905,9 @@ class MechanicValueMultiply {
   }
 }
 
-window.extend('MechanicValuePlaceholder', 'Component');
-class MechanicValuePlaceholder {
+class MechanicValuePlaceholder extends Component {
   constructor() {
-    this.super('Value Placeholder', Type.MECHANIC, false);
+    super('Value Placeholder', Type.MECHANIC, false);
 
     this.description = 'Uses a placeholder string and stores it as a value for the caster';
 
@@ -4053,10 +3929,9 @@ class MechanicValuePlaceholder {
   }
 }
 
-window.extend('MechanicValueRandom', 'Component');
-class MechanicValueRandom {
+class MechanicValueRandom extends Component {
   constructor() {
-    this.super('Value Random', Type.MECHANIC, false);
+    super('Value Random', Type.MECHANIC, false);
 
     this.description = 'Stores a specified value under a given key for the caster.';
 
@@ -4079,10 +3954,9 @@ class MechanicValueRandom {
   }
 }
 
-window.extend('MechanicValueSet', 'Component');
-class MechanicValueSet {
+class MechanicValueSet extends Component {
   constructor() {
-    this.super('Value Set', Type.MECHANIC, false);
+    super('Value Set', Type.MECHANIC, false);
 
     this.description = 'Stores a specified value under a given key for the caster.';
 
@@ -4099,10 +3973,9 @@ class MechanicValueSet {
   }
 }
 
-window.extend('MechanicWarp', 'Component');
-class MechanicWarp {
+class MechanicWarp extends Component {
   constructor() {
-    this.super('Warp', Type.MECHANIC, false);
+    super('Warp', Type.MECHANIC, false);
 
     this.description =
       'Warps the target relative to their forward direction. Use negative numbers to go in the opposite direction (e.g. negative forward will cause the target to warp backwards).';
@@ -4130,10 +4003,9 @@ class MechanicWarp {
   }
 }
 
-window.extend('MechanicWarpLoc', 'Component');
-class MechanicWarpLoc {
+class MechanicWarpLoc extends Component {
   constructor() {
-    this.super('Warp Location', Type.MECHANIC, false);
+    super('Warp Location', Type.MECHANIC, false);
 
     this.description = 'Warps the target to a specified location.';
 
@@ -4164,10 +4036,9 @@ class MechanicWarpLoc {
   }
 }
 
-window.extend('MechanicWarpRandom', 'Component');
-class MechanicWarpRandom {
+class MechanicWarpRandom extends Component {
   constructor() {
-    this.super('Warp Random', Type.MECHANIC, false);
+    super('Warp Random', Type.MECHANIC, false);
 
     this.description = 'Warps the target in a random direction the given distance.';
 
@@ -4189,20 +4060,18 @@ class MechanicWarpRandom {
   }
 }
 
-window.extend('MechanicWarpSwap', 'Component');
-class MechanicWarpSwap {
+class MechanicWarpSwap extends Component {
   constructor() {
-    this.super('Warp Swap', Type.MECHANIC, false);
+    super('Warp Swap', Type.MECHANIC, false);
 
     this.description =
       'Switches the location of the caster and the target. If multiple targets are provided, this takes the first one.';
   }
 }
 
-window.extend('MechanicWarpTarget', 'Component');
-class MechanicWarpTarget {
+class MechanicWarpTarget extends Component {
   constructor() {
-    this.super('Warp Target', Type.MECHANIC, false);
+    super('Warp Target', Type.MECHANIC, false);
 
     this.description =
       'Warps either the target or the caster to the other. This does nothing when the target is the caster.';
@@ -4218,10 +4087,9 @@ class MechanicWarpTarget {
   }
 }
 
-window.extend('MechanicWarpValue', 'Component');
-class MechanicWarpValue {
+class MechanicWarpValue extends Component {
   constructor() {
-    this.super('Warp Value', Type.MECHANIC, false);
+    super('Warp Value', Type.MECHANIC, false);
 
     this.description =
       'Warps all targets to a location remembered using the Value Location mechanic.';
@@ -4234,10 +4102,9 @@ class MechanicWarpValue {
   }
 }
 
-window.extend('MechanicWolf', 'Component');
-class MechanicWolf {
+class MechanicWolf extends Component {
   constructor() {
-    this.super('Wolf', Type.MECHANIC, true);
+    super('Wolf', Type.MECHANIC, true);
 
     this.description =
       'Summons a wolf on each target for a duration. Child components will start off targeting the wolf so you can add effects to it. You can also give it its own skillset, though Cast triggers will not occur.';
