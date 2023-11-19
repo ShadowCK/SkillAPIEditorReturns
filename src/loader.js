@@ -40,7 +40,7 @@ function loadSection(data) {
   this.components = [];
   Object.keys(data).forEach((key) => {
     const inputs = this.data;
-    if (key === this.datakey) {
+    if (key === this.dataKey) {
       const attribs = data[key];
       Object.keys(attribs).forEach((attribKey) => {
         for (let i = 0; i < inputs.length; i++) {
