@@ -1,6 +1,4 @@
 /* eslint-disable max-classes-per-file */
-import { showSkillPage } from './main.js';
-import { loadSection } from './yaml.js';
 import {
   copyRequirements,
   ListValue,
@@ -24,11 +22,28 @@ import {
   getGoodPotions,
   getBadPotions,
   getDyes,
-} from './data';
+} from './data/index.js';
+
+// DI - expose required depdenencies
+let showSkillPage;
+const injectLoadSection = (func) => {
+  /**
+   * Loads component data from the config lines stating at the given index
+   *
+   * @param {YAMLObject} data - the data to load
+   *
+   * @returns {Number} the index of the last line of data for this component
+   */
+  Component.prototype.load = func; // eslint-disable-line no-use-before-define
+};
+
+const injectShowSkillPage = (func) => {
+  showSkillPage = func;
+};
 
 let hoverSpace;
 // The active component being edited or added to
-let activeComponent = null;
+let activeComponent;
 let saveIndex;
 
 const getSaveIndex = () => saveIndex;
@@ -461,15 +476,6 @@ class Component {
     return result;
   }
 }
-
-/**
- * Loads component data from the config lines stating at the given index
- *
- * @param {YAMLObject} data - the data to load
- *
- * @returns {Number} the index of the last line of data for this component
- */
-Component.prototype.load = loadSection;
 
 const appendOptional = (value) => {
   value.requireValue('use-effect', ['True']);
@@ -4292,6 +4298,7 @@ const getActiveComponent = () => activeComponent;
 const setActiveComponent = (value) => {
   activeComponent = value;
 };
+
 export {
   setSaveIndex,
   getSaveIndex,
@@ -4303,4 +4310,6 @@ export {
   Target,
   Condition,
   Mechanic,
+  injectLoadSection,
+  injectShowSkillPage,
 };

@@ -6,11 +6,24 @@ import {
   DoubleValue,
   StringListValue,
   AttributeValue,
+  isAttribute,
 } from './input.js';
 
-import { getMaterials } from './data';
-import { getATTRIBS, saveToFile, loadSection } from './main.js';
-import { isAttribute } from './skill.js';
+import { saveToFile } from './domHelpers.js';
+import { getMaterials } from './data/index.js';
+import Attribute from './classes/Attribute.js';
+
+// DI - expose required depdenencies
+const injectLoadSection = (func) => {
+  /**
+   * Loads class data from the config lines stating at the given index
+   *
+   * @param {YAMLObject} data - the data to load
+   *
+   * @returns {Number} the index of the last line of data for this class
+   */
+  Class.prototype.load = func; // eslint-disable-line no-use-before-define
+};
 
 /** @type {Class} */
 let activeClass;
@@ -137,7 +150,7 @@ class Class {
   }
 
   updateAttribs(i) {
-    const ATTRIBS = getATTRIBS();
+    const { ATTRIBS } = Attribute;
 
     let j = 0;
     const back = {};
@@ -282,15 +295,6 @@ class Class {
 }
 
 /**
- * Loads class data from the config lines stating at the given index
- *
- * @param {YAMLObject} data - the data to load
- *
- * @returns {Number} the index of the last line of data for this class
- */
-Class.prototype.load = loadSection;
-
-/**
  * Adds a class to the editor without switching the view to it
  *
  * @param {string} name - the name of the class to add
@@ -357,4 +361,5 @@ export {
   isClassNameTaken,
   addClass,
   _newClass as newClass,
+  injectLoadSection,
 };

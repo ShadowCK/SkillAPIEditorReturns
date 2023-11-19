@@ -2,13 +2,6 @@
 
 import { filterInt, filterDouble } from './filter.js';
 
-const copyRequirements = (source, target) => {
-  if (source.requirements) {
-    target.requirements = source.requirements;
-  }
-  return target;
-};
-
 /**
  * Requires one of the given values to be active for the
  * value with the given key for this input to be visible.
@@ -1140,8 +1133,16 @@ ByteListValue.prototype.requireValue = requireValue;
 ByteListValue.prototype.applyRequireValues = applyRequireValues;
 ByteListValue.prototype.setTooltip = setTooltip;
 
+const copyRequirements = (source, target) => {
+  if (source.requirements) {
+    target.requirements = source.requirements;
+  }
+  return target;
+};
+
+const isAttribute = (input) => input instanceof AttributeValue || input.key === 'incompatible';
+
 export {
-  copyRequirements,
   IndexListValue,
   ListValue,
   AttributeValue,
@@ -1151,4 +1152,6 @@ export {
   StringListValue,
   MultiListValue,
   ByteListValue,
+  copyRequirements,
+  isAttribute,
 };

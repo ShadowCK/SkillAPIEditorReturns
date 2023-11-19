@@ -1,13 +1,32 @@
-import { ListValue, AttributeValue, IntValue, StringValue, StringListValue } from './input.js';
-import { showSkillPage, loadSection } from './main.js';
+import {
+  ListValue,
+  AttributeValue,
+  IntValue,
+  StringValue,
+  StringListValue,
+  isAttribute,
+} from './input.js';
 import { setSaveIndex } from './component.js';
-import { getMaterials } from './data';
+import { getMaterials } from './data/index.js';
+
+// DI - expose required depdenencies
+let showSkillPage;
+const injectLoadSection = (func) => {
+  /**
+   * Loads class data from the config lines stating at the given index
+   *
+   * @param {YAMLObject} data - the data to load
+   *
+   * @returns {Number} the index of the last line of data for this class
+   */
+  Skill.prototype.loadBase = func; // eslint-disable-line no-use-before-define
+};
+const injectShowSkillPage = (func) => {
+  showSkillPage = func;
+};
 
 let activeSkill;
 let skills;
-
-// TODO: Externalize this function in utils.js
-const isAttribute = (input) => input instanceof AttributeValue || input.key === 'incompatible';
 
 /**
  * Retrieves a skill by name
@@ -307,12 +326,17 @@ const newSkill = () => {
   return activeSkill;
 };
 
-Skill.prototype.loadBase = loadSection;
-
-activeSkill = new Skill('Skill 1');
-skills = [activeSkill];
-activeSkill.createFormHTML();
-showSkillPage('skillForm');
+let hasInitialized = false;
+const init = () => {
+  if (hasInitialized) {
+    throw new Error('Skill has already been initialized');
+  }
+  hasInitialized = true;
+  activeSkill = new Skill('Skill 1');
+  skills = [activeSkill];
+  activeSkill.createFormHTML();
+  showSkillPage('skillForm');
+};
 
 const getActiveSkill = () => activeSkill;
 const setActiveSkill = (value) => {
@@ -324,13 +348,15 @@ const setSkills = (value) => {
 };
 
 export {
+  init,
   getActiveSkill,
   setActiveSkill,
   getSkills,
   setSkills,
-  isAttribute,
   getSkill,
   isSkillNameTaken,
   addSkill,
   newSkill,
+  injectLoadSection,
+  injectShowSkillPage,
 };
