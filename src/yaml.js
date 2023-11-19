@@ -119,7 +119,7 @@ class YAMLObject {
         let value = lines[lineIndex].substring(lines[lineIndex].indexOf(':') + 2);
         if (value.charAt(0) === "'") {
           value = value.substring(1, value.length - 1);
-        } else if (!Number.isNaN(value)) {
+        } else if (!Number.isNaN(Number(value))) {
           if (Regex.INT.test(value)) {
             value = parseInt(value, 10);
           } else {
