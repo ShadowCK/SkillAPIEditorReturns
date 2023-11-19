@@ -9,6 +9,6 @@ The refactoring is essentially finished! Now we are moving forward with a focus 
 
 Next, we will start adding new **Quality of Life (QoL) features** to the editor.
 
-For more information, refer to the documentation below:
+For more information, refer to the documentation(s) of past milestone(s) below:
 
 - [Refactoring Overview](./docs/refactoring-overview.md)
