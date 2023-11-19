@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "A refactored and improved version of the original editor",
   "main": "./src/main.js",
+  "type": "module",
   "scripts": {
     "webpack": "webpack",
     "webpackWatch": "webpack watch",
