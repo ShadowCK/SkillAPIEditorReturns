@@ -447,16 +447,12 @@ class Component {
    */
   createFormHTMLNoDom() {
     currentComponentInputs.clear();
-    // If only has Icon Key, will not add Icon Key
-    let index = 1;
+
+    // data[0] is icon key
     if (this.data.length > 1) {
-      // If no AttributeValue, will not add Icon Key
-      for (let j = 1; j < this.data.length; j++) {
-        if (this.data[j] instanceof AttributeValue) {
-          index = 0;
-          break;
-        }
-      }
+      // If has AttributeValue, will add Icon Key
+      const index = this.data.some(input => input instanceof AttributeValue) ? 0 : 1;
+
       // Initialize inputs
       for (let i = index; i < this.data.length; i++) {
         const input = this.data[i];
@@ -464,10 +460,10 @@ class Component {
         // Note: We are adding a copy of the input to the map so that less side effects happen.
         currentComponentInputs.set(input.key, input.dupe());
       }
-    }
 
-    for (let i = index; i < this.data.length; i++) {
-      this.data[i].applyRequireValuesNoDom();
+      for (let i = index; i < this.data.length; i++) {
+        this.data[i].applyRequireValuesNoDom();
+      }
     }
   }
 

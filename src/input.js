@@ -38,17 +38,10 @@ const checkRequireValue = (htmlElement) => {
  * @param {FormInput} input - The FormInput that contains the requireLists property.
  */
 const checkRequireValueNoDom = (input) => {
-  for (let i = 0; i < input.requireLists.length; i++) {
-    const requireData = input.requireLists[i];
-    let visible = false;
-    for (let j = 0; j < requireData.values.length; j++) {
-      if (requireData.values[j] === input.value) {
-        visible = true;
-        break;
-      }
-    }
+  input.requireLists.forEach(requireData => {
+    const visible = requireData.values.includes(input.value);
     requireData.input.hidden = !visible;
-  }
+  });
 };
 
 class FormInput {
@@ -100,17 +93,19 @@ class FormInput {
    * This is specifically used for saving purposes.
    */
   applyRequireValuesNoDom() {
-    for (let i = 0; this.requirements && i < this.requirements.length; i++) {
-      const { key, values } = this.requirements[i];
-      /** A duplicate of the required input */
-      const required = currentComponentInputs.get(key);
-      if (required != null) {
-        // We are not mutating the original input, which is good!
-        required.requireLists = required.requireLists || [];
-        required.requireLists.push({ input: this, values });
-        checkRequireValueNoDom(required);
-      }
+    if (this.requirements) {
+      this.requirements.forEach(({ key, values }) => {
+        /** A duplicate of the required input */
+        const required = currentComponentInputs.get(key);
+        if (required != null) {
+          // We are not mutating the original input, which is good!
+          required.requireLists = required.requireLists || [];
+          required.requireLists.push({ input: this, values });
+          checkRequireValueNoDom(required);
+        }
+      })
     }
+
   }
 
   /**
