@@ -8,8 +8,14 @@ import { dirname, resolve, sep } from 'path';
 const __filename = fileURLToPath(new URL(import.meta.url));
 const __dirname = dirname(__filename);
 
+// Load package.json
+// This can be achieved by code below. However, ESLint hasn't supported this yet
+// import config from '../package.json' assert { type: "json" };
+// More info: https://github.com/eslint/eslint/discussions/15305
+const config = JSON.parse(fs.readFileSync(resolve(__dirname, '../package.json')));
+
 // Create a write stream to 'release.zip'
-const output = fs.createWriteStream(resolve(__dirname, '../dist/release.zip'));
+const output = fs.createWriteStream(resolve(__dirname, `../dist/${config.name}-${config.version}.zip`));
 const archive = archiver('zip', {
   zlib: { level: 9 }, // Set the compression level
 });
@@ -30,29 +36,16 @@ archive.pipe(output);
 
 // Function to add files to the archive, excluding a specified file
 const addFilesExclude = (directory, exclude) => {
-  // Extract the base directory name from the relative path, e.g., '../dist' to 'dist'
   const baseDirName = directory.split('/').pop();
-
   const dirPath = resolve(__dirname, directory);
 
+  // Convert the exclude parameter to a RegExp if it's not already one
+  const excludeRegex = typeof exclude === 'string' ? new RegExp(exclude) : exclude;
+
   const files = glob.sync(`${dirPath}/**/*`, { nodir: true }).filter((file) => {
-    // Extract the filename using the correct path separator
     const filename = file.substring(file.lastIndexOf(sep) + 1);
     const relativePath = file.substring(file.indexOf(sep) + 1);
-    console.log('--------------------------------------------------');
-    console.log('__dirname                       :', __dirname);
-    console.log('directory                       :', directory);
-    console.log('exclude                         :', exclude);
-    console.log('baseDirName                     :', baseDirName);
-    console.log('dirPath                         :', dirPath);
-    console.log('file                            :', file);
-    console.log('filename                        :', filename);
-    console.log('relativePath                    :', relativePath);
-    console.log('resolve(dirPath, relativePath)  :', resolve(dirPath, relativePath));
-    console.log('relativePath !== exclude        :', relativePath !== exclude);
-    console.log(`relativePath -> ${relativePath} | ${exclude} <- exclude`);
-    console.log('--------------------------------------------------');
-    return relativePath !== exclude;
+    return !excludeRegex.test(relativePath);
   });
 
   files.forEach((file) => {
@@ -60,8 +53,8 @@ const addFilesExclude = (directory, exclude) => {
   });
 };
 
-// Call the function to add all files from '../dist' excluding 'release.zip'
-addFilesExclude('../dist', 'release.zip');
+// Call the function to add all files from '../dist' excluding 'release(...).zip'
+addFilesExclude('../dist', `^${config.name}.*\\.zip$`);
 
 // Add other directories and files
 archive.directory(resolve(__dirname, '../media'), 'media');
