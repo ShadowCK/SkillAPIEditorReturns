@@ -304,16 +304,16 @@ class Component {
       const vision = document.createElement('div');
       vision.title = 'Hide Children';
       vision.className = 'builderButton smallButton';
-      vision.style.background = 'url("editor/img/eye.png") no-repeat center #222';
+      vision.style.background = 'url("media/img/eye.png") no-repeat center #222';
       vision.component = this;
       vision.addEventListener('click', () => {
         const comp = vision.component;
         if (comp.childrenHidden) {
           comp.childDiv.style.display = 'block';
-          vision.style.backgroundImage = 'url("editor/img/eye.png")';
+          vision.style.backgroundImage = 'url("media/img/eye.png")';
         } else {
           comp.childDiv.style.display = 'none';
-          vision.style.backgroundImage = 'url("editor/img/eyeShaded.png")';
+          vision.style.backgroundImage = 'url("media/img/eyeShaded.png")';
         }
         comp.childrenHidden = !comp.childrenHidden;
       });
@@ -326,7 +326,7 @@ class Component {
       const duplicate = document.createElement('div');
       duplicate.className = 'builderButton smallButton';
       duplicate.title = 'Duplicate';
-      duplicate.style.background = 'url("editor/img/duplicate.png") no-repeat center #222';
+      duplicate.style.background = 'url("media/img/duplicate.png") no-repeat center #222';
       duplicate.component = this;
       duplicate.addEventListener('click', () => {
         const comp = this;
@@ -341,7 +341,7 @@ class Component {
     const remove = document.createElement('div');
     remove.title = 'Remove';
     remove.className = 'builderButton smallButton cancelButton';
-    remove.style.background = 'url("editor/img/delete.png") no-repeat center #f00';
+    remove.style.background = 'url("media/img/delete.png") no-repeat center #f00';
     remove.component = this;
     remove.addEventListener('click', () => {
       const list = remove.component.parent.components;
