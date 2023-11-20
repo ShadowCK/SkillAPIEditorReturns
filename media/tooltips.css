@@ -11,6 +11,7 @@
 }
 
 /* Base styles for the entire tooltip */
+/* prettier-ignore */
 [data-tooltip]:before,
 [data-tooltip]:after,
 .tooltip:before,
@@ -48,7 +49,7 @@
 .tooltip:focus:before,
 .tooltip:focus:after {
   visibility: visible;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=100)';
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
   opacity: 1;
 }
@@ -59,7 +60,7 @@
   z-index: 1001;
   border: 6px solid transparent;
   background: transparent;
-  content: "";
+  content: '';
 }
 
 /* Base styles for the tooltip's content area */
@@ -107,6 +108,7 @@
   margin-left: -80px;
 }
 
+/* prettier-ignore */
 [data-tooltip]:hover:before,
 [data-tooltip]:hover:after,
 [data-tooltip]:focus:before,
