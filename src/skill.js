@@ -61,6 +61,7 @@ const isSkillNameTaken = (name) => getSkill(name) != null;
  */
 class Skill {
   constructor(name) {
+    /** @type {import('./component.js').Component[]} */
     this.components = [];
 
     // Included to simplify code when adding components
@@ -348,6 +349,8 @@ const setActiveSkill = (value) => {
 const getSkills = () => skills;
 const setSkills = (value) => {
   skills = value;
+  // For debugging only
+  window.skills = value;
 };
 
 export {

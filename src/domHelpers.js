@@ -55,6 +55,10 @@ const setupOptionList = (div, list, type) => {
     if (list[x].premium) {
       h5.className = 'premium';
     }
+    if (list[x].container) {
+      // TODO: Add style for container
+      h5.classList.add('container');
+    }
     h5.textContent = list[x].name;
     h5.component = list[x];
     h5.addEventListener('click', () => {

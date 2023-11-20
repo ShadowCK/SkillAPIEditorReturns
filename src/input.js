@@ -2,72 +2,176 @@
 
 import { filterInt, filterDouble } from './filter.js';
 
-/**
- * Requires one of the given values to be active for the
- * value with the given key for this input to be visible.
- * (this is to be set to each input type as a function)
- *
- * @param {string} key    - the value key of the required value input
- * @param {Array}  values - the list of values that result in this being visible
- */
-function requireValue(key, values) {
-  this.requirements = this.requirements || [];
-  this.requirements.push({ key, values });
-  return this;
-}
+/** @type {Map.<string, FormInput>} */
+const currentComponentInputs = new Map(); // Not necessary - can use component.data instead
 
 /**
- * Does the check when an input is updated to determine
- * the visibility for those requiring certain values.
+ * Does the check when an input is updated or initialized to
+ * determine the visibility for those requiring certain values.
  *
- * @param {Object} e - event data
+ * @param {HTMLElement} htmlElement - The HTML element that contains the requireLists property.
  */
-function checkRequireValue(e) {
-  for (let i = 0; i < this.requireLists.length; i++) {
-    const requireData = this.requireLists[i];
+const checkRequireValue = (htmlElement) => {
+  for (let i = 0; i < htmlElement.requireLists.length; i++) {
+    const requireData = htmlElement.requireLists[i];
     let visible = false;
     for (let j = 0; j < requireData.values.length; j++) {
-      if (requireData.values[j] === (this.value || this.selectedIndex)) {
+      if (requireData.values[j] === (htmlElement.value || htmlElement.selectedIndex)) {
         visible = true;
+        break;
       }
     }
     if (visible) {
-      requireData.element.show();
+      requireData.input.show();
     } else {
-      requireData.element.hide();
+      requireData.input.hide();
     }
   }
-}
+};
 
 /**
- * Applies the values required from above
- */
-function applyRequireValues() {
-  for (let i = 0; this.requirements && i < this.requirements.length; i++) {
-    const { key, values } = this.requirements[i];
-
-    const element = document.getElementById(key);
-    if (element != null) {
-      element.requireLists = element.requireLists || [];
-      element.requireLists.push({ element: this, values });
-      element.addEventListener('change', checkRequireValue);
-      checkRequireValue.bind(element)();
-    }
-  }
-}
-
-/**
- * Sets the tooltip of the input label to show a description of the value
+ * Does the check when an input is updated or initialized to
+ * determine the visibility for those requiring certain values.
  *
- * @param {string} text - the text to display in the tooltip
+ * This is specifically used for saving purposes.
+ *
+ * @param {FormInput} input - The FormInput that contains the requireLists property.
  */
-function setTooltip(text) {
-  if (text.charAt(0) === '[') {
-    this.tooltip = text;
-  } else {
-    this.tooltip = `[${this.key}] ${text}`;
+const checkRequireValueNoDom = (input) => {
+  for (let i = 0; i < input.requireLists.length; i++) {
+    const requireData = input.requireLists[i];
+    let visible = false;
+    for (let j = 0; j < requireData.values.length; j++) {
+      if (requireData.values[j] === input.value) {
+        visible = true;
+        break;
+      }
+    }
+    requireData.input.hidden = !visible;
   }
-  return this;
+};
+
+class FormInput {
+  name;
+
+  key;
+
+  hidden;
+
+  /**
+   * Requires one of the given values to be active for the
+   * value with the given key for this input to be visible.
+   * (this is to be set to each input type as a function)
+   *
+   * @param {string} key    - the value key of the required value input
+   * @param {Array}  values - the list of values that result in this being visible
+   */
+  requireValue(key, values) {
+    this.requirements = this.requirements || [];
+    this.requirements.push({ key, values });
+    return this;
+  }
+
+  /**
+   * Applies the values required from above
+   */
+  applyRequireValues() {
+    for (let i = 0; this.requirements && i < this.requirements.length; i++) {
+      const { key, values } = this.requirements[i];
+      /** The HTMLElement of the required input */
+      const required = document.getElementById(key);
+      if (required != null) {
+        // It's acceptable to add data to the element
+        // as we are not adding extra data to the input.
+        required.requireLists = required.requireLists || [];
+        required.requireLists.push({ input: this, values });
+        checkRequireValue(required);
+        if (!required.hasCheckRequireValueListener) {
+          required.hasCheckRequireValueListener = true;
+          required.addEventListener('change', () => {
+            checkRequireValue(required);
+          });
+        }
+      }
+    }
+  }
+
+  /**
+   * This is specifically used for saving purposes.
+   */
+  applyRequireValuesNoDom() {
+    for (let i = 0; this.requirements && i < this.requirements.length; i++) {
+      const { key, values } = this.requirements[i];
+      /** A duplicate of the required input */
+      const required = currentComponentInputs.get(key);
+      if (required != null) {
+        // We are not mutating the original input, which is good!
+        required.requireLists = required.requireLists || [];
+        required.requireLists.push({ input: this, values });
+        checkRequireValueNoDom(required);
+      }
+    }
+  }
+
+  /**
+   * Sets the tooltip of the input label to show a description of the value
+   *
+   * @param {string} text - the text to display in the tooltip
+   */
+  setTooltip(text) {
+    if (text.charAt(0) === '[') {
+      this.tooltip = text;
+    } else {
+      this.tooltip = `[${this.key}] ${text}`;
+    }
+    return this;
+  }
+
+  /* eslint-disable */
+  dupe() {
+    throw new Error('Method "dupe" must be implemented.');
+  }
+
+  /**
+   * Creates the form HTML for the value and appends
+   * it to the target element
+   *
+   * @param {Element} target - the HTML element to append to
+   */
+  createHTML(target) {
+    throw new Error('Method "createHTML" must be implemented.');
+  }
+
+  /**
+   * Hides the HTML elements of the value
+   */
+  hide() {
+    throw new Error('Method "hide" must be implemented.');
+  }
+
+  /**
+   * Shows the HTML elements of the value
+   */
+  show() {
+    throw new Error('Method "show" must be implemented.');
+  }
+
+  /**
+   * Updates the current value using the HTML elements
+   */
+  update() {
+    throw new Error('Method "update" must be implemented.');
+  }
+
+  /**
+   * Retrieves the save string for the value
+   *
+   * @param {string} spacing - the spacing to go before the value
+   */
+  getSaveString(spacing) {
+    throw new Error('Method "getSaveString" must be implemented.');
+  }
+  /* eslint-enable */
 }
 
 /**
@@ -80,8 +184,9 @@ function setTooltip(text) {
  * @param {Array}  list  - the list of available options
  * @param {Number} index - the current selected index
  */
-class IndexListValue {
+class IndexListValue extends FormInput {
   constructor(name, key, list, index) {
+    super();
     this.name = name;
     this.key = key;
     this.list = list;
@@ -172,11 +277,6 @@ class IndexListValue {
   }
 }
 
-// -- Hooking up the function at the top, see comments there -- //
-IndexListValue.prototype.requireValue = requireValue;
-IndexListValue.prototype.applyRequireValues = applyRequireValues;
-IndexListValue.prototype.setTooltip = setTooltip;
-
 /**
  * Represents a defined list of options for a value
  *
@@ -185,8 +285,9 @@ IndexListValue.prototype.setTooltip = setTooltip;
  * @param {string[]}  list  - the list of available options
  * @param {string} value - the current selected value
  */
-class ListValue {
+class ListValue extends FormInput {
   constructor(name, key, list, value) {
+    super();
     this.name = name;
     this.key = key;
     this.list = list;
@@ -289,11 +390,6 @@ class ListValue {
   }
 }
 
-// -- Hooking up the function at the top, see comments there -- //
-ListValue.prototype.requireValue = requireValue;
-ListValue.prototype.applyRequireValues = applyRequireValues;
-ListValue.prototype.setTooltip = setTooltip;
-
 /**
  * Represents a scaling double value
  *
@@ -302,8 +398,9 @@ ListValue.prototype.setTooltip = setTooltip;
  * @param {Number} base  - the current starting value
  * @param {Number} scale - the current scale of the value
  */
-class AttributeValue {
+class AttributeValue extends FormInput {
   constructor(name, key, base, scale) {
+    super();
     this.name = name;
     this.key = key;
     this.base = base;
@@ -425,11 +522,6 @@ class AttributeValue {
   }
 }
 
-// -- Hooking up the function at the top, see comments there -- //
-AttributeValue.prototype.requireValue = requireValue;
-AttributeValue.prototype.applyRequireValues = applyRequireValues;
-AttributeValue.prototype.setTooltip = setTooltip;
-
 /**
  * Represents a fixed double value
  *
@@ -437,8 +529,9 @@ AttributeValue.prototype.setTooltip = setTooltip;
  * @param {string} key   - the config key of the value
  * @param {Number} value - the current value
  */
-class DoubleValue {
+class DoubleValue extends FormInput {
   constructor(name, key, value) {
+    super();
     this.name = name;
     this.key = key;
     this.value = value;
@@ -524,11 +617,6 @@ class DoubleValue {
   }
 }
 
-// -- Hooking up the function at the top, see comments there -- //
-DoubleValue.prototype.requireValue = requireValue;
-DoubleValue.prototype.applyRequireValues = applyRequireValues;
-DoubleValue.prototype.setTooltip = setTooltip;
-
 /**
  * Represents a fixed integer value
  *
@@ -536,8 +624,9 @@ DoubleValue.prototype.setTooltip = setTooltip;
  * @param {string} key   - the config key of the value
  * @param {Number} value - the current value
  */
-class IntValue {
+class IntValue extends FormInput {
   constructor(name, key, value) {
+    super();
     this.name = name;
     this.key = key;
     this.value = value;
@@ -623,11 +712,6 @@ class IntValue {
   }
 }
 
-// -- Hooking up the function at the top, see comments there -- //
-IntValue.prototype.requireValue = requireValue;
-IntValue.prototype.applyRequireValues = applyRequireValues;
-IntValue.prototype.setTooltip = setTooltip;
-
 /**
  * Represents a fixed string value
  *
@@ -635,8 +719,9 @@ IntValue.prototype.setTooltip = setTooltip;
  * @param {string} key   - the config key of the value
  * @param {string} value - the current value
  */
-class StringValue {
+class StringValue extends FormInput {
   constructor(name, key, value) {
+    super();
     this.name = name;
     this.key = key;
     this.value = value;
@@ -729,11 +814,6 @@ class StringValue {
   }
 }
 
-// -- Hooking up the functions at the top, see comments there -- //
-StringValue.prototype.requireValue = requireValue;
-StringValue.prototype.applyRequireValues = applyRequireValues;
-StringValue.prototype.setTooltip = setTooltip;
-
 /**
  * Represents a fixed string value
  *
@@ -741,8 +821,9 @@ StringValue.prototype.setTooltip = setTooltip;
  * @param {string} key   - the config key of the value
  * @param {Array}  value - the current value
  */
-class StringListValue {
+class StringListValue extends FormInput {
   constructor(name, key, value) {
+    super();
     this.name = name;
     this.key = key;
     this.value = value;
@@ -848,11 +929,6 @@ class StringListValue {
   }
 }
 
-// -- Hooking up the function at the top, see comments there -- //
-StringListValue.prototype.requireValue = requireValue;
-StringListValue.prototype.applyRequireValues = applyRequireValues;
-StringListValue.prototype.setTooltip = setTooltip;
-
 /**
  * Represents a defined list of options for a value
  *
@@ -861,8 +937,9 @@ StringListValue.prototype.setTooltip = setTooltip;
  * @param {Array|function}  list  - the list of available options
  * @param {Array} [values] - the default values to include
  */
-class MultiListValue {
+class MultiListValue extends FormInput {
   constructor(name, key, list, values) {
+    super();
     this.name = name;
     this.key = key;
     this.list = list;
@@ -1007,11 +1084,6 @@ class MultiListValue {
   }
 }
 
-// -- Hooking up the function at the top, see comments there -- //
-MultiListValue.prototype.requireValue = requireValue;
-MultiListValue.prototype.applyRequireValues = applyRequireValues;
-MultiListValue.prototype.setTooltip = setTooltip;
-
 /**
  * Represents a byte-represented list of options
  *
@@ -1020,8 +1092,9 @@ MultiListValue.prototype.setTooltip = setTooltip;
  * @param {Array}  values - the list of names for the values
  * @param {number} value  - the current value
  */
-class ByteListValue {
+class ByteListValue extends FormInput {
   constructor(name, key, values, value) {
+    super();
     this.name = name;
     this.key = key;
     this.value = value;
@@ -1127,11 +1200,6 @@ class ByteListValue {
   }
 }
 
-// -- Hooking up the function at the top, see comments there -- //
-ByteListValue.prototype.requireValue = requireValue;
-ByteListValue.prototype.applyRequireValues = applyRequireValues;
-ByteListValue.prototype.setTooltip = setTooltip;
-
 const copyRequirements = (source, target) => {
   if (source.requirements) {
     target.requirements = source.requirements;
@@ -1142,6 +1210,8 @@ const copyRequirements = (source, target) => {
 const isAttribute = (input) => input instanceof AttributeValue || input.key === 'incompatible';
 
 export {
+  currentComponentInputs,
+  FormInput,
   IndexListValue,
   ListValue,
   AttributeValue,

@@ -128,7 +128,8 @@ const init = () => {
 
   // skill.js
   skill.init();
-  // TODO:
+  // TODO: Click the selected skill in the skill list to switch between Builder and Skill Form.
+  // Also keep the state of builder and skill form. They can be achived by adding a variable of which view is active.
   document.getElementById('skillList').addEventListener('change', (e) => {
     const activeSkill = getActiveSkill();
     const activeComponent = getActiveComponent();

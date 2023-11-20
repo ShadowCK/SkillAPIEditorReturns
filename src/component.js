@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import {
-  copyRequirements,
+  currentComponentInputs,
   ListValue,
   AttributeValue,
   DoubleValue,
@@ -8,6 +8,7 @@ import {
   StringValue,
   StringListValue,
   MultiListValue,
+  copyRequirements,
 } from './input.js';
 import {
   getMaterials,
@@ -201,7 +202,9 @@ class Component {
     this.container = container;
     this.parent = parent;
     this.html = undefined;
+    /** @type {import('./component.js'.Component[])} */
     this.components = [];
+    /** @type {import('./input.js'.FormInput[])} */
     this.data = [
       new StringValue('Icon Key', 'icon-key', '').setTooltip(
         'The key used by the component in the Icon Lore. If this is set to "example" and has a value name of "value", it can be referenced using the string "{attr:example.value}".',
@@ -390,18 +393,21 @@ class Component {
       form.appendChild(desc);
     }
 
+    let index = 1;
+    // If only has Icon Key, will not add Icon Key
     if (this.data.length > 1) {
       const h = document.createElement('hr');
       form.appendChild(h);
 
-      let i = 1;
+      // If no AttributeValue, will not add Icon Key
       for (let j = 1; j < this.data.length; j++) {
         if (this.data[j] instanceof AttributeValue) {
-          i = 0;
+          index = 0;
           break;
         }
       }
-      for (; i < this.data.length; i++) {
+      // Initialize inputs
+      for (let i = index; i < this.data.length; i++) {
         this.data[i].hidden = false;
         this.data[i].createHTML(form);
       }
@@ -428,8 +434,40 @@ class Component {
     target.appendChild(form);
     activeComponent = this;
 
-    for (let i = 0; i < this.data.length; i++) {
+    for (let i = index; i < this.data.length; i++) {
       this.data[i].applyRequireValues();
+    }
+  }
+
+  /**
+   * Check every input, and hide unused inputs.
+   * Hidden inputs will not get exported to the save file.
+   *
+   * This is specifically used for saving purposes.
+   */
+  createFormHTMLNoDom() {
+    currentComponentInputs.clear();
+    // If only has Icon Key, will not add Icon Key
+    let index = 1;
+    if (this.data.length > 1) {
+      // If no AttributeValue, will not add Icon Key
+      for (let j = 1; j < this.data.length; j++) {
+        if (this.data[j] instanceof AttributeValue) {
+          index = 0;
+          break;
+        }
+      }
+      // Initialize inputs
+      for (let i = index; i < this.data.length; i++) {
+        const input = this.data[i];
+        input.hidden = false;
+        // Note: We are adding a copy of the input to the map so that less side effects happen.
+        currentComponentInputs.set(input.key, input.dupe());
+      }
+    }
+
+    for (let i = index; i < this.data.length; i++) {
+      this.data[i].applyRequireValuesNoDom();
     }
   }
 
@@ -448,8 +486,9 @@ class Component {
    * @param {string} spacing - spacing to put before the data
    */
   getSaveString(spacing) {
-    this.createFormHTML();
+    this.createFormHTMLNoDom();
 
+    // Append an id to the component name that is unique in the scope of the skill
     let id = '';
     let index = saveIndex;
     while (index > 0 || id.length === 0) {
@@ -458,16 +497,20 @@ class Component {
     }
     let result = `${spacing + this.name}-${id}:\n`;
     saveIndex++;
-
+    // Component type: trigger, target, condition, mechanic
     result += `${spacing}  type: '${this.type}'\n`;
+    // Component data
     if (this.data.length > 0) {
       result += `${spacing}  data:\n`;
+      // Append inputs that are not hidden
       for (let i = 0; i < this.data.length; i++) {
-        if (!this.data[i].hidden) {
-          result += this.data[i].getSaveString(`${spacing}    `);
+        const input = this.data[i];
+        if (!input.hidden) {
+          result += input.getSaveString(`${spacing}    `);
         }
       }
     }
+    // Child components
     if (this.components.length > 0) {
       result += `${spacing}  children:\n`;
       for (let j = 0; j < this.components.length; j++) {
@@ -4133,6 +4176,35 @@ class MechanicWolf extends Component {
   }
 }
 
+class MechanicTest extends Component {
+  constructor() {
+    super('Test', Type.MECHANIC, false);
+
+    this.description = 'Test';
+
+    this.data.splice(1, 1);
+
+    this.data.push(
+      new ListValue('Check Data', 'check-data', ['True', 'False'], 'False').setTooltip(
+        'Whether or not the item needs to have a certain data value',
+      ),
+    );
+    this.data.push(
+      new ListValue('Check Haha', 'check-haha', ['True', 'False'], 'False').setTooltip(
+        'Whether or not the item needs to have a certain data value',
+      ),
+    );
+    this.data.push(
+      new IntValue('Data', 'data', 0)
+        .requireValue('check-data', ['True'])
+        .requireValue('check-haha', ['True'])
+        .setTooltip('The data value the item must have'),
+    );
+
+    console.log(this.data);
+  }
+}
+
 /**
  * Available triggers for activating skill effects
  */
@@ -4290,7 +4362,8 @@ const Mechanic = {
     WARP_SWAP:           { name: 'Warp Swap',           container: false, constructor: MechanicWarpSwap           },
     WARP_TARGET:         { name: 'Warp Target',         container: false, constructor: MechanicWarpTarget         },
     WARP_VALUE:          { name: 'Warp Value',          container: false, constructor: MechanicWarpValue          },
-    WOLF:                { name: 'Wolf',                container: true,  constructor: MechanicWolf               }
+    WOLF:                { name: 'Wolf',                container: true,  constructor: MechanicWolf               },
+    TEST:                { name: 'Test',                container: false, constructor: MechanicTest,              }
 };
 
 // #endregion
@@ -4303,6 +4376,7 @@ const setActiveComponent = (value) => {
 export {
   setSaveIndex,
   getSaveIndex,
+  Component,
   CustomComponent,
   getActiveComponent,
   setActiveComponent,
