@@ -8,7 +8,8 @@
     "webpack": "webpack",
     "webpackWatch": "webpack watch",
     "pretest": "eslint ./src --fix",
-    "test": "echo \"Tests complete\""
+    "test": "echo \"Tests complete\"",
+    "pack": "npm run webpack && node ./pack/pack.js"
   },
   "keywords": [
     "SkillAPI",
@@ -18,10 +19,12 @@
   "author": "Zhao Jin (Shadow_CK)",
   "license": "UNLICENSED",
   "devDependencies": {
+    "archiver": "^6.0.1",
     "eslint": "^8.53.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.29.0",
+    "glob": "^10.3.10",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   },
