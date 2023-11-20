@@ -104,7 +104,7 @@ class IndexListValue {
    */
   createHTML(target) {
     this.label = document.createElement('label');
-    this.label.innerHTML = this.name;
+    this.label.textContent = this.name;
     if (this.tooltip) {
       this.label.setAttribute('data-tooltip', this.tooltip);
       this.label.className = 'tooltip';
@@ -115,7 +115,7 @@ class IndexListValue {
     this.select.id = this.key;
     for (let i = 0; i < this.list.length; i++) {
       const option = document.createElement('option');
-      option.innerHTML = this.list[i];
+      option.text = this.list[i];
       this.select.add(option);
     }
     this.select.selectedIndex = this.index;
@@ -209,7 +209,7 @@ class ListValue {
    */
   createHTML(target) {
     this.label = document.createElement('label');
-    this.label.innerHTML = this.name;
+    this.label.textContent = this.name;
     if (this.tooltip) {
       this.label.setAttribute('data-tooltip', this.tooltip);
       this.label.className = 'tooltip';
@@ -224,7 +224,7 @@ class ListValue {
     const list = typeof this.list === 'function' ? this.list() : this.list;
     for (let i = 0; i < list.length; i++) {
       const option = document.createElement('option');
-      option.innerHTML = list[i];
+      option.text = list[i];
       this.select.add(option);
 
       const lower = list[i].toLowerCase().replace('_', ' ');
@@ -263,7 +263,7 @@ class ListValue {
    */
   update() {
     if (this.select) {
-      this.value = this.select[this.select.selectedIndex].innerHTML;
+      this.value = this.select[this.select.selectedIndex].text;
       if (this.value === 'None') {
         this.value = '';
       }
@@ -329,7 +329,7 @@ class AttributeValue {
    */
   createHTML(target) {
     this.label = document.createElement('label');
-    this.label.innerHTML = this.name;
+    this.label.textContent = this.name;
     if (this.tooltip) {
       this.label.setAttribute('data-tooltip', this.tooltip);
       this.label.className = 'tooltip';
@@ -343,7 +343,7 @@ class AttributeValue {
     target.appendChild(this.baseBox);
 
     this.left = document.createElement('label');
-    this.left.innerHTML = '+ (';
+    this.left.textContent = '+ (';
     this.left.className = 'attrLabel';
     target.appendChild(this.left);
 
@@ -354,7 +354,7 @@ class AttributeValue {
     target.appendChild(this.scaleBox);
 
     this.right = document.createElement('label');
-    this.right.innerHTML = ')';
+    this.right.textContent = ')';
     this.right.className = 'attrLabel';
     target.appendChild(this.right);
   }
@@ -460,7 +460,7 @@ class DoubleValue {
    */
   createHTML(target) {
     this.label = document.createElement('label');
-    this.label.innerHTML = this.name;
+    this.label.textContent = this.name;
     if (this.tooltip) {
       this.label.setAttribute('data-tooltip', this.tooltip);
       this.label.className = 'tooltip';
@@ -559,7 +559,7 @@ class IntValue {
    */
   createHTML(target) {
     this.label = document.createElement('label');
-    this.label.innerHTML = this.name;
+    this.label.textContent = this.name;
     if (this.tooltip) {
       this.label.setAttribute('data-tooltip', this.tooltip);
       this.label.className = 'tooltip';
@@ -658,7 +658,7 @@ class StringValue {
    */
   createHTML(target) {
     this.label = document.createElement('label');
-    this.label.innerHTML = this.name;
+    this.label.textContent = this.name;
     if (this.tooltip) {
       this.label.setAttribute('data-tooltip', this.tooltip);
       this.label.className = 'tooltip';
@@ -764,7 +764,7 @@ class StringListValue {
    */
   createHTML(target) {
     this.label = document.createElement('label');
-    this.label.innerHTML = this.name;
+    this.label.textContent = this.name;
     this.label.className = 'areaLabel';
     if (this.tooltip) {
       this.label.setAttribute('data-tooltip', this.tooltip);
@@ -887,7 +887,7 @@ class MultiListValue {
    */
   createHTML(target) {
     this.label = document.createElement('label');
-    this.label.innerHTML = this.name;
+    this.label.textContent = this.name;
     if (this.tooltip) {
       this.label.setAttribute('data-tooltip', this.tooltip);
       this.label.className = 'tooltip';
@@ -899,28 +899,27 @@ class MultiListValue {
     select.id = this.key;
 
     let option = document.createElement('option');
-    option.innerHTML = '- Select -';
+    option.text = '- Select -';
     select.add(option);
     const list = typeof this.list === 'function' ? this.list() : this.list;
     for (let i = 0; i < list.length; i++) {
       option = document.createElement('option');
-      option.innerHTML = list[i];
+      option.text = list[i];
       select.add(option);
     }
     select.selectedIndex = 0;
-    select.inputRef = this;
     select.addEventListener('change', () => {
       if (select.selectedIndex !== 0) {
-        const val = select[select.selectedIndex].innerHTML;
-        // this.inputRef.values.add(val);
-        select.inputRef.populate(val);
+        const val = select[select.selectedIndex].text;
+        // this.values.add(val);
+        this.populate(val);
         select.selectedIndex = 0;
       }
     });
     target.appendChild(this.select);
 
     this.help = document.createElement('label');
-    this.help.innerHTML = '- Click to remove -';
+    this.help.textContent = '- Click to remove -';
     this.help.className = 'grayed';
     target.appendChild(this.help);
 
@@ -936,7 +935,7 @@ class MultiListValue {
   populate(value) {
     const entry = document.createElement('div');
     entry.className = 'multilist';
-    entry.innerHTML = value;
+    entry.textContent = value;
     entry.addEventListener('click', () => {
       entry.parentNode.removeChild(entry);
     });
@@ -973,7 +972,7 @@ class MultiListValue {
   update() {
     this.values = [];
     for (let entry = this.div.firstChild; entry !== null; entry = entry.nextSibling) {
-      this.values.push(entry.innerHTML);
+      this.values.push(entry.textContent);
     }
   }
 
@@ -1045,7 +1044,7 @@ class ByteListValue {
    */
   createHTML(target) {
     this.label = document.createElement('label');
-    this.label.innerHTML = this.name;
+    this.label.textContent = this.name;
     this.label.className = 'areaLabel';
     if (this.tooltip) {
       this.label.setAttribute('data-tooltip', this.tooltip);

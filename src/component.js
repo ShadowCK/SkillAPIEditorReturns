@@ -278,7 +278,7 @@ class Component {
     const label = document.createElement('h3');
     label.title = `Edit ${this.name} options`;
     label.className = `${this.type}Label`;
-    label.innerHTML = this.name;
+    label.textContent = this.name;
     label.component = this;
     label.addEventListener('click', () => {
       this.createFormHTML();
@@ -290,7 +290,7 @@ class Component {
     if (this.container) {
       const add = document.createElement('div');
       add.className = 'builderButton';
-      add.innerHTML = '+ Add Child';
+      add.textContent = '+ Add Child';
       add.component = this;
       add.addEventListener('click', () => {
         activeComponent = this;
@@ -381,12 +381,12 @@ class Component {
     const form = document.createElement('form');
 
     const header = document.createElement('h4');
-    header.innerHTML = this.name;
+    header.textContent = this.name;
     form.appendChild(header);
 
     if (this.description) {
       const desc = document.createElement('p');
-      desc.innerHTML = this.description;
+      desc.textContent = this.description;
       form.appendChild(desc);
     }
 
@@ -412,7 +412,7 @@ class Component {
 
     const done = document.createElement('h5');
     done.className = 'doneButton';
-    done.innerHTML = 'Done';
+    done.textContent = 'Done';
     done.component = this;
     done.addEventListener('click', () => {
       this.update();
@@ -423,6 +423,7 @@ class Component {
 
     this.form = form;
 
+    // Reset skill form
     target.innerHTML = '';
     target.appendChild(form);
     activeComponent = this;

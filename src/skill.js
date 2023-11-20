@@ -6,7 +6,7 @@ import {
   StringListValue,
   isAttribute,
 } from './input.js';
-import { setSaveIndex } from './component.js';
+import { setActiveComponent, setSaveIndex } from './component.js';
 import { getMaterials } from './data/index.js';
 
 // DI - expose required depdenencies
@@ -140,6 +140,7 @@ class Skill {
    */
   apply() {
     const builder = document.getElementById('builderContent');
+    // Reset builder
     builder.innerHTML = '';
 
     // Set up the builder content
@@ -156,7 +157,7 @@ class Skill {
     const form = document.createElement('form');
 
     const header = document.createElement('h4');
-    header.innerHTML = 'Skill Details';
+    header.textContent = 'Skill Details';
     form.appendChild(header);
 
     form.appendChild(document.createElement('hr'));
@@ -178,15 +179,17 @@ class Skill {
 
     form.appendChild(this.createEditButton(form));
 
+    // Reset skill form
     const target = document.getElementById('skillForm');
     target.innerHTML = '';
     target.appendChild(form);
+    setActiveComponent(this);
   }
 
   createEditButton(form) {
     const done = document.createElement('h5');
     done.className = 'doneButton';
-    done.innerHTML = 'Edit Effects';
+    done.textContent = 'Edit Effects';
     done.skill = this;
     done.form = form;
     done.addEventListener('click', () => {

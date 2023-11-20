@@ -187,7 +187,7 @@ class Class {
     const form = document.createElement('form');
 
     const header = document.createElement('h4');
-    header.innerHTML = 'Class Details';
+    header.textContent = 'Class Details';
     form.appendChild(header);
 
     const h = document.createElement('hr');
@@ -206,7 +206,8 @@ class Class {
       if (this.data[i].name === 'Mana') {
         const dragInstructions = document.createElement('label');
         dragInstructions.id = 'attribute-label';
-        dragInstructions.innerHTML = 'Drag/Drop your attributes.yml file to see custom attributes';
+        dragInstructions.textContent =
+          'Drag/Drop your attributes.yml file to see custom attributes';
         form.appendChild(dragInstructions);
         this.updateAttribs(i + 1);
       }
@@ -216,7 +217,7 @@ class Class {
     form.appendChild(hr);
 
     const save = document.createElement('h5');
-    save.innerHTML = 'Save Class';
+    save.textContent = 'Save Class';
     save.classData = this;
     save.addEventListener('click', () => {
       this.update();
@@ -225,7 +226,7 @@ class Class {
     form.appendChild(save);
 
     const del = document.createElement('h5');
-    del.innerHTML = 'Delete';
+    del.textContent = 'Delete';
     del.className = 'cancelButton';
     del.addEventListener('click', () => {
       const list = document.getElementById('classList');
@@ -242,6 +243,7 @@ class Class {
     });
     form.appendChild(del);
 
+    // Reset class form
     const target = document.getElementById('classForm');
     target.innerHTML = '';
     target.appendChild(form);

@@ -41,6 +41,7 @@ import { getActiveClass, setActiveClass, getClasses, newClass } from './class.js
 import Attribute from './classes/Attribute.js';
 
 const getSkillSaveData = () => {
+  const t1 = performance.now();
   const activeSkill = getActiveSkill();
   const activeComponent = getActiveComponent();
   const skills = getSkills();
@@ -50,7 +51,7 @@ const getSkillSaveData = () => {
     activeComponent.update();
   }
   let data = 'loaded: false\n';
-  const alphabetic = skills.slice(0);
+  const alphabetic = [...skills];
   alphabetic.sort((a, b) => {
     const an = a.data[0].value;
     const bn = b.data[0].value;
@@ -65,6 +66,8 @@ const getSkillSaveData = () => {
   for (let i = 0; i < alphabetic.length; i++) {
     data += alphabetic[i].getSaveString();
   }
+  const t2 = performance.now();
+  console.log(`Call to getSkillSaveData took ${t2 - t1} milliseconds.`);
   return data;
 };
 
@@ -125,6 +128,7 @@ const init = () => {
 
   // skill.js
   skill.init();
+  // TODO:
   document.getElementById('skillList').addEventListener('change', (e) => {
     const activeSkill = getActiveSkill();
     const activeComponent = getActiveComponent();

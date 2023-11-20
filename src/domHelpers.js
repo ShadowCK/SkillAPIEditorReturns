@@ -33,6 +33,8 @@ const showSkillPage = (name) => {
 };
 
 const setupOptionList = (div, list, type) => {
+  // Reset div
+  // FIXME: This seems unnecessary. The div should be empty already.
   div.innerHTML = '';
   let x;
   let output = '';
@@ -53,11 +55,17 @@ const setupOptionList = (div, list, type) => {
     if (list[x].premium) {
       h5.className = 'premium';
     }
-    h5.innerHTML = list[x].name;
+    h5.textContent = list[x].name;
     h5.component = list[x];
     h5.addEventListener('click', () => {
       const activeComponent = getActiveComponent();
       const activeSkill = getActiveSkill();
+      console.log('----- Active Component -----');
+      console.log(activeComponent);
+      console.log('-----   Active Skill   -----');
+      console.log(activeSkill);
+      console.log('----------------------------');
+      // If the user is adding a trigger that already exists, go back to the builder
       if (activeComponent === activeSkill && activeSkill.usingTrigger(h5.component.name)) {
         showSkillPage('builder');
       } else {
@@ -96,7 +104,7 @@ const saveToFile = (file, data) => {
 
   const downloadLink = document.createElement('a');
   downloadLink.download = file;
-  downloadLink.innerHTML = 'Download File';
+  downloadLink.text = 'Download File';
   if (window.webkitURL != null) {
     // Chrome allows the link to be clicked
     // without actually adding it to the DOM.
