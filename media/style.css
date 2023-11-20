@@ -344,6 +344,25 @@ hr {
   background-color: #6aa;
 }
 
+.container {
+  position: relative;
+  filter: drop-shadow(0 0 2px #4c5351);
+}
+
+.container::before {
+  border-radius: 20px;
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: inherit;
+  z-index: 99999;
+  opacity: 0.16;
+  background-color: #d6c4f0;
+}
+
 .tab {
   position: relative;
   float: left;

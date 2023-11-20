@@ -56,7 +56,6 @@ const setupOptionList = (div, list, type) => {
       h5.className = 'premium';
     }
     if (list[x].container) {
-      // TODO: Add style for container
       h5.classList.add('container');
     }
     h5.textContent = list[x].name;
