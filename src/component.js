@@ -1,6 +1,5 @@
 /* eslint-disable max-classes-per-file */
 import {
-  currentComponentInputs,
   ListValue,
   AttributeValue,
   DoubleValue,
@@ -180,10 +179,10 @@ const drop = (e) => {
  */
 // prettier-ignore
 const Type = {
-    TRIGGER   : 'trigger',
-    TARGET    : 'target',
-    CONDITION : 'condition',
-    MECHANIC  : 'mechanic'
+  TRIGGER   : 'trigger',
+  TARGET    : 'target',
+  CONDITION : 'condition',
+  MECHANIC  : 'mechanic'
 };
 
 // #region -- Component data ------------------------------------------------------ //
@@ -375,6 +374,65 @@ class Component {
   }
 
   /**
+   * Add callback to required DOM elements and
+   * check required values to determine the visibility of an input
+   *
+   * @param {FormInput} input
+   */
+  applyRequireValues(input) {
+    if (!input.requirements) {
+      return;
+    }
+
+    const fulfilled = input.requirements.every(({ key, values }) => {
+      /** The HTMLElement of the required input */
+      const required = document.getElementById(key);
+
+      if (required != null) {
+        // It's acceptable to add data to the element
+        // as we are not adding extra data to the input.
+        required.requireLists = required.requireLists || new Set();
+        required.requireLists.add(input);
+        if (!required.hasCheckRequireValueListener) {
+          required.hasCheckRequireValueListener = true;
+          required.addEventListener('change', () => {
+            required.requireLists.forEach((source) => this.applyRequireValues(source));
+          });
+        }
+
+        return values.includes(required.value);
+      }
+
+      return false;
+    });
+
+    if (fulfilled) {
+      input.show();
+    } else {
+      input.hide();
+    }
+  }
+
+  /**
+   * Use Input objects instead of DOM elements to check required values
+   * This is specifically used for saving purposes.
+   *
+   * @param {FormInput} input
+   */
+  applyRequireValuesNoDOM(input) {
+    if (!input.requirements) {
+      return;
+    }
+
+    const fulfilled = input.requirements.every(({ key, values }) => {
+      const required = this.data.find((x) => x.key === key);
+      return required != null && values.includes(required.value);
+    });
+
+    input.hidden = !fulfilled;
+  }
+
+  /**
    * Creates the form HTML for editing the component data and
    * applies it to the appropriate part of the page.
    */
@@ -435,7 +493,7 @@ class Component {
     activeComponent = this;
 
     for (let i = index; i < this.data.length; i++) {
-      this.data[i].applyRequireValues();
+      this.applyRequireValues(this.data[i]);
     }
   }
 
@@ -446,23 +504,13 @@ class Component {
    * This is specifically used for saving purposes.
    */
   createFormHTMLNoDom() {
-    currentComponentInputs.clear();
-
     // data[0] is icon key
     if (this.data.length > 1) {
       // If has AttributeValue, will add Icon Key
-      const index = this.data.some(input => input instanceof AttributeValue) ? 0 : 1;
-
-      // Initialize inputs
-      for (let i = index; i < this.data.length; i++) {
-        const input = this.data[i];
-        input.hidden = false;
-        // Note: We are adding a copy of the input to the map so that less side effects happen.
-        currentComponentInputs.set(input.key, input.dupe());
-      }
+      const index = this.data.some((input) => input instanceof AttributeValue) ? 0 : 1;
 
       for (let i = index; i < this.data.length; i++) {
-        this.data[i].applyRequireValuesNoDom();
+        this.applyRequireValuesNoDOM(this.data[i]);
       }
     }
   }
