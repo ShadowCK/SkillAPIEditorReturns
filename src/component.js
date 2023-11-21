@@ -481,16 +481,30 @@ class Component {
     const hr = document.createElement('hr');
     form.appendChild(hr);
 
-    const done = document.createElement('h5');
-    done.className = 'doneButton';
-    done.textContent = 'Done';
-    done.component = this;
-    done.addEventListener('click', () => {
-      this.update();
-      document.getElementById('skillForm').removeChild(this.form);
-      showSkillPage('builder');
-    });
-    form.appendChild(done);
+    if (true /* SplitSkillFormRight */) {
+      const close = document.createElement('h5');
+      close.className = 'doneButton';
+      close.textContent = 'Close';
+      close.component = this;
+      close.addEventListener('click', () => {
+        document.getElementById('skillForm').removeChild(this.form);
+        showSkillPage('builder');
+      });
+      form.appendChild(close);
+      // Auto save on change
+      form.addEventListener('change', ()=>this.update());
+    } else {
+      const done = document.createElement('h5');
+      done.className = 'doneButton';
+      done.textContent = 'Done';
+      done.component = this;
+      done.addEventListener('click', () => {
+        this.update();
+        document.getElementById('skillForm').removeChild(this.form);
+        showSkillPage('builder');
+      });
+      form.appendChild(done);
+    }
 
     this.form = form;
 
