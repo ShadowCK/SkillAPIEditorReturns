@@ -284,7 +284,14 @@ class Component {
     label.component = this;
     label.addEventListener('click', () => {
       this.createFormHTML();
-      showSkillPage('skillForm');
+      if (true /* skillFormSplitRight */) {
+        document.getElementById('builder').setAttribute('data-style', 'half-width');
+        document.getElementById('skillForm').setAttribute('data-style', 'half-width');
+        label.scrollIntoViewIfNeeded();
+        showSkillPage('skillForm', false);
+      } else {
+        showSkillPage('skillForm');
+      }
     });
     div.appendChild(label);
 

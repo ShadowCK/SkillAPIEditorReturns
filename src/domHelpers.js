@@ -25,11 +25,17 @@ const setPageStyle = (name, visible) => {
 /**
  * Returns the view back to the skill builder when in the skill tab
  */
-const showSkillPage = (name) => {
-  setPageStyle('builder', name);
-  setPageStyle('skillForm', name);
-  setPageStyle('componentChooser', name);
-  setPageStyle('triggerChooser', name);
+const showSkillPage = (name, exlusive = true) => {
+  if (exlusive) {
+    document.getElementById('builder').removeAttribute('data-style');
+    document.getElementById('skillForm').removeAttribute('data-style');
+    setPageStyle('builder', name);
+    setPageStyle('skillForm', name);
+    setPageStyle('componentChooser', name);
+    setPageStyle('triggerChooser', name);
+  } else {
+    setPageStyle(name, name);
+  }
 };
 
 const setupOptionList = (div, list, type) => {
