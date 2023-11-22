@@ -608,3 +608,31 @@ textArea {
 #skillForm .input-comment {
   height: 60px;
 }
+
+.settingButton {
+  border: 2px solid #474747;
+  color: #e4e8e3;
+  transition: background-color 600ms, color 600ms, border-color 600ms;
+}
+
+.settingButton.on {
+  background-color: #76b947; /* 开启状态的亮绿色 */
+  color: #ffffff;
+}
+
+.settingButton.off {
+  background-color: #393939; /* 关闭状态的深灰色 */
+  color: #a3a3a3;
+}
+
+.settingButton:hover.on {
+  background-color: #659f3d; /* 开启状态悬停的稍暗绿色 */
+  border-color: #558835;
+  color: #f0f0f0;
+}
+
+.settingButton:hover.off {
+  background-color: #2f2f2f; /* 关闭状态悬停的更深灰色 */
+  border-color: #1f1f1f;
+  color: #bdbdbd;
+}

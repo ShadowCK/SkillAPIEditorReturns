@@ -60,7 +60,8 @@ function loadSection(data) {
     } else if (key === this.componentKey) {
       const components = data[key];
       Object.keys(components).forEach((componentKey) => {
-        const { type } = components[componentKey];
+        const { type, comment } = components[componentKey];
+
         let list;
         if (type === Type.TRIGGER) {
           list = Trigger;
@@ -82,6 +83,7 @@ function loadSection(data) {
               const component = list[listKey].constructor
                 ? new list[listKey].constructor()
                 : list[listKey].supplier();
+              component.comment.load(comment);
               component.parent = this;
               this.components.push(component);
               component.load(components[componentKey]);

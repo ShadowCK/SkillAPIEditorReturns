@@ -25,6 +25,9 @@ import {
   getDyes,
 } from './data/index.js';
 
+import * as appData from './appData.js';
+import { settings } from './appData.js';
+
 // DI - expose required depdenencies
 let showSkillPage;
 const injectLoadSection = (func) => {
@@ -50,6 +53,54 @@ let saveIndex;
 const getSaveIndex = () => saveIndex;
 const setSaveIndex = (value) => {
   saveIndex = value;
+};
+
+const resetSettingButton = (state, button, onText, offText) => {
+  button.textContent = state ? onText : offText; // Unnecessary for now we are recreating the form.
+  button.classList.add(state ? 'on' : 'off');
+  button.classList.remove(state ? 'off' : 'on');
+};
+
+const createSettingButton = ({
+  form,
+  component,
+  button = document.createElement('h5'),
+  key,
+  callback,
+  onText,
+  offText,
+}) => {
+  button.key = key;
+  button.className = 'settingButton';
+  // Set text and class with the default state
+  resetSettingButton(appData.get(key), button, onText, offText);
+
+  button.addEventListener('click', () => {
+    // Revert on/off state
+    appData.set(key, !appData.get(key));
+    // Reset text and class with the new state
+    resetSettingButton(appData.get(key), button, onText, offText);
+    if (callback != null && typeof callback === 'function') {
+      callback();
+    }
+    // Recreate the form.
+    // We can also set the visibility of the comment input here.
+    // FIXME: This may lead to potential bugs as creating a new form clears out any stored data in previous elements.
+    // If the form is holding extra data after it was created, it will be lost.
+    component.update();
+    component.createFormHTML();
+  });
+  form.appendChild(button);
+};
+
+const createSettingsButtons = (component, form) => {
+  createSettingButton({
+    form,
+    component,
+    key: settings.ShowComment,
+    onText: 'Hide Comment',
+    offText: 'Show Comment',
+  });
 };
 
 const DAMAGE_TYPES = [
@@ -396,13 +447,19 @@ class Component {
       form.appendChild(desc);
     }
 
-    // Always add comment
-    form.appendChild(document.createElement('hr'));
-    this.comment.createHTML(form);
+    // Add comment if "show-comment" setting is on
+    if (appData.get('show-comment')) {
+      form.appendChild(document.createElement('hr'));
+      this.comment.createHTML(form);
+    }
 
     let index = 1;
     // If only has Icon Key, will not add Icon Key
     if (this.data.length > 1) {
+      // If comment was not created (otherwise it will create a divider with it), create a divider
+      if (!form.querySelector('hr')) {
+        form.appendChild(document.createElement('hr'));
+      }
       // If no AttributeValue, will not add Icon Key
       for (let j = 1; j < this.data.length; j++) {
         if (this.data[j] instanceof AttributeValue) {
@@ -430,6 +487,8 @@ class Component {
       showSkillPage('builder');
     });
     form.appendChild(done);
+
+    createSettingsButtons(this, form);
 
     this.form = form;
 
@@ -475,6 +534,7 @@ class Component {
    * Updates the component using the form data if it exists
    */
   update() {
+    this.comment.update();
     for (let j = 0; j < this.data.length; j++) {
       this.data[j].update();
     }
@@ -499,6 +559,8 @@ class Component {
     saveIndex++;
     // Component type: trigger, target, condition, mechanic
     result += `${spacing}  type: '${this.type}'\n`;
+    // Comment
+    result += `${this.comment.getSaveString(`${spacing}  `)}`;
     // Component data
     if (this.data.length > 0) {
       result += `${spacing}  data:\n`;
