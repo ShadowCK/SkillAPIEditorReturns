@@ -33,6 +33,18 @@ const getCurrentForm = (source) => {
   return forms.find((form) => document.getElementById(form).style.display === 'block');
 };
 
+const updateSelectedOptionCSS = (action) => {
+  if (action === 'skillForm') {
+    selectedOption.classList.remove('in-builder');
+    selectedOption.classList.add('active-skill', 'in-skill-form');
+  } else if (action === 'builder') {
+    selectedOption.classList.remove('in-skill-form');
+    selectedOption.classList.add('active-skill', 'in-builder');
+  } else if (action === 'reset') {
+    selectedOption.classList.remove('active-skill', 'in-builder', 'in-skill-form');
+  }
+};
+
 /**
  * Sets the style for the page based on the current visible one
  */
@@ -40,13 +52,7 @@ const setPageStyle = (name, visible) => {
   const target = document.getElementById(name);
   if (visible === name) {
     target.style.display = 'block';
-    if (name === 'skillForm') {
-      selectedOption.classList.remove('in-builder');
-      selectedOption.classList.add('active-skill', 'in-skill-form');
-    } else if (name === 'builder') {
-      selectedOption.classList.remove('in-skill-form');
-      selectedOption.classList.add('active-skill', 'in-builder');
-    }
+    updateSelectedOptionCSS(name);
   } else {
     target.style.display = 'none';
   }
@@ -186,6 +192,7 @@ export {
   getSelectedOption,
   setSelectedOption,
   getCurrentForm,
+  updateSelectedOptionCSS,
   setPageStyle,
   showSkillPage,
   setupOptionList,

@@ -32,8 +32,8 @@ import {
   saveToFile,
   switchToSkills,
   switchToClasses,
-  getSelectedOption,
   setSelectedOption,
+  updateSelectedOptionCSS,
 } from './domHelpers.js';
 import { initSkills, initClasses, loadFiles, parseConfig } from './loader.js';
 import { getActiveComponent, setActiveComponent } from './component.js';
@@ -188,9 +188,8 @@ const init = () => {
     setActiveComponent(newActiveSkill);
 
     const currentForm = getCurrentForm();
-    const selectedOption = getSelectedOption();
     // Clean up old selected option
-    selectedOption.classList.remove('active-skill', 'in-builder', 'in-skill-form');
+    updateSelectedOptionCSS('reset');
     // Set up new selected option
     setSelectedOption(skillList.options[skillList.selectedIndex]);
     if (currentForm === 'skillForm') {
