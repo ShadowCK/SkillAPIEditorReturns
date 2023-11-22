@@ -16,5 +16,8 @@
   },
   "parserOptions": {
     "ecmaVersion": "latest"
+  },
+  "globals": {
+    "WEBPACK_MODE": "readonly" // Our webpack "macro"
   }
 }

@@ -116,8 +116,10 @@ document.addEventListener(
 
 const init = () => {
   // debug.js
-  initDebug();
-
+  if (WEBPACK_MODE === 'development') {
+    initDebug();
+    console.log('You are in development mode! debug.js is initialized.');
+  }
   // component.js
   const config = localStorage.getItem('config');
   if (config) {

@@ -350,8 +350,6 @@ const setActiveSkill = (value) => {
 const getSkills = () => skills;
 const setSkills = (value) => {
   skills = value;
-  // For debugging only
-  window.skills = value;
 };
 
 export {
