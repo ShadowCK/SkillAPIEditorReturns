@@ -15,6 +15,14 @@ const setSkillsActive = (value) => {
   skillsActive = value;
 };
 
+/** @type {HTMLSelectElement} */
+const skillList = document.getElementById('skillList');
+let selectedOption = skillList.options[skillList.selectedIndex];
+const getSelectedOption = () => selectedOption;
+const setSelectedOption = (option) => {
+  selectedOption = option;
+};
+
 /**
  * Retrieves the current form being displayed.
  * @param {Array<string>} source - Optional. An array of form IDs to check. Defaults to ['builder', 'skillForm', 'componentChooser', 'triggerChooser'].
@@ -29,7 +37,19 @@ const getCurrentForm = (source) => {
  * Sets the style for the page based on the current visible one
  */
 const setPageStyle = (name, visible) => {
-  document.getElementById(name).style.display = visible === name ? 'block' : 'none';
+  const target = document.getElementById(name);
+  if (visible === name) {
+    target.style.display = 'block';
+    if (name === 'skillForm') {
+      selectedOption.classList.remove('in-builder');
+      selectedOption.classList.add('active-skill', 'in-skill-form');
+    } else if (name === 'builder') {
+      selectedOption.classList.remove('in-skill-form');
+      selectedOption.classList.add('active-skill', 'in-builder');
+    }
+  } else {
+    target.style.display = 'none';
+  }
 };
 
 /**
@@ -163,6 +183,8 @@ injectShowSkillPage2(showSkillPage);
 export {
   getSkillsActive,
   setSkillsActive,
+  getSelectedOption,
+  setSelectedOption,
   getCurrentForm,
   setPageStyle,
   showSkillPage,
