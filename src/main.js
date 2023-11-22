@@ -26,6 +26,7 @@ import _ from 'underscore';
 
 import {
   getSkillsActive,
+  getCurrentForm,
   showSkillPage,
   refreshOptions,
   saveToFile,
@@ -137,12 +138,39 @@ const init = () => {
 
   // skill.js
   skill.init();
-  // TODO: Click the selected skill in the skill list to switch between Builder and Skill Form.
-  // Also keep the state of builder and skill form. They can be achived by adding a variable of which view is active.
-  document.getElementById('skillList').addEventListener('change', (e) => {
+
+  const skillList = document.getElementById('skillList');
+  skillList.addEventListener('mousedown', (e) => {
+    if (e.target.tagName !== 'OPTION') {
+      return;
+    }
+
+    // find of the index of e.target in skilllist
+    const { options } = skillList;
+    let currentSelectedIndex;
+    for (let i = 0; i < options.length; i++) {
+      if (options[i] === e.target) {
+        currentSelectedIndex = i;
+        break;
+      }
+    }
+
+    const previousSelectedIndex = skillList.selectedIndex;
+
+    // Same skill option is selected
+    if (previousSelectedIndex === currentSelectedIndex) {
+      const currentForm = getCurrentForm();
+      if (currentForm === 'skillForm') {
+        showSkillPage('builder');
+      } else if (currentForm === 'builder') {
+        showSkillPage('skillForm');
+      }
+    }
+  });
+
+  skillList.addEventListener('change', () => {
     updateActiveSkillAndComponent();
 
-    const skillList = e.currentTarget;
     if (skillList.selectedIndex === skillList.length - 1) {
       newSkill();
     } else {
@@ -150,10 +178,17 @@ const init = () => {
       const newActiveSkill = skills[skillList.selectedIndex];
       setActiveSkill(newActiveSkill);
       setActiveComponent(newActiveSkill);
-      newActiveSkill.apply();
-      showSkillPage('builder');
+      const currentForm = getCurrentForm();
+      if (currentForm === 'skillForm') {
+        newActiveSkill.createFormHTML();
+        showSkillPage('skillForm');
+      } else if (currentForm === 'builder') {
+        newActiveSkill.apply();
+        showSkillPage('builder');
+      }
     }
   });
+
   document.getElementById('skillDetails').addEventListener('click', () => {
     const activeSkill = getActiveSkill();
     activeSkill.createFormHTML();

@@ -25,7 +25,9 @@ const injectShowSkillPage = (func) => {
   showSkillPage = func;
 };
 
+/** @type {Skill} */
 let activeSkill;
+/** @type {Skill[]} */
 let skills;
 
 /**

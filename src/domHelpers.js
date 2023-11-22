@@ -16,6 +16,16 @@ const setSkillsActive = (value) => {
 };
 
 /**
+ * Retrieves the current form being displayed.
+ * @param {Array<string>} source - Optional. An array of form IDs to check. Defaults to ['builder', 'skillForm', 'componentChooser', 'triggerChooser'].
+ * @returns {string|null} - The ID of the current form being displayed, or null if no form is found.
+ */
+const getCurrentForm = (source) => {
+  const forms = source || ['builder', 'skillForm', 'componentChooser', 'triggerChooser'];
+  return forms.find((form) => document.getElementById(form).style.display === 'block');
+};
+
+/**
  * Sets the style for the page based on the current visible one
  */
 const setPageStyle = (name, visible) => {
@@ -153,6 +163,7 @@ injectShowSkillPage2(showSkillPage);
 export {
   getSkillsActive,
   setSkillsActive,
+  getCurrentForm,
   setPageStyle,
   showSkillPage,
   setupOptionList,
