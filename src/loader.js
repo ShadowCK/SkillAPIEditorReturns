@@ -83,7 +83,9 @@ function loadSection(data) {
               const component = list[listKey].constructor
                 ? new list[listKey].constructor()
                 : list[listKey].supplier();
-              component.comment.load(comment);
+              if (comment) {
+                component.comment.load(comment);
+              }
               component.parent = this;
               this.components.push(component);
               component.load(components[componentKey]);

@@ -255,7 +255,7 @@ class Component {
     this.html = undefined;
     /** @type {import('./component.js'.Component[])} */
     this.components = [];
-    this.comment = new StringListValue('Comment', 'comment', '')
+    this.comment = new StringListValue('Comment', 'comment', [])
       .setTooltip('A comment to help you remember what this component does')
       .addHTMLClasses('input-comment');
     /** @type {import('./input.js'.FormInput[])} */
