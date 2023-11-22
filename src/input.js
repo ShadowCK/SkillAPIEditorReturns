@@ -38,7 +38,7 @@ const checkRequireValue = (htmlElement) => {
  * @param {FormInput} input - The FormInput that contains the requireLists property.
  */
 const checkRequireValueNoDom = (input) => {
-  input.requireLists.forEach(requireData => {
+  input.requireLists.forEach((requireData) => {
     const visible = requireData.values.includes(input.value);
     requireData.input.hidden = !visible;
   });
@@ -50,6 +50,13 @@ class FormInput {
   key;
 
   hidden;
+
+  HTMLClasses = [];
+
+  addHTMLClasses(...tags) {
+    this.HTMLClasses.push(...tags);
+    return this;
+  }
 
   /**
    * Requires one of the given values to be active for the
@@ -103,9 +110,8 @@ class FormInput {
           required.requireLists.push({ input: this, values });
           checkRequireValueNoDom(required);
         }
-      })
+      });
     }
-
   }
 
   /**
@@ -193,7 +199,9 @@ class IndexListValue extends FormInput {
   }
 
   dupe() {
-    return new IndexListValue(this.name, this.key, this.list, this.index).setTooltip(this.tooltip);
+    return new IndexListValue(this.name, this.key, this.list, this.index)
+      .setTooltip(this.tooltip)
+      .addHTMLClasses(...this.HTMLClasses);
   }
 
   /**
@@ -294,7 +302,9 @@ class ListValue extends FormInput {
   }
 
   dupe() {
-    return new ListValue(this.name, this.key, this.list, this.value).setTooltip(this.tooltip);
+    return new ListValue(this.name, this.key, this.list, this.value)
+      .setTooltip(this.tooltip)
+      .addHTMLClasses(...this.HTMLClasses);
   }
 
   /**
@@ -313,6 +323,7 @@ class ListValue extends FormInput {
     target.appendChild(this.label);
 
     this.select = document.createElement('select');
+    this.select.classList.add(...this.HTMLClasses);
     this.select.id = this.key;
     let selected = -1;
 
@@ -410,7 +421,9 @@ class AttributeValue extends FormInput {
   }
 
   dupe() {
-    return new AttributeValue(this.name, this.key, this.base, this.scale).setTooltip(this.tooltip);
+    return new AttributeValue(this.name, this.key, this.base, this.scale)
+      .setTooltip(this.tooltip)
+      .addHTMLClasses(...this.HTMLClasses);
   }
 
   /**
@@ -429,6 +442,7 @@ class AttributeValue extends FormInput {
     target.appendChild(this.label);
 
     this.baseBox = document.createElement('input');
+    this.baseBox.classList.add(...this.HTMLClasses);
     this.baseBox.id = `${this.key}-base`;
     this.baseBox.value = this.base;
     this.baseBox.className = 'base';
@@ -440,6 +454,7 @@ class AttributeValue extends FormInput {
     target.appendChild(this.left);
 
     this.scaleBox = document.createElement('input');
+    this.scaleBox.classList.add(...this.HTMLClasses);
     this.scaleBox.id = `${this.key}-scale`;
     this.scaleBox.value = this.scale;
     this.scaleBox.className = 'scale';
@@ -537,7 +552,9 @@ class DoubleValue extends FormInput {
   }
 
   dupe() {
-    return new DoubleValue(this.name, this.key, this.value).setTooltip(this.tooltip);
+    return new DoubleValue(this.name, this.key, this.value)
+      .setTooltip(this.tooltip)
+      .addHTMLClasses(...this.HTMLClasses);
   }
 
   /**
@@ -556,6 +573,7 @@ class DoubleValue extends FormInput {
     target.appendChild(this.label);
 
     this.box = document.createElement('input');
+    this.box.classList.add(...this.HTMLClasses);
     this.box.id = this.key;
     this.box.value = this.value;
     this.box.addEventListener('input', filterDouble);
@@ -632,7 +650,9 @@ class IntValue extends FormInput {
   }
 
   dupe() {
-    return new IntValue(this.name, this.key, this.value).setTooltip(this.tooltip);
+    return new IntValue(this.name, this.key, this.value)
+      .setTooltip(this.tooltip)
+      .addHTMLClasses(...this.HTMLClasses);
   }
 
   /**
@@ -651,6 +671,7 @@ class IntValue extends FormInput {
     target.appendChild(this.label);
 
     this.box = document.createElement('input');
+    this.box.classList.add(...this.HTMLClasses);
     this.box.id = this.key;
     this.box.value = this.value;
     this.box.addEventListener('input', filterInt);
@@ -727,7 +748,9 @@ class StringValue extends FormInput {
   }
 
   dupe() {
-    return new StringValue(this.name, this.key, this.value).setTooltip(this.tooltip);
+    return new StringValue(this.name, this.key, this.value)
+      .setTooltip(this.tooltip)
+      .addHTMLClasses(...this.HTMLClasses);
   }
 
   /**
@@ -746,6 +769,7 @@ class StringValue extends FormInput {
     target.appendChild(this.label);
 
     this.box = document.createElement('input');
+    this.box.classList.add(...this.HTMLClasses);
     this.box.id = this.key;
     this.box.value = this.value;
     target.appendChild(this.box);
@@ -829,7 +853,9 @@ class StringListValue extends FormInput {
   }
 
   dupe() {
-    return new StringListValue(this.name, this.key, this.value).setTooltip(this.tooltip);
+    return new StringListValue(this.name, this.key, this.value)
+      .setTooltip(this.tooltip)
+      .addHTMLClasses(...this.HTMLClasses);
   }
 
   /**
@@ -857,6 +883,7 @@ class StringListValue extends FormInput {
     }
 
     this.box = document.createElement('textarea');
+    this.box.classList.add(...this.HTMLClasses);
     this.box.id = this.key;
     this.box.value = content;
     target.appendChild(this.box);
@@ -948,7 +975,9 @@ class MultiListValue extends FormInput {
   }
 
   dupe() {
-    return new MultiListValue(this.name, this.key, this.list, this.values).setTooltip(this.tooltip);
+    return new MultiListValue(this.name, this.key, this.list, this.values)
+      .setTooltip(this.tooltip)
+      .addHTMLClasses(...this.HTMLClasses);
   }
 
   /**
@@ -968,6 +997,7 @@ class MultiListValue extends FormInput {
 
     const select = document.createElement('select');
     this.select = select;
+    select.classList.add(...this.HTMLClasses);
     select.id = this.key;
 
     let option = document.createElement('option');
@@ -1101,7 +1131,9 @@ class ByteListValue extends FormInput {
   }
 
   dupe() {
-    return new ByteListValue(this.name, this.key, this.values, this.value).setTooltip(this.tooltip);
+    return new ByteListValue(this.name, this.key, this.values, this.value)
+      .setTooltip(this.tooltip)
+      .addHTMLClasses(...this.HTMLClasses);
   }
 
   /**
@@ -1124,6 +1156,7 @@ class ByteListValue extends FormInput {
     this.checkboxes = [];
     this.div = document.createElement('div');
     this.div.className = 'byteList';
+    this.div.classList.add(...this.HTMLClasses);
     let html = '';
     for (let i = 0; i < this.values.length; i++) {
       const id = `${this.key}-${this.values[i].replace(' ', '-').toLowerCase()}`;

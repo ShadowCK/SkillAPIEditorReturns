@@ -204,6 +204,9 @@ class Component {
     this.html = undefined;
     /** @type {import('./component.js'.Component[])} */
     this.components = [];
+    this.comment = new StringListValue('Comment', 'comment', '')
+      .setTooltip('A comment to help you remember what this component does')
+      .addHTMLClasses('input-comment');
     /** @type {import('./input.js'.FormInput[])} */
     this.data = [
       new StringValue('Icon Key', 'icon-key', '').setTooltip(
@@ -393,12 +396,13 @@ class Component {
       form.appendChild(desc);
     }
 
+    // Always add comment
+    form.appendChild(document.createElement('hr'));
+    this.comment.createHTML(form);
+
     let index = 1;
     // If only has Icon Key, will not add Icon Key
     if (this.data.length > 1) {
-      const h = document.createElement('hr');
-      form.appendChild(h);
-
       // If no AttributeValue, will not add Icon Key
       for (let j = 1; j < this.data.length; j++) {
         if (this.data[j] instanceof AttributeValue) {
@@ -451,7 +455,7 @@ class Component {
     // data[0] is icon key
     if (this.data.length > 1) {
       // If has AttributeValue, will add Icon Key
-      const index = this.data.some(input => input instanceof AttributeValue) ? 0 : 1;
+      const index = this.data.some((input) => input instanceof AttributeValue) ? 0 : 1;
 
       // Initialize inputs
       for (let i = index; i < this.data.length; i++) {

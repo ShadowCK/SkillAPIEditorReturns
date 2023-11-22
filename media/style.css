@@ -604,3 +604,7 @@ textArea {
     filter: drop-shadow(0 0 2px #4c5351) drop-shadow(0 0 6px #3c403f);
   }
 }
+
+#skillForm .input-comment {
+  height: 60px;
+}
