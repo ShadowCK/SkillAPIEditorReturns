@@ -2,48 +2,6 @@
 
 import { filterInt, filterDouble } from './filter.js';
 
-/** @type {Map.<string, FormInput>} */
-const currentComponentInputs = new Map(); // Not necessary - can use component.data instead
-
-/**
- * Does the check when an input is updated or initialized to
- * determine the visibility for those requiring certain values.
- *
- * @param {HTMLElement} htmlElement - The HTML element that contains the requireLists property.
- */
-const checkRequireValue = (htmlElement) => {
-  for (let i = 0; i < htmlElement.requireLists.length; i++) {
-    const requireData = htmlElement.requireLists[i];
-    let visible = false;
-    for (let j = 0; j < requireData.values.length; j++) {
-      if (requireData.values[j] === (htmlElement.value || htmlElement.selectedIndex)) {
-        visible = true;
-        break;
-      }
-    }
-    if (visible) {
-      requireData.input.show();
-    } else {
-      requireData.input.hide();
-    }
-  }
-};
-
-/**
- * Does the check when an input is updated or initialized to
- * determine the visibility for those requiring certain values.
- *
- * This is specifically used for saving purposes.
- *
- * @param {FormInput} input - The FormInput that contains the requireLists property.
- */
-const checkRequireValueNoDom = (input) => {
-  input.requireLists.forEach(requireData => {
-    const visible = requireData.values.includes(input.value);
-    requireData.input.hidden = !visible;
-  });
-};
-
 class FormInput {
   name;
 
@@ -63,49 +21,6 @@ class FormInput {
     this.requirements = this.requirements || [];
     this.requirements.push({ key, values });
     return this;
-  }
-
-  /**
-   * Applies the values required from above
-   */
-  applyRequireValues() {
-    for (let i = 0; this.requirements && i < this.requirements.length; i++) {
-      const { key, values } = this.requirements[i];
-      /** The HTMLElement of the required input */
-      const required = document.getElementById(key);
-      if (required != null) {
-        // It's acceptable to add data to the element
-        // as we are not adding extra data to the input.
-        required.requireLists = required.requireLists || [];
-        required.requireLists.push({ input: this, values });
-        checkRequireValue(required);
-        if (!required.hasCheckRequireValueListener) {
-          required.hasCheckRequireValueListener = true;
-          required.addEventListener('change', () => {
-            checkRequireValue(required);
-          });
-        }
-      }
-    }
-  }
-
-  /**
-   * This is specifically used for saving purposes.
-   */
-  applyRequireValuesNoDom() {
-    if (this.requirements) {
-      this.requirements.forEach(({ key, values }) => {
-        /** A duplicate of the required input */
-        const required = currentComponentInputs.get(key);
-        if (required != null) {
-          // We are not mutating the original input, which is good!
-          required.requireLists = required.requireLists || [];
-          required.requireLists.push({ input: this, values });
-          checkRequireValueNoDom(required);
-        }
-      })
-    }
-
   }
 
   /**
@@ -1205,7 +1120,6 @@ const copyRequirements = (source, target) => {
 const isAttribute = (input) => input instanceof AttributeValue || input.key === 'incompatible';
 
 export {
-  currentComponentInputs,
   FormInput,
   IndexListValue,
   ListValue,
