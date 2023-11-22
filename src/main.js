@@ -139,7 +139,10 @@ const init = () => {
   // skill.js
   skill.init();
 
+  /** @type {HTMLSelectElement} */
   const skillList = document.getElementById('skillList');
+  let selectedOption = skillList.options[skillList.selectedIndex];
+
   skillList.addEventListener('mousedown', (e) => {
     if (e.target.tagName !== 'OPTION') {
       return;
@@ -162,30 +165,45 @@ const init = () => {
       const currentForm = getCurrentForm();
       if (currentForm === 'skillForm') {
         showSkillPage('builder');
+        selectedOption.classList.remove('in-skill-form');
+        selectedOption.classList.add('in-builder');
       } else if (currentForm === 'builder') {
         showSkillPage('skillForm');
+        selectedOption.classList.remove('in-builder');
+        selectedOption.classList.add('in-skill-form');
       }
     }
   });
 
-  skillList.addEventListener('change', () => {
+  skillList.addEventListener('change', (e) => {
     updateActiveSkillAndComponent();
 
+    let newActiveSkill;
     if (skillList.selectedIndex === skillList.length - 1) {
-      newSkill();
+      // newSkill() will set active skill for us
+      newActiveSkill = newSkill();
     } else {
       const skills = getSkills();
-      const newActiveSkill = skills[skillList.selectedIndex];
+      newActiveSkill = skills[skillList.selectedIndex];
+      // We need to manually set active skill
       setActiveSkill(newActiveSkill);
-      setActiveComponent(newActiveSkill);
-      const currentForm = getCurrentForm();
-      if (currentForm === 'skillForm') {
-        newActiveSkill.createFormHTML();
-        showSkillPage('skillForm');
-      } else if (currentForm === 'builder') {
-        newActiveSkill.apply();
-        showSkillPage('builder');
-      }
+    }
+    setActiveComponent(newActiveSkill);
+
+    const currentForm = getCurrentForm();
+    // Clean up old selected option
+    selectedOption.classList.remove('active-skill', 'in-builder', 'in-skill-form');
+    // Set up new selected option
+    selectedOption = skillList.options[skillList.selectedIndex];
+    selectedOption.classList.add('active-skill');
+    if (currentForm === 'skillForm') {
+      selectedOption.classList.add('in-skill-form');
+      newActiveSkill.createFormHTML();
+      showSkillPage('skillForm');
+    } else if (currentForm === 'builder') {
+      selectedOption.classList.add('in-builder');
+      newActiveSkill.apply();
+      showSkillPage('builder');
     }
   });
 

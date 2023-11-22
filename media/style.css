@@ -577,3 +577,30 @@ textArea {
     display: block;
   }
 }
+
+#skillList option.active-skill {
+  animation: pulse 2s infinite;
+}
+
+#skillList option.active-skill.in-builder {
+  background-color: rgb(223, 255, 213);
+}
+
+#skillList option.active-skill.in-skill-form {
+  background-color: rgb(232, 223, 255);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 5px #4c5351) drop-shadow(0 0 10px #3c403f);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 5px #4c5351) drop-shadow(0 0 10px #3c403f) contrast(120%);
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 5px #4c5351) drop-shadow(0 0 10px #3c403f);
+  }
+}
