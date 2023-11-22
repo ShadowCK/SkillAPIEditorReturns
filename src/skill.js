@@ -324,10 +324,6 @@ const newSkill = () => {
   const list = document.getElementById('skillList');
   list.selectedIndex = list.length - 2;
 
-  activeSkill.apply();
-  activeSkill.createFormHTML();
-  showSkillPage('skillForm');
-
   return activeSkill;
 };
 

@@ -16,8 +16,7 @@ const setSkillsActive = (value) => {
 };
 
 /** @type {HTMLSelectElement} */
-const skillList = document.getElementById('skillList');
-let selectedOption = skillList.options[skillList.selectedIndex];
+let selectedOption;
 const getSelectedOption = () => selectedOption;
 const setSelectedOption = (option) => {
   selectedOption = option;
@@ -182,6 +181,26 @@ const switchToClasses = () => {
   }
 };
 
+const updateUIForNewActiveSkill = (newActiveSkill) => {
+  const skillList = document.getElementById('skillList');
+  // Update UI
+  const currentForm = getCurrentForm();
+  // Clean up old selected option and set up new selected option
+  updateSelectedOptionCSS('reset');
+  setSelectedOption(skillList.options[skillList.selectedIndex]);
+  if (currentForm === 'skillForm') {
+    newActiveSkill.createFormHTML();
+    showSkillPage('skillForm');
+  } else if (currentForm === 'builder') {
+    newActiveSkill.apply();
+    showSkillPage('builder');
+  }
+};
+
+// Init variables
+const skillList = document.getElementById('skillList');
+selectedOption = skillList.options[skillList.selectedIndex];
+
 // DI - inject depdenencies
 injectShowSkillPage1(showSkillPage);
 injectShowSkillPage2(showSkillPage);
@@ -200,4 +219,5 @@ export {
   saveToFile,
   switchToSkills,
   switchToClasses,
+  updateUIForNewActiveSkill,
 };

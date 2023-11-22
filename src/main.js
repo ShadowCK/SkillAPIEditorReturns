@@ -32,8 +32,7 @@ import {
   saveToFile,
   switchToSkills,
   switchToClasses,
-  setSelectedOption,
-  updateSelectedOptionCSS,
+  updateUIForNewActiveSkill,
 } from './domHelpers.js';
 import { initSkills, initClasses, loadFiles, parseConfig } from './loader.js';
 import { getActiveComponent, setActiveComponent } from './component.js';
@@ -48,7 +47,9 @@ const updateActiveSkillAndComponent = () => {
   const activeSkill = getActiveSkill();
   const activeComponent = getActiveComponent();
 
-  activeSkill.update();
+  if (activeSkill) {
+    activeSkill.update();
+  }
   if (activeComponent && activeComponent !== activeSkill) {
     activeComponent.update();
   }
@@ -120,6 +121,7 @@ const init = () => {
     initDebug();
     console.log('You are in development mode! debug.js is initialized.');
   }
+
   // component.js
   const config = localStorage.getItem('config');
   if (config) {
@@ -178,9 +180,10 @@ const init = () => {
     updateActiveSkillAndComponent();
 
     let newActiveSkill;
+    // If selected "New Skill", create a new skill
     if (skillList.selectedIndex === skillList.length - 1) {
       // newSkill() will set active skill for us
-      newActiveSkill = newSkill();
+      newActiveSkill = newSkill(false);
     } else {
       const skills = getSkills();
       newActiveSkill = skills[skillList.selectedIndex];
@@ -188,19 +191,7 @@ const init = () => {
       setActiveSkill(newActiveSkill);
     }
     setActiveComponent(newActiveSkill);
-
-    const currentForm = getCurrentForm();
-    // Clean up old selected option
-    updateSelectedOptionCSS('reset');
-    // Set up new selected option
-    setSelectedOption(skillList.options[skillList.selectedIndex]);
-    if (currentForm === 'skillForm') {
-      newActiveSkill.createFormHTML();
-      showSkillPage('skillForm');
-    } else if (currentForm === 'builder') {
-      newActiveSkill.apply();
-      showSkillPage('builder');
-    }
+    updateUIForNewActiveSkill(newActiveSkill);
   });
 
   document.getElementById('skillDetails').addEventListener('click', () => {
@@ -226,13 +217,11 @@ const init = () => {
     }
     list.remove(index);
     index = Math.min(index, skills.length - 1);
-    const newActiveSkill = skills[index];
-    setActiveSkill(newActiveSkill);
-    setActiveComponent(newActiveSkill);
     list.selectedIndex = index;
-
-    newActiveSkill.apply();
-    showSkillPage('builder');
+    // Manually trigger the skill list's change event
+    setActiveComponent(null); // our active skill is deleted
+    setActiveSkill(null); // our active skill is deleted
+    list.dispatchEvent(new Event('change')); // will set new active skill and component
   });
 
   // class.js
