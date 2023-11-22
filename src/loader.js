@@ -9,6 +9,7 @@ import {
   Condition,
   Mechanic,
   injectLoadSection as injectLoadSection1,
+  setActiveComponent,
 } from './component.js';
 import { YAMLObject, parseYAML } from './yaml.js';
 import {
@@ -164,6 +165,7 @@ const initSkills = (skillData, skillIndex) => {
     const newActiveSkill =
       skills[Math.max(0, Math.min(skills.length - 1, parseInt(skillIndex, 10)))];
     setActiveSkill(newActiveSkill);
+    setActiveComponent(newActiveSkill);
     newActiveSkill.apply();
     showSkillPage('builder');
   }

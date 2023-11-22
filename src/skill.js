@@ -207,14 +207,13 @@ class Skill {
    * Updates the skill data from the details form if it exists
    */
   update() {
-    let index;
-    const list = document.getElementById('skillList');
-    for (let i = 0; i < skills.length; i++) {
-      if (skills[i] === this) {
-        index = i;
-        break;
-      }
+    const index = skills.indexOf(this);
+    if (index === -1) {
+      console.log('Skill not found in skill list', this);
+      console.log('skill list:', skills);
+      throw new Error('Skill not found in skill list');
     }
+    const list = document.getElementById('skillList');
     const prevName = this.data[0].value;
     for (let j = 0; j < this.data.length; j++) {
       this.data[j].update();

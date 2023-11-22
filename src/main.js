@@ -39,17 +39,23 @@ import * as skill from './skill.js';
 import { getActiveSkill, setActiveSkill, getSkills, newSkill } from './skill.js';
 import { getActiveClass, setActiveClass, getClasses, newClass } from './class.js';
 import Attribute from './classes/Attribute.js';
+import initDebug from './debug.js';
+
+const updateActiveSkillAndComponent = () => {
+  const activeSkill = getActiveSkill();
+  const activeComponent = getActiveComponent();
+
+  activeSkill.update();
+  if (activeComponent && activeComponent !== activeSkill) {
+    activeComponent.update();
+  }
+};
 
 const getSkillSaveData = () => {
   const t1 = performance.now();
-  const activeSkill = getActiveSkill();
-  const activeComponent = getActiveComponent();
   const skills = getSkills();
 
-  activeSkill.update();
-  if (activeComponent) {
-    activeComponent.update();
-  }
+  updateActiveSkillAndComponent();
   let data = 'loaded: false\n';
   const alphabetic = [...skills];
   alphabetic.sort((a, b) => {
@@ -106,6 +112,9 @@ document.addEventListener(
 );
 
 const init = () => {
+  // debug.js
+  initDebug();
+
   // component.js
   const config = localStorage.getItem('config');
   if (config) {
@@ -131,13 +140,8 @@ const init = () => {
   // TODO: Click the selected skill in the skill list to switch between Builder and Skill Form.
   // Also keep the state of builder and skill form. They can be achived by adding a variable of which view is active.
   document.getElementById('skillList').addEventListener('change', (e) => {
-    const activeSkill = getActiveSkill();
-    const activeComponent = getActiveComponent();
+    updateActiveSkillAndComponent();
 
-    activeSkill.update();
-    if (activeComponent) {
-      activeComponent.update();
-    }
     const skillList = e.currentTarget;
     if (skillList.selectedIndex === skillList.length - 1) {
       newSkill();
@@ -145,6 +149,7 @@ const init = () => {
       const skills = getSkills();
       const newActiveSkill = skills[skillList.selectedIndex];
       setActiveSkill(newActiveSkill);
+      setActiveComponent(newActiveSkill);
       newActiveSkill.apply();
       showSkillPage('builder');
     }
@@ -174,6 +179,7 @@ const init = () => {
     index = Math.min(index, skills.length - 1);
     const newActiveSkill = skills[index];
     setActiveSkill(newActiveSkill);
+    setActiveComponent(newActiveSkill);
     list.selectedIndex = index;
 
     newActiveSkill.apply();
