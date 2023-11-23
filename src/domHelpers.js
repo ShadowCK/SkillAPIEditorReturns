@@ -13,6 +13,7 @@ let skillsActive = true;
 const getSkillsActive = () => skillsActive;
 const setSkillsActive = (value) => {
   skillsActive = value;
+  return value;
 };
 
 /** @type {HTMLSelectElement} */

@@ -3,20 +3,21 @@
 // Note: This script is intended for development use only and should not be deployed in production environments.
 
 import { getActiveComponent } from './component.js';
+import { getSkillsActive } from './domHelpers.js';
 import { getActiveSkill, getSkills, newSkill } from './skill.js';
 
 const levels = {
-  OFF: 5,
   VERBOSE: 4,
   INFO: 3,
   WARN: 2,
   ERROR: 1,
   ALWAYS: 0,
+  OFF: -1,
 };
 
 let hasInited = false;
 let canDebug = false;
-let debugLevel = -1;
+let debugLevel = levels.OFF;
 
 const isOn = () => canDebug;
 
@@ -60,7 +61,7 @@ const init = (isProduction) => {
   }
 
   canDebug = true;
-  debugLevel = 0;
+  debugLevel = levels.VERBOSE;
 
   _getDebugLevel = () => debugLevel;
   _setDebugLevel = (level) => {
@@ -87,6 +88,18 @@ const init = (isProduction) => {
       get() {
         return getSkills();
       },
+    },
+    getSkillsActive: {
+      value: getSkillsActive,
+    },
+    getDebugLevel: {
+      value: getDebugLevel,
+    },
+    setDebugLevel: {
+      value: setDebugLevel,
+    },
+    log: {
+      value: log,
     },
   });
 };
