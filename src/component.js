@@ -343,6 +343,18 @@ class Component {
     });
     div.appendChild(label);
 
+    // Comment
+    if (this.comment.value && this.comment.value.some((s) => s !== '')) {
+      const comment = document.createElement('pre');
+      comment.className = 'component-comment';
+      comment.textContent = this.comment.value.join('\n');
+      div.append(comment);
+    }
+
+    const builderButtonWrapper = document.createElement('div');
+    builderButtonWrapper.className = 'builder-button-wrapper';
+    div.append(builderButtonWrapper);
+
     // Container components can add children so they get a button
     if (this.container) {
       const add = document.createElement('div');
@@ -353,7 +365,7 @@ class Component {
         activeComponent = this;
         showSkillPage('componentChooser');
       });
-      div.appendChild(add);
+      builderButtonWrapper.appendChild(add);
 
       const vision = document.createElement('div');
       vision.title = 'Hide Children';
@@ -371,7 +383,7 @@ class Component {
         }
         comp.childrenHidden = !comp.childrenHidden;
       });
-      div.appendChild(vision);
+      builderButtonWrapper.appendChild(vision);
       this.childrenHidden = false;
     }
 
@@ -388,7 +400,7 @@ class Component {
         comp.parent.components.push(copy);
         copy.createBuilderHTML(comp.parent.html);
       });
-      div.appendChild(duplicate);
+      builderButtonWrapper.appendChild(duplicate);
     }
 
     // Add the remove button
@@ -407,7 +419,7 @@ class Component {
       }
       remove.parentNode.parentNode.parentNode.removeChild(remove.parentNode.parentNode);
     });
-    div.appendChild(remove);
+    builderButtonWrapper.appendChild(remove);
 
     container.appendChild(div);
 

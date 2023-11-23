@@ -916,7 +916,8 @@ class StringListValue extends FormInput {
    */
   update() {
     if (this.box) {
-      this.value = this.box.value.split('\n');
+      // Will not create [''] for an empty string value, but an empty array [] instead.
+      this.value = this.box.value !== '' ? this.box.value.split('\n') : []; 
     }
   }
 
@@ -927,6 +928,11 @@ class StringListValue extends FormInput {
    */
   getSaveString(spacing) {
     let result = `${spacing}${this.key}:\n`;
+    // Will not add a - '' line if the array only contains an empty string
+    if (this.value.length === 1 && this.value[1] === '') {
+      return result;
+    }
+
     for (let i = 0; i < this.value.length; i++) {
       let enclosing = "'";
       if (this.value[i].indexOf("'") >= 0) {

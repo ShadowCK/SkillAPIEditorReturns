@@ -45,16 +45,59 @@ h3:hover {
   border-radius: 10px;
   font: 18px Sertig-Web;
   background-color: #181818;
-  width: 260px;
-  height: 90px;
+  min-width: 260px;
+  min-height: 90px;
+}
+
+.component-comment::before,
+.component-comment::after {
+  font-size: 20px;
+  color: #aaa;
+  position: absolute;
+  transition: all 600ms ease-in-out;
+}
+
+.component-comment::before {
+  content: '“';
+  left: 5px;
+}
+
+.component-comment::after {
+  content: '”';
+  right: 5px;
+}
+
+.component-comment:hover::before,
+.component-comment:hover::after {
+  opacity: 0;
+}
+
+.component-comment {
+  position: relative;
+  font: 14px Sertig-Web;
+  color: #aaa;
+  background-color: #121213;
+  padding: 4px 14px 4px 14px;
+  margin: 2px 4px 4px 2px;
+  border-radius: 4px;
+  transition: all 600ms ease-in-out;
+}
+
+.component-comment:hover {
+  font: 18px Sertig-Web;
+  padding: 10px 20px 10px 20px;
+  background-color: #181818;
 }
 
 .componentChildren {
   margin-left: 20px;
 }
 
+.builder-button-wrapper {
+  display: flex;
+}
+
 .builderButton {
-  float: left;
   background-color: #043;
   width: 90px;
   height: 32px;
