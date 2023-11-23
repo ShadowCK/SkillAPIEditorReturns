@@ -45,77 +45,73 @@ import * as debug from './debug.js';
  * Loads a section of config data
  */
 function loadSection(data) {
-  this.components = [];
-  Object.keys(data).forEach((key) => {
-    const inputs = this.data;
-    if (key === this.dataKey) {
-      const attribs = data[key];
-      Object.keys(attribs).forEach((attribKey) => {
-        for (let i = 0; i < inputs.length; i++) {
-          if (inputs[i].key === attribKey && inputs[i].load) {
-            inputs[i].load(attribs[attribKey]);
-            break;
-          } else if (`${inputs[i].key}-base` === attribKey && inputs[i].loadBase) {
-            inputs[i].loadBase(attribs[attribKey]);
-            break;
-          } else if (`${inputs[i].key}-scale` === attribKey && inputs[i].loadScale) {
-            inputs[i].loadScale(attribs[attribKey]);
-            break;
-          }
-        }
-      });
-    } else if (key === this.componentKey) {
-      const components = data[key];
-      Object.keys(components).forEach((componentKey) => {
-        const { type, comment } = components[componentKey];
+  const inputs = this.data;
 
-        let list;
-        if (type === Type.TRIGGER) {
-          list = Trigger;
-        } else if (type === Type.TARGET) {
-          list = Target;
-        } else if (type === Type.CONDITION) {
-          list = Condition;
-        } else if (type === Type.MECHANIC) {
-          list = Mechanic;
-        }
+  const loadDataIntoInput = (input, key, value) => {
+    if (input.key === key && input.load) {
+      input.load(value);
+      return true;
+    }
+    if (`${input.key}-base` === key && input.loadBase) {
+      input.loadBase(value);
+      return true;
+    }
+    if (`${input.key}-scale` === key && input.loadScale) {
+      input.loadScale(value);
+      return true;
+    }
+    return false;
+  };
+
+  this.components = [];
+  Object.entries(data).forEach(([key, value]) => {
+    // Load a data set
+    if (key === this.dataKey) {
+      const attribs = value;
+      Object.entries(attribs).forEach(([attribKey, attribData]) => {
+      // Assuming our inputs have unique keys (as they should), we can use find() instead of forEach()
+      inputs.find((input) => loadDataIntoInput(input, attribKey, attribData));
+      });
+    }
+    // Load components
+    else if (key === this.componentKey) {
+      const components = value;
+      Object.entries(components).forEach(([componentKey, componentData]) => {
+        const { type, comment } = componentData;
+        const list = {
+          [Type.TRIGGER]: Trigger,
+          [Type.TARGET]: Target,
+          [Type.CONDITION]: Condition,
+          [Type.MECHANIC]: Mechanic,
+        }[type];
 
         let name = componentKey;
-        if (name.indexOf('-') > 0) {
-          name = name.substring(0, name.indexOf('-'));
+        const dashIndex = name.indexOf('-');
+        if (dashIndex > 0) {
+          name = name.substring(0, dashIndex);
         }
-        if (list !== undefined && list !== null) {
-          Object.keys(list).forEach((listKey) => {
-            if (list[listKey].name.toLowerCase() === name.toLowerCase()) {
-              const component = list[listKey].constructor
-                ? new list[listKey].constructor()
-                : list[listKey].supplier();
-              if (comment) {
-                component.comment.load(comment);
-              }
-              component.parent = this;
-              this.components.push(component);
-              component.load(components[componentKey]);
-            }
-          });
+        if (list != null) {
+          // Assuming our dynamic components have unique keys (as they should), we can use find() instead of forEach()
+          const componentDesc = Object.values(list).find(
+            (desc) => desc.name.toLowerCase() === name.toLowerCase(),
+          );
+          const component = componentDesc.constructor
+            ? new componentDesc.constructor()
+            : componentDesc.supplier();
+
+          if (comment) {
+            component.comment.load(comment);
+          }
+          component.parent = this;
+          this.components.push(component);
+          component.load(componentData);
         }
       });
-    } else if (this.dataKey !== 'data') {
-      for (let i = 0; i < this.data.length; i++) {
-        if (this.data[i].key === key) {
-          if (!this.data[i].load) {
-            debugger; // eslint-disable-line no-debugger
-          }
-          this.data[i].load(data[key]);
-          break;
-        } else if (`${this.data[i].key}-base` === key) {
-          this.data[i].loadBase(data[key]);
-          break;
-        } else if (`${this.data[i].key}-scale` === key) {
-          this.data[i].loadScale(data[key]);
-          break;
-        }
-      }
+    }
+    // Load single data value
+    else if (this.dataKey !== 'data') {
+      // Assuming our inputs have unique keys (as they should), we can use find() instead of forEach()
+      inputs.find((input) => loadDataIntoInput(input, key, value));
     }
   });
 }
