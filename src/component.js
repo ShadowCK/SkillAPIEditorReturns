@@ -9,6 +9,7 @@ import {
   StringListValue,
   MultiListValue,
   copyRequirements,
+  ByteListValue,
 } from './input.js';
 import {
   getMaterials,
@@ -336,6 +337,54 @@ class Component {
       comment.className = 'component-comment';
       comment.textContent = this.comment.value.join('\n');
       div.append(comment);
+    }
+
+    /**
+     * @param {import('./input.js').FormInput} input
+     * @returns
+     */
+    const isValidInput = (input) => {
+      if (!input.hasValidValueForInputLabel()) {
+        return false;
+      }
+      // Input may be a string of the default value
+      if (
+        input instanceof AttributeValue &&
+        (input.base === input.defaultValue.base ||
+          input.base === input.defaultValue.base.toString()) &&
+        (input.scale === input.defaultValue.scale ||
+          input.scale === input.defaultValue.scale.toString())
+      ) {
+        return false;
+      }
+      // ByteListValue will only hold number values
+      if (input instanceof ByteListValue && input.value === input.defaultValue.value) {
+        return false;
+      }
+      // Input may be a string of the default value
+      if (input.value === input.defaultValue || input.value === input.defaultValue.toString()) {
+        return false;
+      }
+      return true;
+    };
+
+    // Input labels
+    const hasValidInput = this.data.find((input) => isValidInput(input));
+
+    if (hasValidInput) {
+      const inputContainer = document.createElement('div');
+      inputContainer.className = 'input-container';
+      this.data.forEach((input) => {
+        if (isValidInput(input)) {
+          const inputLabel = document.createElement('div');
+          inputLabel.className = 'input-label';
+          inputLabel.innerHTML = `<span class="input-label-name">${
+            input.name
+          }</span>: <span class="input-label-value">${input.getValueForInputLabel()}</span>`;
+          inputContainer.appendChild(inputLabel);
+        }
+      });
+      div.appendChild(inputContainer);
     }
 
     const builderButtonWrapper = document.createElement('div');

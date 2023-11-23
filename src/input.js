@@ -172,6 +172,15 @@ class FormInput {
   getSaveString(spacing) {
     throw new Error('Method "getSaveString" must be implemented.');
   }
+
+  hasValidValueForInputLabel() {
+    throw new Error('Method "hasValidValueForInputLabel" must be implemented.');
+  }
+
+  getValueForInputLabel() {
+    throw new Error('Method "getValueForInputLabel" must be implemented.');
+  }
+
   /* eslint-enable */
 }
 
@@ -192,6 +201,7 @@ class IndexListValue extends FormInput {
     this.key = key;
     this.list = list;
     this.index = index;
+    this.defaultValue = index;
 
     this.label = undefined;
     this.select = undefined;
@@ -278,6 +288,14 @@ class IndexListValue extends FormInput {
   load(value) {
     this.index = value;
   }
+
+  hasValidValueForInputLabel() {
+    return this.index >= 0 && this.index < this.list.length;
+  }
+
+  getValueForInputLabel() {
+    return this.list[this.index];
+  }
 }
 
 /**
@@ -295,6 +313,7 @@ class ListValue extends FormInput {
     this.key = key;
     this.list = list;
     this.value = value;
+    this.defaultValue = value;
 
     this.label = undefined;
     this.select = undefined;
@@ -394,6 +413,15 @@ class ListValue extends FormInput {
   load(value) {
     this.value = value;
   }
+
+  hasValidValueForInputLabel() {
+    const list = typeof this.list === 'function' ? this.list() : this.list;
+    return list.includes(this.value);
+  }
+
+  getValueForInputLabel() {
+    return this.value;
+  }
 }
 
 /**
@@ -411,6 +439,7 @@ class AttributeValue extends FormInput {
     this.key = key;
     this.base = base;
     this.scale = scale;
+    this.defaultValue = { base, scale };
 
     this.label = undefined;
     this.left = undefined;
@@ -530,6 +559,14 @@ class AttributeValue extends FormInput {
   loadScale(value) {
     this.scale = value;
   }
+
+  hasValidValueForInputLabel() {
+    return this.base != null && this.scale != null;
+  }
+
+  getValueForInputLabel() {
+    return `${this.base}+${this.scale}`;
+  }
 }
 
 /**
@@ -545,6 +582,7 @@ class DoubleValue extends FormInput {
     this.name = name;
     this.key = key;
     this.value = value;
+    this.defaultValue = value;
 
     this.label = undefined;
     this.box = undefined;
@@ -628,6 +666,14 @@ class DoubleValue extends FormInput {
   load(value) {
     this.value = value;
   }
+
+  hasValidValueForInputLabel() {
+    return this.value != null;
+  }
+
+  getValueForInputLabel() {
+    return this.value;
+  }
 }
 
 /**
@@ -643,6 +689,7 @@ class IntValue extends FormInput {
     this.name = name;
     this.key = key;
     this.value = value;
+    this.defaultValue = value;
 
     this.label = undefined;
     this.box = undefined;
@@ -726,6 +773,14 @@ class IntValue extends FormInput {
   load(value) {
     this.value = value;
   }
+
+  hasValidValueForInputLabel() {
+    return this.value != null;
+  }
+
+  getValueForInputLabel() {
+    return this.value;
+  }
 }
 
 /**
@@ -741,6 +796,7 @@ class StringValue extends FormInput {
     this.name = name;
     this.key = key;
     this.value = value;
+    this.defaultValue = value;
 
     this.label = undefined;
     this.box = undefined;
@@ -831,6 +887,14 @@ class StringValue extends FormInput {
   load(value) {
     this.value = value;
   }
+
+  hasValidValueForInputLabel() {
+    return this.value != null;
+  }
+
+  getValueForInputLabel() {
+    return this.value;
+  }
 }
 
 /**
@@ -846,6 +910,7 @@ class StringListValue extends FormInput {
     this.name = name;
     this.key = key;
     this.value = value;
+    this.defaultValue = value;
 
     this.label = undefined;
     this.box = undefined;
@@ -917,7 +982,7 @@ class StringListValue extends FormInput {
   update() {
     if (this.box) {
       // Will not create [''] for an empty string value, but an empty array [] instead.
-      this.value = this.box.value !== '' ? this.box.value.split('\n') : []; 
+      this.value = this.box.value !== '' ? this.box.value.split('\n') : [];
     }
   }
 
@@ -955,6 +1020,17 @@ class StringListValue extends FormInput {
   load(value) {
     this.value = value;
   }
+
+  hasValidValueForInputLabel() {
+    return (
+      this.value != null &&
+      (this.value.length > 1 || (this.value.length === 1 && this.value[0] !== ''))
+    );
+  }
+
+  getValueForInputLabel() {
+    return this.value;
+  }
 }
 
 /**
@@ -972,6 +1048,7 @@ class MultiListValue extends FormInput {
     this.key = key;
     this.list = list;
     this.values = values || [];
+    this.defaultValue = this.values;
 
     this.label = undefined;
     this.select = undefined;
@@ -1113,6 +1190,17 @@ class MultiListValue extends FormInput {
   load(value) {
     this.values = value;
   }
+
+  hasValidValueForInputLabel() {
+    return (
+      this.values != null &&
+      (this.values.length > 1 || (this.values.length === 1 && this.values[0] !== ''))
+    );
+  }
+
+  getValueForInputLabel() {
+    return this.values;
+  }
 }
 
 /**
@@ -1130,6 +1218,7 @@ class ByteListValue extends FormInput {
     this.key = key;
     this.value = value;
     this.values = values;
+    this.defaultValue = { value, values };
 
     this.label = undefined;
     this.div = undefined;
@@ -1231,6 +1320,14 @@ class ByteListValue extends FormInput {
    */
   load(value) {
     this.value = value;
+  }
+
+  hasValidValueForInputLabel() {
+    return this.value != null;
+  }
+
+  getValueForInputLabel() {
+    return this.value;
   }
 }
 
