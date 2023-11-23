@@ -41,7 +41,7 @@ import * as skill from './skill.js';
 import { getActiveSkill, setActiveSkill, getSkills, newSkill } from './skill.js';
 import { getActiveClass, setActiveClass, getClasses, newClass } from './class.js';
 import Attribute from './classes/Attribute.js';
-import initDebug from './debug.js';
+import * as debug from './debug.js';
 
 const updateActiveSkillAndComponent = () => {
   const activeSkill = getActiveSkill();
@@ -77,7 +77,10 @@ const getSkillSaveData = () => {
     data += alphabetic[i].getSaveString();
   }
   const t2 = performance.now();
-  console.log(`Call to getSkillSaveData took ${t2 - t1} milliseconds.`);
+  debug.logIfAllowed(
+    debug.levels.VERBOSE,
+    `Call to getSkillSaveData took ${t2 - t1} milliseconds.`,
+  );
   return data;
 };
 
@@ -117,10 +120,8 @@ document.addEventListener(
 
 const init = () => {
   // debug.js
-  if (WEBPACK_MODE === 'development') {
-    initDebug();
-    console.log('You are in development mode! debug.js is initialized.');
-  }
+  debug.init(WEBPACK_MODE !== 'development');
+  debug.logIfAllowed(debug.levels.ALWAYS, 'You are in development mode! debug.js is initialized.');
 
   // component.js
   const config = localStorage.getItem('config');
@@ -176,7 +177,7 @@ const init = () => {
     }
   });
 
-  skillList.addEventListener('change', (e) => {
+  skillList.addEventListener('change', () => {
     updateActiveSkillAndComponent();
 
     let newActiveSkill;

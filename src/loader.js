@@ -1,6 +1,11 @@
 /* eslint-disable max-classes-per-file */
 
-import { getSkillsActive, refreshOptions, showSkillPage } from './domHelpers.js';
+import {
+  getSkillsActive,
+  refreshOptions,
+  showSkillPage,
+  updateUIForNewActiveSkill,
+} from './domHelpers.js';
 import {
   CustomComponent,
   Type,
@@ -33,6 +38,8 @@ import {
   injectLoadSection as injectLoadSection3,
 } from './class.js';
 import Attribute from './classes/Attribute.js';
+import { clamp } from './mathUtils.js';
+import * as debug from './debug.js';
 
 /**
  * Loads a section of config data
@@ -161,17 +168,17 @@ const loadSkills = (e) => {
 // Loads skill data from local storage when the page is loaded
 const initSkills = (skillData, skillIndex) => {
   setSkills([]); // Reset skills
-  document.getElementById('skillList').remove(0);
+  const skillList = document.getElementById('skillList');
+  skillList.remove(0);
   loadSkillText(skillData); // Load skills from data
   if (skillIndex) {
-    document.getElementById('skillList').selectedIndex = parseInt(skillIndex, 10);
+    const indexNumber = parseInt(skillIndex, 10);
+    skillList.selectedIndex = indexNumber;
     const skills = getSkills();
-    const newActiveSkill =
-      skills[Math.max(0, Math.min(skills.length - 1, parseInt(skillIndex, 10)))];
+    const newActiveSkill = skills[clamp(indexNumber, 0, skills.length - 1)];
     setActiveSkill(newActiveSkill);
     setActiveComponent(newActiveSkill);
-    newActiveSkill.apply();
-    showSkillPage('builder');
+    updateUIForNewActiveSkill(newActiveSkill);
   }
 };
 
