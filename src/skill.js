@@ -8,6 +8,7 @@ import {
 } from './input.js';
 import { setActiveComponent, setSaveIndex } from './component.js';
 import { getMaterials } from './data/index.js';
+import * as debug from './debug.js'; // eslint-disable-line import/no-cycle
 
 // DI - expose required depdenencies
 let showSkillPage;
@@ -227,8 +228,8 @@ class Skill {
   update() {
     const index = skills.indexOf(this);
     if (index === -1) {
-      console.log('Skill not found in skill list', this);
-      console.log('skill list:', skills);
+      debug.logIfAllowed(debug.levels.ERROR, 'Skill not found in skill list', this);
+      debug.logIfAllowed(debug.levels.ERROR, 'skill list:', skills);
       throw new Error('Skill not found in skill list');
     }
     const list = document.getElementById('skillList');

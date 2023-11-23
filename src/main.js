@@ -22,8 +22,6 @@
  * THE SOFTWARE.
  */
 
-import _ from 'underscore';
-
 import {
   getSkillsActive,
   getCurrentForm,

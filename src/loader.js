@@ -39,7 +39,6 @@ import {
 } from './class.js';
 import Attribute from './classes/Attribute.js';
 import { clamp } from './mathUtils.js';
-import * as debug from './debug.js';
 
 /**
  * Loads a section of config data

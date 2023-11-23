@@ -1,4 +1,4 @@
-import { getActiveSkill, injectShowSkillPage as injectShowSkillPage1 } from './skill.js';
+import { getActiveSkill, injectShowSkillPage as injectShowSkillPage1 } from './skill.js'; // eslint-disable-line import/no-cycle
 import {
   getActiveComponent,
   Type,
@@ -9,7 +9,7 @@ import {
   injectShowSkillPage as injectShowSkillPage2,
 } from './component.js';
 
-import * as debug from './debug.js'; // eslint-disable-line import/no-cycle
+import * as debug from './debug.js';
 
 let skillsActive = true;
 const getSkillsActive = () => skillsActive;
@@ -101,11 +101,11 @@ const setupOptionList = (div, list, type) => {
     h5.addEventListener('click', () => {
       const activeComponent = getActiveComponent();
       const activeSkill = getActiveSkill();
-      console.log('----- Active Component -----');
-      console.log(activeComponent);
-      console.log('-----   Active Skill   -----');
-      console.log(activeSkill);
-      console.log('----------------------------');
+      debug.logIfAllowed(debug.levels.VERBOSE, '----- Active Component -----');
+      debug.logIfAllowed(debug.levels.VERBOSE, activeComponent);
+      debug.logIfAllowed(debug.levels.VERBOSE, '-----   Active Skill   -----');
+      debug.logIfAllowed(debug.levels.VERBOSE, activeSkill);
+      debug.logIfAllowed(debug.levels.VERBOSE, '----------------------------');
       // If the user is adding a trigger that already exists, go back to the builder
       if (activeComponent === activeSkill && activeSkill.usingTrigger(h5.component.name)) {
         debug.logIfAllowed(debug.levels.WARN, 'Trigger already exists, going back to builder');

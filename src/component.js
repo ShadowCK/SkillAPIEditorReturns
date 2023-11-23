@@ -4274,8 +4274,6 @@ class MechanicTest extends Component {
         .requireValue('check-haha', ['True'])
         .setTooltip('The data value the item must have'),
     );
-
-    console.log(this.data);
   }
 }
 
