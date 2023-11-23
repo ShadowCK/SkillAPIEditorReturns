@@ -13,7 +13,6 @@ import {
   Target,
   Condition,
   Mechanic,
-  injectLoadSection as injectLoadSection1,
   setActiveComponent,
 } from './component.js';
 import { YAMLObject, parseYAML } from './yaml.js';
@@ -25,7 +24,6 @@ import {
   getSkill,
   isSkillNameTaken,
   addSkill,
-  injectLoadSection as injectLoadSection2,
 } from './skill.js';
 import {
   getActiveClass,
@@ -35,10 +33,10 @@ import {
   getClass,
   isClassNameTaken,
   addClass,
-  injectLoadSection as injectLoadSection3,
 } from './class.js';
 import Attribute from './classes/Attribute.js';
 import { clamp } from './mathUtils.js';
+import diContainer from './diContainer.js';
 
 /**
  * Loads a section of config data
@@ -68,8 +66,8 @@ function loadSection(data) {
     if (key === this.dataKey) {
       const attribs = value;
       Object.entries(attribs).forEach(([attribKey, attribData]) => {
-      // Assuming our inputs have unique keys (as they should), we can use find() instead of forEach()
-      inputs.find((input) => loadDataIntoInput(input, attribKey, attribData));
+        // Assuming our inputs have unique keys (as they should), we can use find() instead of forEach()
+        inputs.find((input) => loadDataIntoInput(input, attribKey, attribData));
       });
     }
     // Load components
@@ -294,8 +292,6 @@ const loadFiles = (files) => {
   }
 };
 
-injectLoadSection1(loadSection);
-injectLoadSection2(loadSection);
-injectLoadSection3(loadSection);
+diContainer.register('loadSection', loadSection);
 
 export { initSkills, initClasses, loadSection, loadFiles, parseConfig };

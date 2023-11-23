@@ -27,23 +27,10 @@ import {
 
 import * as appData from './appData.js';
 import { settings } from './appData.js';
+import diContainer from './diContainer.js';
 
-// DI - expose required depdenencies
 let showSkillPage;
-const injectLoadSection = (func) => {
-  /**
-   * Loads component data from the config lines stating at the given index
-   *
-   * @param {YAMLObject} data - the data to load
-   *
-   * @returns {Number} the index of the last line of data for this component
-   */
-  Component.prototype.load = func; // eslint-disable-line no-use-before-define
-};
-
-const injectShowSkillPage = (func) => {
-  showSkillPage = func;
-};
+let loadSection;
 
 let hoverSpace;
 // The active component being edited or added to
@@ -4445,6 +4432,15 @@ const setActiveComponent = (value) => {
   activeComponent = value;
 };
 
+// Injdect dependencies
+diContainer.inject('showSkillPage').then((value) => {
+  showSkillPage = value;
+});
+diContainer.inject('loadSection').then((value) => {
+  loadSection = value;
+  Component.prototype.load = loadSection;
+});
+
 export {
   setSaveIndex,
   getSaveIndex,
@@ -4457,6 +4453,4 @@ export {
   Target,
   Condition,
   Mechanic,
-  injectLoadSection,
-  injectShowSkillPage,
 };

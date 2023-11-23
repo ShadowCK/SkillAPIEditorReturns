@@ -12,18 +12,7 @@ import {
 import { saveToFile } from './domHelpers.js';
 import { getMaterials } from './data/index.js';
 import Attribute from './classes/Attribute.js';
-
-// DI - expose required depdenencies
-const injectLoadSection = (func) => {
-  /**
-   * Loads class data from the config lines stating at the given index
-   *
-   * @param {YAMLObject} data - the data to load
-   *
-   * @returns {Number} the index of the last line of data for this class
-   */
-  Class.prototype.load = func; // eslint-disable-line no-use-before-define
-};
+import diContainer from './diContainer.js';
 
 /** @type {Class} */
 let activeClass;
@@ -353,6 +342,11 @@ const setClasses = (value) => {
   classes = value;
 };
 
+// Inject dependencies
+diContainer.inject('loadSection').then((value) => {
+  Class.prototype.load = value;
+});
+
 export {
   Class,
   getActiveClass,
@@ -363,5 +357,4 @@ export {
   isClassNameTaken,
   addClass,
   _newClass as newClass,
-  injectLoadSection,
 };

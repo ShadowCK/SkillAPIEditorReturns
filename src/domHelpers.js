@@ -1,15 +1,8 @@
-import { getActiveSkill, injectShowSkillPage as injectShowSkillPage1 } from './skill.js'; // eslint-disable-line import/no-cycle
-import {
-  getActiveComponent,
-  Type,
-  Trigger,
-  Target,
-  Condition,
-  Mechanic,
-  injectShowSkillPage as injectShowSkillPage2,
-} from './component.js';
+import { getActiveSkill } from './skill.js'; // eslint-disable-line import/no-cycle
+import { getActiveComponent, Type, Trigger, Target, Condition, Mechanic } from './component.js';
 
 import * as debug from './debug.js';
+import diContainer from './diContainer.js';
 
 let skillsActive = true;
 const getSkillsActive = () => skillsActive;
@@ -205,9 +198,7 @@ const updateUIForNewActiveSkill = (newActiveSkill) => {
 const skillList = document.getElementById('skillList');
 selectedOption = skillList.options[skillList.selectedIndex];
 
-// DI - inject depdenencies
-injectShowSkillPage1(showSkillPage);
-injectShowSkillPage2(showSkillPage);
+diContainer.register('showSkillPage', showSkillPage);
 
 export {
   getSkillsActive,

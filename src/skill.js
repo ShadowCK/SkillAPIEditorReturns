@@ -9,22 +9,15 @@ import {
 import { setActiveComponent, setSaveIndex } from './component.js';
 import { getMaterials } from './data/index.js';
 import * as debug from './debug.js'; // eslint-disable-line import/no-cycle
+import diContainer from './diContainer.js';
 
-// DI - expose required depdenencies
+// Inject dependencies
 let showSkillPage;
-const injectLoadSection = (func) => {
-  /**
-   * Loads class data from the config lines stating at the given index
-   *
-   * @param {YAMLObject} data - the data to load
-   *
-   * @returns {Number} the index of the last line of data for this class
-   */
-  Skill.prototype.loadBase = func; // eslint-disable-line no-use-before-define
-};
-const injectShowSkillPage = (func) => {
-  showSkillPage = func;
-};
+diContainer.inject('showSkillPage').then((value) => {
+  showSkillPage = value;
+  console.log(123)
+  console.log(showSkillPage)
+});
 
 /** @type {Skill} */
 let activeSkill;
@@ -356,6 +349,11 @@ const init = () => {
   showSkillPage('skillForm');
 };
 
+// Inject dependencies
+diContainer.inject('loadSection').then((value) => {
+  Skill.prototype.loadBase = value;
+});
+
 export {
   init,
   getActiveSkill,
@@ -366,6 +364,4 @@ export {
   isSkillNameTaken,
   addSkill,
   newSkill,
-  injectLoadSection,
-  injectShowSkillPage,
 };
