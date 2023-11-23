@@ -30,6 +30,15 @@ let activeSkill;
 /** @type {Skill[]} */
 let skills;
 
+const getActiveSkill = () => activeSkill;
+const setActiveSkill = (value) => {
+  activeSkill = value;
+};
+const getSkills = () => skills;
+const setSkills = (value) => {
+  skills = value;
+};
+
 /**
  * Retrieves a skill by name
  *
@@ -150,6 +159,8 @@ class Skill {
     for (let i = 0; i < this.components.length; i++) {
       this.components[i].createBuilderHTML(builder);
     }
+
+    builder.skill = this;
   }
 
   /**
@@ -187,6 +198,8 @@ class Skill {
     target.innerHTML = '';
     target.appendChild(form);
     setActiveComponent(this);
+
+    form.skill = this;
   }
 
   createEditButton(form) {
@@ -200,6 +213,9 @@ class Skill {
       const list = document.getElementById('skillList');
       list[list.selectedIndex].text = done.skill.data[0].value;
       done.form.parentNode.removeChild(done.form);
+      if (document.getElementById('builder').skill !== activeSkill) {
+        activeSkill.apply();
+      }
       showSkillPage('builder');
     });
     return done;
@@ -337,15 +353,6 @@ const init = () => {
   skills = [activeSkill];
   activeSkill.createFormHTML();
   showSkillPage('skillForm');
-};
-
-const getActiveSkill = () => activeSkill;
-const setActiveSkill = (value) => {
-  activeSkill = value;
-};
-const getSkills = () => skills;
-const setSkills = (value) => {
-  skills = value;
 };
 
 export {

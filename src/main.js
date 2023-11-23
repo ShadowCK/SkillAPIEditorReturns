@@ -168,10 +168,20 @@ const init = () => {
 
     // Same skill option is selected
     if (previousSelectedIndex === currentSelectedIndex) {
+      debug.logIfAllowed(debug.levels.VERBOSE, 'Same skill option is selected');
       const currentForm = getCurrentForm();
+      const activeSkill = getActiveSkill();
       if (currentForm === 'skillForm') {
+        // Create form html not already created
+        if (currentForm.skill !== activeSkill) {
+          activeSkill.apply();
+        }
         showSkillPage('builder');
       } else if (currentForm === 'builder') {
+        // Create form html not already created
+        if (currentForm.skill !== activeSkill) {
+          activeSkill.createFormHTML();
+        }
         showSkillPage('skillForm');
       }
     }

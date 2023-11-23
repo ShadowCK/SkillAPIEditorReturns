@@ -2,6 +2,7 @@
 // It also incorporates a streamlined logging system capable of outputting messages across various severity levels.
 // Note: This script is intended for development use only and should not be deployed in production environments.
 
+/* eslint import/no-cycle: "warn" */
 import { getActiveComponent } from './component.js';
 import { getSkillsActive } from './domHelpers.js';
 import { getActiveSkill, getSkills, newSkill } from './skill.js';

@@ -9,6 +9,8 @@ import {
   injectShowSkillPage as injectShowSkillPage2,
 } from './component.js';
 
+import * as debug from './debug.js'; // eslint-disable-line import/no-cycle
+
 let skillsActive = true;
 const getSkillsActive = () => skillsActive;
 const setSkillsActive = (value) => {
@@ -106,6 +108,7 @@ const setupOptionList = (div, list, type) => {
       console.log('----------------------------');
       // If the user is adding a trigger that already exists, go back to the builder
       if (activeComponent === activeSkill && activeSkill.usingTrigger(h5.component.name)) {
+        debug.logIfAllowed(debug.levels.WARN, 'Trigger already exists, going back to builder');
         showSkillPage('builder');
       } else {
         showSkillPage('skillForm');
