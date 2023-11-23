@@ -282,16 +282,23 @@ window.onload = () => {
   const classData = localStorage.getItem('classData');
   const classIndex = localStorage.getItem('classIndex');
   if (attribs) {
+    debug.logIfAllowed(debug.levels.VERBOSE, 'ATTRIBS loaded from local storage', attribs);
     Attribute.ATTRIBS = attribs.split(',');
   }
   if (skillData) {
+    debug.logIfAllowed(debug.levels.VERBOSE, 'Loading stored skillData from local storage');
     initSkills(skillData, skillIndex);
   }
   if (classData) {
+    debug.logIfAllowed(debug.levels.VERBOSE, 'Loading stored classData from local storage');
     initClasses(classData, classIndex);
   }
   if (localStorage.getItem('skillsActive') === 'false') {
+    debug.logIfAllowed(debug.levels.VERBOSE, 'The user was last on the class tab');
     switchToClasses();
+  } else {
+    debug.logIfAllowed(debug.levels.VERBOSE, 'The user was last on the skill tab');
+    switchToSkills();
   }
 };
 
@@ -301,7 +308,7 @@ window.onload = () => {
 window.onbeforeunload = () => {
   localStorage.setItem('skillData', getSkillSaveData());
   localStorage.setItem('classData', getClassSaveData());
-  localStorage.setItem('skillsActive', getSkillsActive ? 'true' : 'false');
+  localStorage.setItem('skillsActive', getSkillsActive() ? 'true' : 'false');
   localStorage.setItem('skillIndex', document.getElementById('skillList').selectedIndex);
   localStorage.setItem('classIndex', document.getElementById('classList').selectedIndex);
 };
