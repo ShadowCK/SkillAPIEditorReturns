@@ -367,10 +367,21 @@ class Component {
       if (input instanceof ByteListValue && input.value === input.defaultValue.value) {
         return false;
       }
+
+      // MultiListValue
+      if (
+        input instanceof MultiListValue &&
+        (input.values === input.defaultValue ||
+          input.values.toString() === input.defaultValue.toString())
+      ) {
+        return false;
+      }
+
       // Input may be a string of the default value
       if (input.value === input.defaultValue || input.value === input.defaultValue.toString()) {
         return false;
       }
+
       return true;
     };
 
@@ -1319,7 +1330,7 @@ class TriggerEnvironmentDamage extends Component {
     this.description = 'Applies skill effects when a player takes environmental damage.';
 
     this.data.push(
-      new ListValue('Type', 'type', DAMAGE_TYPES, 'FALL').setTooltip(
+      new ListValue('Type', 'type', DAMAGE_TYPES, 'Fall').setTooltip(
         'The source of damage to apply for',
       ),
     );
@@ -3798,7 +3809,7 @@ class MechanicTrigger extends Component {
 
     // ENVIRONMENT_DAMAGE
     this.data.push(
-      new ListValue('Type', 'type', DAMAGE_TYPES, 'FALL')
+      new ListValue('Type', 'type', DAMAGE_TYPES, 'Fall')
         .requireValue('trigger', ['Environment Damage'])
         .setTooltip('The source of damage to apply for'),
     );
