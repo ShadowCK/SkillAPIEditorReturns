@@ -305,12 +305,14 @@ class Component {
    */
   createBuilderHTML(target, index) {
     // Create the wrapping divs with the appropriate classes
+    // The wrapper includes the self element and childDiv/html.
     const container = document.createElement('div');
     container.comp = this;
     if (this.type === Type.TRIGGER) {
       container.className = 'componentWrapper';
     }
 
+    // Component's self element
     const div = document.createElement('div');
     div.className = `component ${this.type}`;
     if (this.type !== Type.TRIGGER) {
@@ -321,6 +323,7 @@ class Component {
     if (this.container) {
       div.ondragover = allowDrop;
     }
+    this.selfElement = div;
 
     // Component label
     const label = document.createElement('h3');
@@ -478,7 +481,9 @@ class Component {
           break;
         }
       }
-      remove.parentNode.parentNode.parentNode.parentNode.removeChild(remove.parentNode.parentNode.parentNode);
+      const parentChildContainer = this.parent.html;
+      const componentWrapper = this.html.parentNode;
+      parentChildContainer.removeChild(componentWrapper);
     });
     builderButtonWrapper.appendChild(remove);
 
