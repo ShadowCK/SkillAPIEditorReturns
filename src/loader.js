@@ -60,6 +60,21 @@ function loadSection(data) {
     return false;
   };
 
+  const createComponnet = (componentDesc, componentData) => {
+    const component = componentDesc.constructor
+      ? new componentDesc.constructor()
+      : componentDesc.supplier();
+
+    const { comment } = componentData;
+    if (comment) {
+      component.comment.load(comment);
+    }
+    component.parent = this;
+
+    this.components.push(component);
+    component.load(componentData);
+  };
+
   this.components = [];
   Object.entries(data).forEach(([key, value]) => {
     // Load a data set
@@ -74,7 +89,7 @@ function loadSection(data) {
     else if (key === this.componentKey) {
       const components = value;
       Object.entries(components).forEach(([componentKey, componentData]) => {
-        const { type, comment } = componentData;
+        const { type } = componentData;
         const list = {
           [Type.TRIGGER]: Trigger,
           [Type.TARGET]: Target,
@@ -92,16 +107,9 @@ function loadSection(data) {
           const componentDesc = Object.values(list).find(
             (desc) => desc.name.toLowerCase() === name.toLowerCase(),
           );
-          const component = componentDesc.constructor
-            ? new componentDesc.constructor()
-            : componentDesc.supplier();
-
-          if (comment) {
-            component.comment.load(comment);
+          if (componentDesc !== undefined) {
+            createComponnet(componentDesc, componentData);
           }
-          component.parent = this;
-          this.components.push(component);
-          component.load(componentData);
         }
       });
     }
