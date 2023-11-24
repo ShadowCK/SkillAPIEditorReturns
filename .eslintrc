@@ -19,5 +19,6 @@
   },
   "globals": {
     "WEBPACK_MODE": "readonly" // Our webpack "macro"
-  }
+  },
+  "ignorePatterns": ["test/**/*.js"]
 }
