@@ -385,6 +385,13 @@ class Component {
             input.name
           }</span>: <span class="input-label-value">${input.getValueForInputLabel()}</span>`;
           inputContainer.appendChild(inputLabel);
+          inputLabel.addEventListener('click', () => {
+            this.createFormHTML();
+            showSkillPage('skillForm');
+            const inputElementInSkillForm =
+              document.getElementById(input.key) || document.getElementById(`${input.key}-base`);
+            inputElementInSkillForm.focus();
+          });
         }
       });
       div.appendChild(inputContainer);
