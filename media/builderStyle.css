@@ -77,6 +77,8 @@ h3:active {
 }
 
 .component-comment {
+  white-space: pre-wrap;
+  padding: 80px;
   position: relative;
   font: 14px Sertig-Web;
   color: #aaa;
