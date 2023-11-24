@@ -29,6 +29,8 @@ import {
 import * as appData from './appData.js';
 import { settings } from './appData.js';
 import diContainer from './diContainer.js';
+import * as debug from './debug.js'; // eslint-disable-line import/no-cycle
+import { notNull, assertMatches } from './assert.js';
 
 let showSkillPage;
 let loadSection;
@@ -543,6 +545,21 @@ class Component {
       this.update();
       document.getElementById('skillForm').removeChild(this.form);
       showSkillPage('builder');
+      // Check if parent is null. Should not happen, but just in case
+      assertMatches(
+        notNull,
+        () => {
+          debug.logIfAllowed(debug.levels.ERROR, 'Parent or parent html is null');
+        },
+        this.parent,
+        this.parent.html,
+      );
+      // Delete the element for this component in the builder
+      this.parent.html.removeChild(
+        Array.from(this.parent.html.children).find((child) => child.comp === this),
+      );
+      // Generate a new one
+      this.createBuilderHTML(this.parent.html);
     });
     form.appendChild(done);
 
