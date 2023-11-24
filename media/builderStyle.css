@@ -13,6 +13,10 @@ h3:hover {
   cursor: pointer;
 }
 
+h3:active {
+  cursor: grabbing;
+}
+
 .triggerLabel:before {
   content: 'Trigger: ';
   color: red;
@@ -163,6 +167,7 @@ h3:hover {
   transition: all 600ms ease-in-out;
   white-space: nowrap;
   overflow: visible;
+  cursor: pointer;
 }
 
 .input-label:hover {
