@@ -356,7 +356,15 @@ class Component {
       if (!input.hasValidValueForInputLabel()) {
         return false;
       }
-      // Input may be a string of the default value
+      // No default value, so it is valid
+      if (input.defaultValue == null) {
+        const isAllValid = [input.value, input.base, input.scale, input.values].every(
+          (v) => v !== null && v !== undefined && v !== 'null' && v !== 'undefined',
+        );
+        return isAllValid;
+      }
+      // Otherwise, check if the value is the same as the default value
+      // * Input may be a string of the default value
       if (
         input instanceof AttributeValue &&
         (input.base === input.defaultValue.base ||
@@ -370,7 +378,6 @@ class Component {
       if (input instanceof ByteListValue && input.value === input.defaultValue.value) {
         return false;
       }
-
       // MultiListValue
       if (
         input instanceof MultiListValue &&
@@ -379,12 +386,10 @@ class Component {
       ) {
         return false;
       }
-
       // Input may be a string of the default value
       if (input.value === input.defaultValue || input.value === input.defaultValue.toString()) {
         return false;
       }
-
       return true;
     };
 
