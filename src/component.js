@@ -301,8 +301,9 @@ class Component {
    * appends it onto the target HTML element.
    *
    * @param {Element} target - the HTML element to append the result to
+   * @param {number}  index  - the index of the component in the parent
    */
-  createBuilderHTML(target) {
+  createBuilderHTML(target, index) {
     // Create the wrapping divs with the appropriate classes
     const container = document.createElement('div');
     container.comp = this;
@@ -382,6 +383,7 @@ class Component {
       this.data.forEach((input) => {
         if (isValidInput(input)) {
           const inputLabel = document.createElement('div');
+          inputLabel.input = input;
           inputLabel.className = 'input-label';
           inputLabel.innerHTML = `<span class="input-label-name">${
             input.name
@@ -482,9 +484,8 @@ class Component {
     container.appendChild(childContainer);
     this.childDiv = childContainer;
 
-    // Append the content
-    target.appendChild(container);
-
+    // Append the content. If index is undefined or any other falsy value, it will append to the end.
+    target.insertBefore(container, target.childNodes[index]);
     this.html = childContainer;
   }
 
@@ -555,11 +556,14 @@ class Component {
         this.parent.html,
       );
       // Delete the element for this component in the builder
-      this.parent.html.removeChild(
-        Array.from(this.parent.html.children).find((child) => child.comp === this),
+      const componentElement = Array.from(this.parent.html.children).find(
+        (child) => child.comp === this,
       );
+      const insertIndex = Array.from(this.parent.html.children).indexOf(componentElement);
+      this.parent.html.removeChild(componentElement);
       // Generate a new one
-      this.createBuilderHTML(this.parent.html);
+      this.createBuilderHTML(this.parent.html, insertIndex);
+      debug.logIfAllowed(debug.levels.INFO, 'insertIndex: ', insertIndex);
     });
     form.appendChild(done);
 
