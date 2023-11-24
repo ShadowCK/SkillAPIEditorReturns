@@ -478,7 +478,7 @@ class Component {
           break;
         }
       }
-      remove.parentNode.parentNode.parentNode.removeChild(remove.parentNode.parentNode);
+      remove.parentNode.parentNode.parentNode.parentNode.removeChild(remove.parentNode.parentNode.parentNode);
     });
     builderButtonWrapper.appendChild(remove);
 
