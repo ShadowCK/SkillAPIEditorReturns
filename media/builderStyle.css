@@ -128,12 +128,13 @@ h3:active {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding-left: 3px;
+  padding: 0 6px;
+  margin-top: 2px;
+  margin-bottom: 4px;
+  max-height: 80px;
   overflow-x: hidden;
   overflow-y: auto;
   transition: all 1000ms ease;
-  text-underline-position: under;
-  align-items: center;
 }
 
 /* Chrome, Edge, and Safari */
@@ -153,17 +154,20 @@ h3:active {
 
 .input-label {
   position: relative;
+  flex-grow: 0;
   flex-shrink: 1;
   flex-basis: content;
+  min-width: 50px;
   font: 15px Sertig-Web;
   color: rgb(191, 191, 191);
-  margin: 2px;
+  margin: 2px 3px 2px 3px;
   background-color: rgb(66, 69, 72);
   padding: 2px 5px;
   border-radius: 5px;
   transition: all 600ms ease-in-out;
   overflow: visible;
   cursor: pointer;
+  line-height: 1.5;
 }
 
 .input-label:hover {
