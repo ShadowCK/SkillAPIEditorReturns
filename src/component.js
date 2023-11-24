@@ -344,6 +344,9 @@ class Component {
      * @returns
      */
     const isValidInput = (input) => {
+      if (input.hidden) {
+        return false;
+      }
       if (!input.hasValidValueForInputLabel()) {
         return false;
       }
