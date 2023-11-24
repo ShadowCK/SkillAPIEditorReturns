@@ -20,5 +20,5 @@
   "globals": {
     "WEBPACK_MODE": "readonly" // Our webpack "macro"
   },
-  "ignorePatterns": ["test/**/*.js"]
+  "ignorePatterns": ["test/**/*.js", "pack/**/*.js", "dist/**/*.js"]
 }
