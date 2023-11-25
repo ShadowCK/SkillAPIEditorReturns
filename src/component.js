@@ -40,6 +40,9 @@ let hoverSpace;
 let activeComponent;
 let saveIndex;
 
+const getActiveComponent = () => activeComponent;
+let setActiveComponent;
+
 const getSaveIndex = () => saveIndex;
 const setSaveIndex = (value) => {
   saveIndex = value;
@@ -324,6 +327,9 @@ class Component {
       div.ondragover = allowDrop;
     }
     this.selfElement = div;
+    if (activeComponent === this) {
+      div.classList.add('active-component');
+    }
 
     // Component label
     const label = document.createElement('h3');
@@ -431,7 +437,7 @@ class Component {
       add.textContent = '+ Add Child';
       add.component = this;
       add.addEventListener('click', () => {
-        activeComponent = this;
+        setActiveComponent(this);
         showSkillPage('componentChooser');
       });
       builderButtonWrapper.appendChild(add);
@@ -566,7 +572,6 @@ class Component {
     done.addEventListener('click', () => {
       this.update();
       document.getElementById('skillForm').removeChild(this.form);
-      showSkillPage('builder');
       // Check if parent is null. Should not happen, but just in case
       assertMatches(
         notNull,
@@ -585,6 +590,7 @@ class Component {
       // Generate a new one
       this.createBuilderHTML(this.parent.html, insertIndex);
       debug.logIfAllowed(debug.levels.INFO, 'insertIndex: ', insertIndex);
+      showSkillPage('builder');
     });
     form.appendChild(done);
 
@@ -595,7 +601,7 @@ class Component {
     // Reset skill form
     target.innerHTML = '';
     target.appendChild(form);
-    activeComponent = this;
+    setActiveComponent(this);
 
     for (let i = index; i < this.data.length; i++) {
       this.data[i].applyRequireValues();
@@ -4542,10 +4548,17 @@ const Mechanic = {
 
 // #endregion
 
-const getActiveComponent = () => activeComponent;
-const setActiveComponent = (value) => {
+setActiveComponent = (value) => {
+  if (activeComponent instanceof Component) {
+    activeComponent.selfElement.classList.remove('active-component');
+  }
+  if (value instanceof Component) {
+    value.selfElement.classList.add('active-component');
+  }
+
   activeComponent = value;
 };
+const _setActiveComponent = (value) => setActiveComponent(value);
 
 // Inject dependencies
 diContainer.inject('showSkillPage').then((value) => {
@@ -4565,7 +4578,7 @@ export {
   Component,
   CustomComponent,
   getActiveComponent,
-  setActiveComponent,
+  _setActiveComponent as setActiveComponent,
   Type,
   Trigger,
   Target,
