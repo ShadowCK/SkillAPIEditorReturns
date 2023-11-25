@@ -185,7 +185,7 @@ const setupOptionList = (div, list, type) => {
       const [componentKey, component] = entry;
       let { category } = component;
       if (!category) {
-        category = 'Default';
+        category = 'Uncategorized';
       }
       if (!accumulator[category]) {
         accumulator[category] = {};

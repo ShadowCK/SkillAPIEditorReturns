@@ -637,6 +637,11 @@ textArea {
   color: #bdbdbd;
 }
 
+#componentChooser h4 {
+  font-size: 28px;
+  color: #9cc69b;
+}
+
 /* Parent of options-category. Steven didn't write a classname for it so... */
 div:has(> .options-category) {
   border-left: 0.5rem solid #003d51;
@@ -650,32 +655,68 @@ div:has(> .options-category):hover {
 }
 
 .options-category {
+  display: grid;
+  grid-template-columns: 1fr 8fr;
+  grid-template-areas: 'header components';
+
   color: white;
-  padding: 6px 10px 6px 10px;
+  padding: 10px 10px;
   margin-bottom: 0px;
-  transition: background-color 600ms ease-in, padding 300ms ease-in;
+  transition: background-color 600ms ease-out, padding 1000ms ease-out,
+    grid-template-columns 300ms ease-in;
 }
 
 .options-category:hover {
   padding: 40px 10px 40px 10px;
   background-color: rgb(16, 16, 18);
+  grid-template-columns: 0fr 1fr;
+  transition: background-color 600ms ease-in, padding 1000ms ease-in,
+    grid-template-columns 600ms ease-out;
 }
 
 .options-category-header {
   all: unset;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #d7f2ba !important;
   padding: 0 5px 2px 0;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #888;
-  font-size: 24px;
+  margin-bottom: 0px;
+  font-size: 22px;
+  margin: 0px 20px;
+  transition: all 600ms ease-in-out, opacity 300ms ease-in, font-size 300ms ease-in,
+    margin 300ms ease-in;
+}
+
+.options-category:hover .options-category-header {
+  opacity: 0;
+  font-size: 0px !important;
+  margin: 0;
+  transition: all 600ms ease-in-out, opacity 400ms ease-out, font-size 400ms ease-out,
+    margin 400ms ease-out;
 }
 
 .options-category-selection {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 10px;
 }
 
 .option {
   margin-bottom: 0px;
+  margin-left: 0px;
+  width: 150px;
+  font-size: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 400ms ease-in-out, background-color 300ms ease-out;
+}
+
+.options-category:hover .option {
+  width: 225px;
+  font-size: 24px;
+  transition: all 400ms ease-in-out, background-color 300ms ease-in;
 }
