@@ -40,6 +40,8 @@ import { getActiveSkill, setActiveSkill, getSkills, newSkill } from './skill.js'
 import { getActiveClass, setActiveClass, getClasses, newClass } from './class.js';
 import Attribute from './classes/Attribute.js';
 import * as debug from './debug.js';
+import { toPinyin } from './utils.js';
+import * as appData from './appData.js';
 
 const updateActiveSkillAndComponent = () => {
   const activeSkill = getActiveSkill();
@@ -61,15 +63,12 @@ const getSkillSaveData = () => {
   let data = 'loaded: false\n';
   const alphabetic = [...skills];
   alphabetic.sort((a, b) => {
-    const an = a.data[0].value;
-    const bn = b.data[0].value;
-    if (an > bn) {
-      return 1;
-    }
-    if (an < bn) {
-      return -1;
-    }
-    return 0;
+    const aName = a.data[0].value;
+    const bName = b.data[0].value;
+    const isSortByPinyin = appData.get(appData.settings.SortPinyin);
+    return isSortByPinyin
+      ? toPinyin(aName).localeCompare(toPinyin(bName))
+      : aName.localeCompare(bName);
   });
   for (let i = 0; i < alphabetic.length; i++) {
     data += alphabetic[i].getSaveString();

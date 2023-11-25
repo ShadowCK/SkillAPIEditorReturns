@@ -1,5 +1,6 @@
 const settings = {
   ShowComment: 'show-comment',
+  SortPinyin: 'sort-pinyin',
 };
 
 const appData = new Map();
@@ -15,3 +16,4 @@ export { settings, get, set };
 
 // Set default values
 appData.set(settings.ShowComment, true);
+appData.set(settings.SortPinyin, true);

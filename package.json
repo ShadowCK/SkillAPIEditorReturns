@@ -29,6 +29,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "pinyin": "^3.1.0",
     "underscore": "^1.13.6"
   }
 }
