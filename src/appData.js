@@ -4,6 +4,8 @@ const settings = {
   SortPinyin: 'sort-pinyin',
 };
 
+const globals = {};
+
 const appData = new Map();
 
 const get = (key) => appData.get(key);
@@ -13,7 +15,7 @@ const set = (key, value) => {
   return appData;
 };
 
-export { settings, get, set };
+export { settings, globals, get, set };
 
 // Set default values
 appData.set(settings.ShowComment, true);

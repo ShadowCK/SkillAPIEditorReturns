@@ -163,33 +163,26 @@ const init = () => {
 
     const previousSelectedIndex = skillList.selectedIndex;
 
-    // Same skill option is selected
+    // * Same skill option is selected
     if (previousSelectedIndex === currentSelectedIndex) {
       debug.logIfAllowed(debug.levels.VERBOSE, 'Same skill option is selected');
       const currentForm = getCurrentForm();
       const activeSkill = getActiveSkill();
       if (currentForm === 'skillForm') {
         // Create form content if not already created
-        if (
-          document.querySelector('#skillForm form').skill !== activeSkill ||
-          document.getElementById('builderContent').innerHTML === ''
-        ) {
+        if (document.getElementById('builderContent').innerHTML === '') {
           activeSkill.apply();
         }
         showSkillPage('builder');
       } else if (currentForm === 'builder') {
-        // Create form content if not already created
-        // or cleared because of opening a component (it also uses skillForm)
-        if (
-          document.getElementById('builderContent').skill !== activeSkill ||
-          document.getElementById('skillForm').innerHTML === ''
-        ) {
+        // May be cleared because of previously opening a component (it also uses skillForm)
+        if (document.getElementById('skillForm').innerHTML === '') {
           debug.logIfAllowed(
             debug.levels.VERBOSE,
             'Skill form does not exist for the active skill - recreating it',
             activeSkill,
           );
-          activeSkill.createFormHTML(false);
+          activeSkill.createFormHTML(true);
         }
         showSkillPage('skillForm');
       }
