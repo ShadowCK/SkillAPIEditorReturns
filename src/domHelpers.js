@@ -176,7 +176,9 @@ const setupOptionList = (div, list, type) => {
 
   const entries = Object.entries(list);
   // Check if the first value has `category: null` explicitly set
-  const useCategory = entries[0][1].category !== null;
+  // const useCategory = entries[0][1].category !== null;
+  // FIXME: We force the use of categories for now because I didn't add/adjust CSS for the non-category version
+  const useCategory = true;
 
   if (useCategory) {
     const categoryLists = entries.reduce((accumulator, entry) => {
