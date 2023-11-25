@@ -644,7 +644,6 @@ textArea {
 
 /* Parent of options-category. Steven didn't write a classname for it so... */
 div:has(> .options-category) {
-  border-left: 0.5rem solid #003d51;
   padding: 20px 0;
   margin: 0px 0 10px 0;
   transition: background-color 600ms ease-in;
@@ -656,11 +655,11 @@ div:has(> .options-category):hover {
 
 .options-category {
   display: grid;
-  grid-template-columns: 1fr 8fr;
+  grid-template-columns: 1fr 4fr;
   grid-template-areas: 'header components';
 
   color: white;
-  padding: 10px 10px;
+  padding: 0px 0px;
   margin-bottom: 0px;
   transition: background-color 600ms ease-out, padding 1000ms ease-out,
     grid-template-columns 300ms ease-in;
@@ -681,12 +680,16 @@ div:has(> .options-category):hover {
   justify-content: center;
   text-align: center;
   color: #d7f2ba !important;
-  padding: 0 5px 2px 0;
+  padding: 10px 5px 2px 10px;
   margin-bottom: 0px;
-  font-size: 22px;
-  margin: 0px 20px;
+  font-size: 20px !important;
+  margin: 0 4px 0 0;
   transition: all 600ms ease-in-out, opacity 300ms ease-in, font-size 300ms ease-in,
     margin 300ms ease-in;
+
+  background-color: #111;
+  border-left: 10px solid #222;
+  border-right: 10px solid #222;
 }
 
 .options-category:hover .options-category-header {
@@ -702,6 +705,7 @@ div:has(> .options-category):hover {
   align-items: center;
   flex-wrap: wrap;
   gap: 10px;
+  padding: 10px;
 }
 
 .option {
