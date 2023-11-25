@@ -97,61 +97,106 @@ const setupOptionList = (div, list, type) => {
   // Reset div
   // FIXME: This seems unnecessary. The div should be empty already.
   div.innerHTML = '';
-
   let output = '';
 
-  Object.entries(list)
-    .sort(([keyA], [keyB]) =>
-      // This sorts using only unicode values
-      // keyA > keyB ? 1 : keyA < keyB ? -1 : 0;
-      // * This respects locale. For example, it can sort Chinese characters based on their pinyin.
-      keyA.localeCompare(keyB),
-    )
-    .forEach(([, value], index) => {
-      if (index % 4 === 0) {
-        output += '| ';
-      }
-      output += `[[${value.name}|_${type.substr(0, 1).toUpperCase()}${type.substr(1)} ${
-        value.name
-      }]] | `;
-      if ((index + 1) % 4 === 0) {
-        output += '\n';
-      }
+  const createOptions = (source, parent, category) => {
+    let container;
+    if (category) {
+      const section = document.createElement('div');
+      section.className = 'options-category';
+      parent.appendChild(section);
 
-      const h5 = document.createElement('h5');
-      if (value.premium) {
-        h5.className = 'premium';
-      }
-      if (value.container) {
-        h5.classList.add('container');
-      }
-      h5.textContent = value.name;
-      h5.component = value;
-      h5.addEventListener('click', () => {
-        const activeComponent = getActiveComponent();
-        const activeSkill = getActiveSkill();
-        debug.logIfAllowed(debug.levels.VERBOSE, '----- Active Component -----');
-        debug.logIfAllowed(debug.levels.VERBOSE, activeComponent);
-        debug.logIfAllowed(debug.levels.VERBOSE, '-----   Active Skill   -----');
-        debug.logIfAllowed(debug.levels.VERBOSE, activeSkill);
-        debug.logIfAllowed(debug.levels.VERBOSE, '----------------------------');
-        // If the user is adding a trigger that already exists, go back to the builder
-        if (activeComponent === activeSkill && activeSkill.usingTrigger(h5.component.name)) {
-          debug.logIfAllowed(debug.levels.WARN, 'Trigger already exists, going back to builder');
-          showSkillPage('builder');
-        } else {
-          showSkillPage('skillForm');
-          const component = h5.component.constructor
-            ? new h5.component.constructor()
-            : h5.component.supplier();
-          component.parent = activeComponent;
-          activeComponent.components.push(component);
-          component.createBuilderHTML(activeComponent.html);
-          component.createFormHTML();
+      const header = document.createElement('h4');
+      header.className = 'options-category-header';
+      header.textContent = category;
+      section.appendChild(header);
+
+      const selection = document.createElement('div');
+      selection.className = 'options-category-selection';
+      section.appendChild(selection);
+
+      container = selection;
+    } else {
+      container = parent;
+    }
+    Object.entries(source)
+      .sort(([keyA], [keyB]) =>
+        // This sorts using only unicode values
+        // keyA > keyB ? 1 : keyA < keyB ? -1 : 0;
+        // * This respects locale. For example, it can sort Chinese characters based on their pinyin.
+        keyA.localeCompare(keyB),
+      )
+      .forEach(([, value], index) => {
+        if (index % 4 === 0) {
+          output += '| ';
         }
+        output += `[[${value.name}|_${type.substr(0, 1).toUpperCase()}${type.substr(1)} ${
+          value.name
+        }]] | `;
+        if ((index + 1) % 4 === 0) {
+          output += '\n';
+        }
+
+        const h5 = document.createElement('h5');
+        h5.className = 'option';
+        if (value.premium) {
+          h5.classList.add('premium');
+        }
+        if (value.container) {
+          h5.classList.add('container');
+        }
+        h5.textContent = value.name;
+        h5.component = value;
+        h5.addEventListener('click', () => {
+          const activeComponent = getActiveComponent();
+          const activeSkill = getActiveSkill();
+          debug.logIfAllowed(debug.levels.VERBOSE, '----- Active Component -----');
+          debug.logIfAllowed(debug.levels.VERBOSE, activeComponent);
+          debug.logIfAllowed(debug.levels.VERBOSE, '-----   Active Skill   -----');
+          debug.logIfAllowed(debug.levels.VERBOSE, activeSkill);
+          debug.logIfAllowed(debug.levels.VERBOSE, '----------------------------');
+          // If the user is adding a trigger that already exists, go back to the builder
+          if (activeComponent === activeSkill && activeSkill.usingTrigger(h5.component.name)) {
+            debug.logIfAllowed(debug.levels.WARN, 'Trigger already exists, going back to builder');
+            showSkillPage('builder');
+          } else {
+            showSkillPage('skillForm');
+            const component = h5.component.constructor
+              ? new h5.component.constructor()
+              : h5.component.supplier();
+            component.parent = activeComponent;
+            activeComponent.components.push(component);
+            component.createBuilderHTML(activeComponent.html);
+            component.createFormHTML();
+          }
+        });
+        container.appendChild(h5);
       });
-      div.appendChild(h5);
+  };
+
+  const entries = Object.entries(list);
+  // Check if the first value has `category: null` explicitly set
+  const useCategory = entries[0][1].category !== null;
+
+  if (useCategory) {
+    const categoryLists = entries.reduce((accumulator, entry) => {
+      const [componentKey, component] = entry;
+      let { category } = component;
+      if (!category) {
+        category = 'Default';
+      }
+      if (!accumulator[category]) {
+        accumulator[category] = {};
+      }
+      accumulator[category][componentKey] = component;
+      return accumulator;
+    }, {});
+    Object.entries(categoryLists).forEach(([categoryKey, categoryList]) => {
+      createOptions(categoryList, div, categoryKey);
     });
+  } else {
+    createOptions(list, div);
+  }
 
   // saveToFile(`wiki_${type}.txt`, output);
 };

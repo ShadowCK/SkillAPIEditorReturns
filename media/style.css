@@ -616,23 +616,66 @@ textArea {
 }
 
 .settingButton.on {
-  background-color: #76b947; /* 开启状态的亮绿色 */
+  background-color: #76b947;
   color: #ffffff;
 }
 
 .settingButton.off {
-  background-color: #393939; /* 关闭状态的深灰色 */
+  background-color: #393939;
   color: #a3a3a3;
 }
 
 .settingButton:hover.on {
-  background-color: #659f3d; /* 开启状态悬停的稍暗绿色 */
+  background-color: #659f3d;
   border-color: #558835;
   color: #f0f0f0;
 }
 
 .settingButton:hover.off {
-  background-color: #2f2f2f; /* 关闭状态悬停的更深灰色 */
+  background-color: #2f2f2f;
   border-color: #1f1f1f;
   color: #bdbdbd;
+}
+
+/* Parent of options-category. Steven didn't write a classname for it so... */
+div:has(> .options-category) {
+  border-left: 0.5rem solid #003d51;
+  padding: 20px 0;
+  margin: 0px 0 10px 0;
+  transition: background-color 600ms ease-in;
+}
+
+div:has(> .options-category):hover {
+  background-color: rgb(8, 8, 8);
+}
+
+.options-category {
+  color: white;
+  padding: 6px 10px 6px 10px;
+  margin-bottom: 0px;
+  transition: background-color 600ms ease-in, padding 300ms ease-in;
+}
+
+.options-category:hover {
+  padding: 40px 10px 40px 10px;
+  background-color: rgb(16, 16, 18);
+}
+
+.options-category-header {
+  all: unset;
+  display: block;
+  padding: 0 5px 2px 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #888;
+  font-size: 24px;
+}
+
+.options-category-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.option {
+  margin-bottom: 0px;
 }
