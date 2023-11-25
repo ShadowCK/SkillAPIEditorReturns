@@ -300,6 +300,7 @@ const loadFiles = (files) => {
   }
 };
 
+// Register dependencies
 diContainer.register('loadSection', loadSection);
 
 export { initSkills, initClasses, loadSection, loadFiles, parseConfig };

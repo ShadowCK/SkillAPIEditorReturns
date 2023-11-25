@@ -2,10 +2,33 @@
 // It also incorporates a streamlined logging system capable of outputting messages across various severity levels.
 // Note: This script is intended for development use only and should not be deployed in production environments.
 
-/* eslint import/no-cycle: "warn" */
-import { getActiveComponent } from './component.js';
-import { getSkillsActive } from './domHelpers.js';
-import { getActiveSkill, getSkills, newSkill } from './skill.js';
+import diContainer from './diContainer.js';
+
+// component.js
+let getActiveComponent;
+// domHelpers.js
+let getSkillsActive;
+// skill.js
+let getActiveSkill;
+let getSkills;
+let newSkill;
+
+// Inject dependencies
+diContainer.inject('getActiveComponent').then((value) => {
+  getActiveComponent = value;
+});
+diContainer.inject('getSkillsActive').then((value) => {
+  getSkillsActive = value;
+});
+diContainer.inject('getActiveSkill').then((value) => {
+  getActiveSkill = value;
+});
+diContainer.inject('getSkills').then((value) => {
+  getSkills = value;
+});
+diContainer.inject('newSkill').then((value) => {
+  newSkill = value;
+});
 
 const levels = {
   VERBOSE: 4,

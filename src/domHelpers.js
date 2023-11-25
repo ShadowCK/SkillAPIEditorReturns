@@ -1,4 +1,4 @@
-import { getActiveSkill } from './skill.js'; // eslint-disable-line import/no-cycle
+import { getActiveSkill } from './skill.js';
 import { getActiveComponent, Type, Trigger, Target, Condition, Mechanic } from './component.js';
 
 import * as debug from './debug.js';
@@ -269,7 +269,9 @@ const updateUIForNewActiveSkill = (newActiveSkill) => {
 const skillList = document.getElementById('skillList');
 selectedOption = skillList.options[skillList.selectedIndex];
 
+// Register dependencies
 diContainer.register('showSkillPage', showSkillPage);
+diContainer.register('getSkillsActive', getSkillsActive);
 
 export {
   getSkillsActive,

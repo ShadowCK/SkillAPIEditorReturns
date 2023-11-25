@@ -8,7 +8,7 @@ import {
 } from './input.js';
 import { setActiveComponent, setSaveIndex } from './component.js';
 import { getMaterials } from './data/index.js';
-import * as debug from './debug.js'; // eslint-disable-line import/no-cycle
+import * as debug from './debug.js';
 import diContainer from './diContainer.js';
 
 // Inject dependencies
@@ -351,6 +351,11 @@ const init = () => {
 diContainer.inject('loadSection').then((value) => {
   Skill.prototype.loadBase = value;
 });
+
+// Register dependencies
+diContainer.register('getActiveSkill', getActiveSkill);
+diContainer.register('getSkills', getSkills);
+diContainer.register('newSkill', newSkill);
 
 export {
   init,

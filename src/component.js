@@ -29,7 +29,7 @@ import {
 import * as appData from './appData.js';
 import { settings } from './appData.js';
 import diContainer from './diContainer.js';
-import * as debug from './debug.js'; // eslint-disable-line import/no-cycle
+import * as debug from './debug.js';
 import { notNull, assertMatches } from './assert.js';
 
 let showSkillPage;
@@ -4547,7 +4547,7 @@ const setActiveComponent = (value) => {
   activeComponent = value;
 };
 
-// Injdect dependencies
+// Inject dependencies
 diContainer.inject('showSkillPage').then((value) => {
   showSkillPage = value;
 });
@@ -4555,6 +4555,9 @@ diContainer.inject('loadSection').then((value) => {
   loadSection = value;
   Component.prototype.load = loadSection;
 });
+
+// Register dependencies
+diContainer.register('getActiveComponent', getActiveComponent);
 
 export {
   setSaveIndex,
