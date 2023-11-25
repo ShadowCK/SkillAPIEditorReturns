@@ -188,4 +188,16 @@ h3:active {
   transition: all 400ms ease-out;
 }
 
+.positive-value {
+  color: rgb(191, 215, 191);
+}
+
+.negative-value {
+  color: rgb(215, 191, 191);
+}
+
+.fixed-value {
+  color: rgb(205, 205, 205);
+}
+
 /* Form styling */

@@ -565,7 +565,20 @@ class AttributeValue extends FormInput {
   }
 
   getValueForInputLabel() {
-    return `${this.base}+${this.scale}`;
+    const formatValue = (value, forceFixed = false, plusSign = true) => {
+      const valueNum = Number(value);
+      if (Number.isNaN(valueNum) || valueNum === 0 || forceFixed) {
+        return `<span class="fixed-value">${value}</span>`;
+      }
+      return value > 0
+        ? `<span class="positive-value">${plusSign ? '+' : ''}${value}</span>`
+        : `<span class="negative-value">${value}</span>`;
+    };
+
+    if (this.scale !== 0 && this.scale !== '0') {
+      return `${formatValue(this.base, false, false)}${formatValue(this.scale)}`;
+    }
+    return formatValue(this.base, true);
   }
 }
 
