@@ -1,6 +1,6 @@
 {
   "name": "skillapi-editor-returns",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A refactored and improved version of the original editor",
   "main": "./src/main.js",
   "type": "module",
