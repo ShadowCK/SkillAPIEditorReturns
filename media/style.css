@@ -663,11 +663,17 @@ div:has(> .options-category):hover {
   margin-bottom: 0px;
   transition: background-color 600ms ease-out, padding 1000ms ease-out,
     grid-template-columns 300ms ease-in;
+
+  cursor: pointer;
 }
 
 .options-category:hover {
-  padding: 40px 10px 40px 10px;
   background-color: rgb(16, 16, 18);
+  transition: background-color 600ms ease-in;
+}
+
+.options-category.active {
+  padding: 40px 10px 40px 10px;
   grid-template-columns: 0fr 1fr;
   transition: background-color 600ms ease-in, padding 1000ms ease-in,
     grid-template-columns 600ms ease-out;
@@ -692,7 +698,7 @@ div:has(> .options-category):hover {
   border-right: 10px solid #222;
 }
 
-.options-category:hover .options-category-header {
+.options-category.active .options-category-header {
   opacity: 0;
   font-size: 0px !important;
   margin: 0;
@@ -719,7 +725,7 @@ div:has(> .options-category):hover {
   transition: all 400ms ease-in-out, background-color 300ms ease-out;
 }
 
-.options-category:hover .option {
+.options-category.active .option {
   width: 225px;
   font-size: 24px;
   transition: all 400ms ease-in-out, background-color 300ms ease-in;

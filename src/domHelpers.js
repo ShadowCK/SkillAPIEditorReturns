@@ -93,6 +93,8 @@ const showSkillPage = (name) => {
   setPageStyle('triggerChooser', name);
 };
 
+let activeSection = null;
+
 const setupOptionList = (div, list, type) => {
   // Reset div
   // FIXME: This seems unnecessary. The div should be empty already.
@@ -105,6 +107,22 @@ const setupOptionList = (div, list, type) => {
       const section = document.createElement('div');
       section.className = 'options-category';
       parent.appendChild(section);
+
+      section.addEventListener('click', (e) => {
+        // Clicking on an option should not expand/collapse the category
+        if (e.target.classList.contains('option')) {
+          return;
+        }
+        if (activeSection) {
+          activeSection.classList.remove('active');
+        }
+        if (activeSection === section) {
+          activeSection = null;
+        } else {
+          section.classList.add('active');
+          activeSection = section;
+        }
+      });
 
       const header = document.createElement('h4');
       header.className = 'options-category-header';

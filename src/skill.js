@@ -15,8 +15,6 @@ import diContainer from './diContainer.js';
 let showSkillPage;
 diContainer.inject('showSkillPage').then((value) => {
   showSkillPage = value;
-  console.log(123)
-  console.log(showSkillPage)
 });
 
 /** @type {Skill} */
