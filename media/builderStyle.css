@@ -130,13 +130,19 @@ h3:active {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 0 6px;
-  margin-top: 2px;
-  margin-bottom: 4px;
+  padding-bottom: 4px;
+  margin: 2px 6px 2px 6px;
   max-height: 80px;
   overflow-x: hidden;
   overflow-y: auto;
-  transition: all 1000ms ease;
+  transition: all 1000ms ease, border-bottom 500ms ease, max-height 200ms ease-in;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.component:hover .input-container {
+  max-height: 160px;
+  transition: all 1000ms ease, border-bottom 500ms ease, max-height 800ms ease-out;
+  border-bottom: 10px solid rgba(255, 255, 255, 0);
 }
 
 /* Chrome, Edge, and Safari */
