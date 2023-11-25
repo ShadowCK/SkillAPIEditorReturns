@@ -159,7 +159,7 @@ class Skill {
    * Creates the form HTML for editing the skill and applies it to
    * the appropriate area on the page
    */
-  createFormHTML() {
+  createFormHTML(IsSameSkill) {
     const form = document.createElement('form');
 
     const header = document.createElement('h4');
@@ -189,7 +189,9 @@ class Skill {
     const target = document.getElementById('skillForm');
     target.innerHTML = '';
     target.appendChild(form);
-    setActiveComponent(this);
+    if (!IsSameSkill) {
+      setActiveComponent(this);
+    }
 
     form.skill = this;
   }
@@ -204,8 +206,9 @@ class Skill {
       done.skill.update();
       const list = document.getElementById('skillList');
       list[list.selectedIndex].text = done.skill.data[0].value;
-      done.form.parentNode.removeChild(done.form);
-      if (document.getElementById('builder').skill !== activeSkill) {
+      done.form.remove();
+      const builder = document.getElementById('builderContent');
+      if (builder.skill !== activeSkill) {
         activeSkill.apply();
       }
       showSkillPage('builder');

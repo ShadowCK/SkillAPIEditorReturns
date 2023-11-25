@@ -169,15 +169,27 @@ const init = () => {
       const currentForm = getCurrentForm();
       const activeSkill = getActiveSkill();
       if (currentForm === 'skillForm') {
-        // Create form html not already created
-        if (currentForm.skill !== activeSkill) {
+        // Create form content if not already created
+        if (
+          document.querySelector('#skillForm form').skill !== activeSkill ||
+          document.getElementById('builderContent').innerHTML === ''
+        ) {
           activeSkill.apply();
         }
         showSkillPage('builder');
       } else if (currentForm === 'builder') {
-        // Create form html not already created
-        if (currentForm.skill !== activeSkill) {
-          activeSkill.createFormHTML();
+        // Create form content if not already created
+        // or cleared because of opening a component (it also uses skillForm)
+        if (
+          document.getElementById('builderContent').skill !== activeSkill ||
+          document.getElementById('skillForm').innerHTML === ''
+        ) {
+          debug.logIfAllowed(
+            debug.levels.VERBOSE,
+            'Skill form does not exist for the active skill - recreating it',
+            activeSkill,
+          );
+          activeSkill.createFormHTML(false);
         }
         showSkillPage('skillForm');
       }
@@ -204,7 +216,8 @@ const init = () => {
 
   document.getElementById('skillDetails').addEventListener('click', () => {
     const activeSkill = getActiveSkill();
-    activeSkill.createFormHTML();
+    // IsSameSkill must be true because the button is to switch to the active skill's skillForm (from builder)
+    activeSkill.createFormHTML(true);
     showSkillPage('skillForm');
   });
   document.getElementById('saveButton').addEventListener('click', () => {
