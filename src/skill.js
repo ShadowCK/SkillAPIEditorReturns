@@ -186,7 +186,7 @@ class Skill {
     form.appendChild(this.createEditButton(form));
 
     // Reset skill form
-    const target = document.getElementById('skillForm');
+    const target = document.getElementById('skill-form');
     target.innerHTML = '';
     target.appendChild(form);
     if (!IsSameSkill) {
@@ -198,13 +198,13 @@ class Skill {
 
   createEditButton(form) {
     const done = document.createElement('h5');
-    done.className = 'doneButton';
+    done.className = 'done-button';
     done.textContent = 'Edit Effects';
     done.skill = this;
     done.form = form;
     done.addEventListener('click', () => {
       done.skill.update();
-      const list = document.getElementById('skillList');
+      const list = document.getElementById('skill-list');
       list[list.selectedIndex].text = done.skill.data[0].value;
       done.form.remove();
       const builder = document.getElementById('builderContent');
@@ -226,7 +226,7 @@ class Skill {
       debug.logIfAllowed(debug.levels.ERROR, 'skill list:', skills);
       throw new Error('Skill not found in skill list');
     }
-    const list = document.getElementById('skillList');
+    const list = document.getElementById('skill-list');
     const prevName = this.data[0].value;
     for (let j = 0; j < this.data.length; j++) {
       this.data[j].update();
@@ -313,7 +313,7 @@ const addSkill = (name) => {
 
   const option = document.createElement('option');
   option.text = name;
-  const list = document.getElementById('skillList');
+  const list = document.getElementById('skill-list');
   list.add(option, list.length - 1);
 
   return skill;
@@ -332,7 +332,7 @@ const newSkill = () => {
 
   activeSkill = addSkill(`Skill ${id}`);
 
-  const list = document.getElementById('skillList');
+  const list = document.getElementById('skill-list');
   list.selectedIndex = list.length - 2;
 
   return activeSkill;
@@ -347,7 +347,7 @@ const init = () => {
   activeSkill = new Skill('Skill 1');
   skills = [activeSkill];
   activeSkill.createFormHTML();
-  showSkillPage('skillForm');
+  showSkillPage('skill-form');
 };
 
 // Inject dependencies

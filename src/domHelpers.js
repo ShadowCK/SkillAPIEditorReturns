@@ -53,16 +53,16 @@ const saveToFile = (file, data) => {
 
 /**
  * Retrieves the current form being displayed.
- * @param {Array<string>} source - Optional. An array of form IDs to check. Defaults to ['builder', 'skillForm', 'componentChooser', 'triggerChooser'].
+ * @param {Array<string>} source - Optional. An array of form IDs to check. Defaults to ['builder', 'skill-form', 'component-chooser', 'trigger-chooser'].
  * @returns {string|null} - The ID of the current form being displayed, or null if no form is found.
  */
 const getCurrentForm = (source) => {
-  const forms = source || ['builder', 'skillForm', 'componentChooser', 'triggerChooser'];
+  const forms = source || ['builder', 'skill-form', 'component-chooser', 'trigger-chooser'];
   return forms.find((form) => document.getElementById(form).style.display === 'block');
 };
 
 const updateSelectedOptionCSS = (action) => {
-  if (action === 'skillForm') {
+  if (action === 'skill-form') {
     selectedOption.classList.remove('in-builder');
     selectedOption.classList.add('active-skill', 'in-skill-form');
   } else if (action === 'builder') {
@@ -92,9 +92,9 @@ const setPageStyle = (name, visible) => {
 const showSkillPage = (name) => {
   appData.set(appData.globals.lastVisitedForm, getCurrentForm());
   setPageStyle('builder', name);
-  setPageStyle('skillForm', name);
-  setPageStyle('componentChooser', name);
-  setPageStyle('triggerChooser', name);
+  setPageStyle('skill-form', name);
+  setPageStyle('component-chooser', name);
+  setPageStyle('trigger-chooser', name);
 };
 
 let activeSection = null;
@@ -182,7 +182,7 @@ const setupOptionList = (div, list, type) => {
             debug.logIfAllowed(debug.levels.WARN, 'Trigger already exists, going back to builder');
             showSkillPage('builder');
           } else {
-            showSkillPage('skillForm');
+            showSkillPage('skill-form');
             /** @type {import('./component.js').Component} */
             const component = h5.component.constructor
               ? new h5.component.constructor()
@@ -236,8 +236,8 @@ const refreshOptions = () => {
 
 const switchToSkills = () => {
   if (!skillsActive) {
-    document.getElementById('skillTab').className = 'tab tabLeft tabActive';
-    document.getElementById('classTab').className = 'tab tabRight';
+    document.getElementById('skillTab').className = 'tab tab-left tab-active';
+    document.getElementById('classTab').className = 'tab tab-right';
     document.getElementById('skills').style.display = 'block';
     document.getElementById('classes').style.display = 'none';
     skillsActive = true;
@@ -246,8 +246,8 @@ const switchToSkills = () => {
 
 const switchToClasses = () => {
   if (skillsActive) {
-    document.getElementById('classTab').className = 'tab tabRight tabActive';
-    document.getElementById('skillTab').className = 'tab tabLeft';
+    document.getElementById('classTab').className = 'tab tab-right tab-active';
+    document.getElementById('skillTab').className = 'tab tab-left';
     document.getElementById('classes').style.display = 'block';
     document.getElementById('skills').style.display = 'none';
     skillsActive = false;
@@ -255,15 +255,15 @@ const switchToClasses = () => {
 };
 
 const updateUIForNewActiveSkill = (newActiveSkill) => {
-  const skillList = document.getElementById('skillList');
+  const skillList = document.getElementById('skill-list');
   // Update UI
   const currentForm = getCurrentForm();
   // Clean up old selected option and set up new selected option
   updateSelectedOptionCSS('reset');
   setSelectedOption(skillList.options[skillList.selectedIndex]);
-  if (currentForm === 'skillForm') {
+  if (currentForm === 'skill-form') {
     newActiveSkill.createFormHTML();
-    showSkillPage('skillForm');
+    showSkillPage('skill-form');
   } else if (currentForm === 'builder') {
     newActiveSkill.apply();
     showSkillPage('builder');
@@ -271,7 +271,7 @@ const updateUIForNewActiveSkill = (newActiveSkill) => {
 };
 
 // Init variables
-const skillList = document.getElementById('skillList');
+const skillList = document.getElementById('skill-list');
 selectedOption = skillList.options[skillList.selectedIndex];
 
 // Register dependencies

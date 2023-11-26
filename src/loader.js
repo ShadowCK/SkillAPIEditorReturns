@@ -169,7 +169,7 @@ const loadSkills = (e) => {
 // Loads skill data from local storage when the page is loaded
 const initSkills = (skillData, skillIndex) => {
   setSkills([]); // Reset skills
-  const skillList = document.getElementById('skillList');
+  const skillList = document.getElementById('skill-list');
   skillList.remove(0);
   loadSkillText(skillData); // Load skills from data
   if (skillIndex) {

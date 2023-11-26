@@ -216,7 +216,7 @@ class Class {
 
     const del = document.createElement('h5');
     del.textContent = 'Delete';
-    del.className = 'cancelButton';
+    del.className = 'cancel-button';
     del.addEventListener('click', () => {
       const list = document.getElementById('classList');
       let index = list.selectedIndex;
@@ -233,7 +233,7 @@ class Class {
     form.appendChild(del);
 
     // Reset class form
-    const target = document.getElementById('classForm');
+    const target = document.getElementById('class-form');
     target.innerHTML = '';
     target.appendChild(form);
   }

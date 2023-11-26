@@ -64,7 +64,7 @@ const createSettingButton = ({
   offText,
 }) => {
   button.key = key;
-  button.className = 'settingButton';
+  button.className = 'setting-button';
   // Set text and class with the default state
   resetSettingButton(appData.get(key), button, onText, offText);
 
@@ -312,7 +312,7 @@ class Component {
     const container = document.createElement('div');
     container.comp = this;
     if (this.type === Type.TRIGGER) {
-      container.className = 'componentWrapper';
+      container.className = 'component-wrapper';
     }
 
     // Component's self element
@@ -337,14 +337,14 @@ class Component {
           `Clicked on selfElement of ${this.type} component ${this.name}!`,
         );
         this.createFormHTML();
-        showSkillPage('skillForm');
+        showSkillPage('skill-form');
       }
     });
 
     // Component label
     const label = document.createElement('h3');
     label.title = `Edit ${this.name} options`;
-    label.className = `${this.type}Label`;
+    label.className = `${this.type}-label`;
     label.textContent = this.name;
     label.component = this;
     label.addEventListener('click', (e) => {
@@ -355,7 +355,7 @@ class Component {
       // Prevents the click from bubbling up to the selfElement
       e.stopPropagation();
       this.createFormHTML();
-      showSkillPage('skillForm');
+      showSkillPage('skill-form');
     });
     div.appendChild(label);
 
@@ -432,7 +432,7 @@ class Component {
           inputContainer.appendChild(inputLabel);
           inputLabel.addEventListener('click', () => {
             this.createFormHTML();
-            showSkillPage('skillForm');
+            showSkillPage('skill-form');
             const inputElementInSkillForm =
               document.getElementById(input.key) || document.getElementById(`${input.key}-base`);
             inputElementInSkillForm.focus();
@@ -449,18 +449,18 @@ class Component {
     // Container components can add children so they get a button
     if (this.container) {
       const add = document.createElement('div');
-      add.className = 'builderButton';
+      add.className = 'builder-button';
       add.textContent = '+ Add Child';
       add.component = this;
       add.addEventListener('click', () => {
         setActiveComponent(this);
-        showSkillPage('componentChooser');
+        showSkillPage('component-chooser');
       });
       builderButtonWrapper.appendChild(add);
 
       const vision = document.createElement('div');
       vision.title = 'Hide Children';
-      vision.className = 'builderButton smallButton';
+      vision.className = 'builder-button small-button';
       vision.style.background = 'url("media/img/eye.png") no-repeat center #222';
       vision.component = this;
       vision.addEventListener('click', () => {
@@ -481,7 +481,7 @@ class Component {
     // Add the duplicate button
     if (this.type !== Type.TRIGGER) {
       const duplicate = document.createElement('div');
-      duplicate.className = 'builderButton smallButton';
+      duplicate.className = 'builder-button small-button';
       duplicate.title = 'Duplicate';
       duplicate.style.background = 'url("media/img/duplicate.png") no-repeat center #222';
       duplicate.component = this;
@@ -497,7 +497,7 @@ class Component {
     // Add the remove button
     const remove = document.createElement('div');
     remove.title = 'Remove';
-    remove.className = 'builderButton smallButton cancelButton';
+    remove.className = 'builder-button small-button cancel-button';
     remove.style.background = 'url("media/img/delete.png") no-repeat center #f00';
     remove.component = this;
     this.removeFunction = () => {
@@ -520,7 +520,7 @@ class Component {
 
     // Apply child components
     const childContainer = document.createElement('div');
-    childContainer.className = 'componentChildren';
+    childContainer.className = 'component-children';
     if (this.components.length > 0) {
       for (let i = 0; i < this.components.length; i++) {
         this.components[i].createBuilderHTML(childContainer);
@@ -539,7 +539,7 @@ class Component {
    * applies it to the appropriate part of the page.
    */
   createFormHTML() {
-    const target = document.getElementById('skillForm');
+    const target = document.getElementById('skill-form');
 
     const form = document.createElement('form');
 
@@ -584,12 +584,12 @@ class Component {
     form.appendChild(hr);
 
     const done = document.createElement('h5');
-    done.className = 'doneButton';
+    done.className = 'done-button';
     done.textContent = 'Done';
     done.component = this;
     done.addEventListener('click', () => {
       this.update();
-      document.getElementById('skillForm').removeChild(this.form);
+      document.getElementById('skill-form').removeChild(this.form);
       // Check if parent is null. Should not happen, but just in case
       assertMatches(
         notNull,
@@ -616,7 +616,7 @@ class Component {
       if (form.parentNode === e.currentTarget) {
         e.preventDefault();
         const lastVisitedForm = appData.get('last-visited-form');
-        if (['triggerChooser', 'componentChooser'].includes(lastVisitedForm)) {
+        if (['trigger-chooser', 'component-chooser'].includes(lastVisitedForm)) {
           // Remove the newly added component
           this.removeFunction();
           debug.logIfAllowed(
@@ -632,7 +632,7 @@ class Component {
         target.removeEventListener('contextmenu', handleContextMenu);
         debug.logIfAllowed(
           debug.levels.VERBOSE,
-          `Removed context menu listener on skillForm for ${this.type} component ${this.name}`,
+          `Removed context menu listener on skill-form for ${this.type} component ${this.name}`,
         );
       }
     };

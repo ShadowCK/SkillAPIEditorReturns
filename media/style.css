@@ -42,7 +42,7 @@ body {
   background-color: black;
 }
 
-#badBrowser {
+#bad-browser {
   position: absolute;
   top: 0;
   left: 0;
@@ -57,24 +57,24 @@ body {
   color: #888;
 }
 
-#badBrowser p {
+#bad-browser p {
   text-align: center;
   margin-top: 40%;
   font: 24px Sertig-Web;
 }
 
 #builder,
-#skillForm,
-#classForm,
-#componentChooser,
-#triggerChooser {
+#skill-form,
+#class-form,
+#component-chooser,
+#trigger-chooser {
   width: calc(100% - 200px);
   height: 100%;
   float: left;
   overflow-y: auto;
 }
 
-#skillForm, /*#builder,*/ #componentChooser, #triggerChooser {
+#skill-form, /*#builder,*/ #component-chooser, #trigger-chooser {
   display: none;
 }
 
@@ -106,20 +106,20 @@ body {
   clear: both;
 }
 
-#builderSpacer {
+#builder-spacer {
   display: inline-block;
   width: calc(20% - 40px);
   height: 10px;
 }
 
-#tabSpacer {
+#tab-spacer {
   float: left;
   width: 5%;
   height: 10px;
 }
 
-#skillList,
-#classList {
+#skill-list,
+#class-list {
   float: left;
   width: 200px;
   font: 18px Sertig-Web;
@@ -132,8 +132,8 @@ body {
   margin: 0;
 }
 
-#skillList option,
-#classList option {
+#skill-list option,
+#class-list option {
   border-radius: 10px;
   padding: 3px;
   padding-left: 8px;
@@ -273,25 +273,25 @@ textarea {
   -webkit-box-sizing: border-box;
 }
 
-.cancelButton {
+.cancel-button {
   background-color: #a00;
   color: white;
   transition: background-color 600ms, color 600ms;
 }
 
-.cancelButton:hover {
+.cancel-button:hover {
   background-color: white;
   color: #a00;
 }
 
-.doneButton {
+.done-button {
   background-color: #008966;
   border: 2px solid #004433;
   color: white;
   transition: background-color 600ms, color 600ms;
 }
 
-.doneButton:hover {
+.done-button:hover {
   background-color: #004433;
   border: 2px solid #002211;
 }
@@ -304,15 +304,15 @@ hr {
   clear: both;
 }
 
-#saveSkill {
+#save-skill {
   background-color: #375a7f;
 }
 
-#saveSkill:hover {
+#save-skill:hover {
   background-color: #6af;
 }
 
-.ioButton {
+.io-button {
   height: 30px;
   margin: 5px 10px;
   width: calc(100% - 20px);
@@ -326,11 +326,11 @@ hr {
   transition: background-color 600ms;
 }
 
-.ioButton:hover {
+.io-button:hover {
   background-color: #6af;
 }
 
-.ioText {
+.io-text {
   text-align: center;
   margin-top: 15px;
   margin-bottom: 5px;
@@ -389,13 +389,13 @@ hr {
   background-color: #ffab3c;
 }
 
-.tabActive,
-.tabActive:hover {
+.tab-active,
+.tab-active:hover {
   background-color: #fff;
   color: black;
 }
 
-.tabLeft:before {
+.tab-left:before {
   position: absolute;
   left: -1px;
   top: -1px;
@@ -404,7 +404,7 @@ hr {
   border-right: 20px solid transparent;
 }
 
-.tabLeft:after {
+.tab-left:after {
   position: absolute;
   left: -3px;
   top: -3px;
@@ -413,7 +413,7 @@ hr {
   border-right: 20px solid transparent;
 }
 
-.tabRight:before {
+.tab-right:before {
   position: absolute;
   right: -1px;
   top: -1px;
@@ -422,7 +422,7 @@ hr {
   border-left: 20px solid transparent;
 }
 
-.tabRight:after {
+.tab-right:after {
   position: absolute;
   right: -3px;
   top: -3px;
@@ -447,11 +447,11 @@ label {
   clear: both;
 }
 
-#skillForm input,
+#skill-form input,
 select,
-#classForm input,
-#skillForm .byteList,
-#classForm .byteList {
+#class-form input,
+#skill-form .byte-list,
+#class-form .byte-list {
   font: 20px Sertig-Web;
   font-weight: bold;
   background-color: #181818;
@@ -467,27 +467,27 @@ select,
   float: left;
 }
 
-#skillForm .grayed,
-#classForm .grayed {
+#skill-form .grayed,
+#class-form .grayed {
   color: #999;
 }
 
-#skillForm .byteList,
-#classForm .byteList {
+#skill-form .byte-list,
+#class-form .byte-list {
   width: calc(40% - 24px);
   min-height: 50px;
 }
 
-#skillForm .multilist,
-#classForm .multilist {
+#skill-form .multi-list,
+#class-form .multi-list {
   padding: 5px;
   padding-left: 10px;
   cursor: pointer;
   border-radius: 10px;
 }
 
-#skillForm .multilist:hover,
-#classForm .multilist:hover {
+#skill-form .multi-list:hover,
+#class-form .multi-list:hover {
   background-color: red;
 }
 
@@ -496,8 +496,8 @@ select {
   cursor: pointer;
 }
 
-#skillForm textarea,
-#classForm textArea {
+#skill-form textarea,
+#class-form textarea {
   font: 20px Sertig-Web;
   font-weight: bold;
   background-color: #181818;
@@ -513,23 +513,23 @@ select {
   height: 200px;
 }
 
-textArea {
+textarea {
   resize: vertical;
 }
 
-#skillForm p,
-#classForm p {
+#skill-form p,
+#class-form p {
   text-align: center;
   font: 20px Sertig-Web;
   color: #ccc;
 }
 
-#skillForm .areaLabel,
-#classForm .areaLabel {
+#skill-form .area-label,
+#class-form .area-label {
 }
 
-#skillForm .attrLabel,
-#classForm .attrLabel {
+#skill-form .attr-label,
+#class-form .attr-label {
   width: 25px;
   text-align: left;
   margin: 0;
@@ -538,18 +538,18 @@ textArea {
   clear: none;
 }
 
-#skillForm .base,
-#classForm .base {
+#skill-form .base,
+#class-form .base {
   width: calc(25% - 32px);
 }
 
-#skillForm .scale,
-#classForm .scale {
+#skill-form .scale,
+#class-form .scale {
   width: calc(15% - 18px);
 }
 
-#skillForm .byteList input,
-#classForm .byteList input {
+#skill-form .byte-list input,
+#class-form .byte-list input {
   width: 15px;
   margin-top: 6px;
 }
@@ -578,15 +578,15 @@ textArea {
   }
 }
 
-#skillList option.active-skill {
+#skill-list option.active-skill {
   animation: pulse 2s infinite;
 }
 
-#skillList option.active-skill.in-builder {
+#skill-list option.active-skill.in-builder {
   background-color: rgb(5, 204, 226);
 }
 
-#skillList option.active-skill.in-skill-form {
+#skill-list option.active-skill.in-skill-form {
   background-color: rgb(5, 226, 171);
 }
 
@@ -605,39 +605,39 @@ textArea {
   }
 }
 
-#skillForm .input-comment {
+#skill-form .input-comment {
   height: 60px;
 }
 
-.settingButton {
+.setting-button {
   border: 2px solid #474747;
   color: #e4e8e3;
   transition: background-color 600ms, color 600ms, border-color 600ms;
 }
 
-.settingButton.on {
+.setting-button.on {
   background-color: #76b947;
   color: #ffffff;
 }
 
-.settingButton.off {
+.setting-button.off {
   background-color: #393939;
   color: #a3a3a3;
 }
 
-.settingButton:hover.on {
+.setting-button:hover.on {
   background-color: #659f3d;
   border-color: #558835;
   color: #f0f0f0;
 }
 
-.settingButton:hover.off {
+.setting-button:hover.off {
   background-color: #2f2f2f;
   border-color: #1f1f1f;
   color: #bdbdbd;
 }
 
-#componentChooser h4 {
+#component-chooser h4 {
   font-size: 28px;
   color: #9cc69b;
 }

@@ -17,27 +17,27 @@ h3:active {
   cursor: grabbing;
 }
 
-.triggerLabel:before {
+.trigger-label:before {
   content: 'Trigger: ';
   color: red;
 }
 
-.conditionLabel:before {
+.condition-label:before {
   content: 'Condition: ';
   color: blue;
 }
 
-.targetLabel:before {
+.target-label:before {
   content: 'Target: ';
   color: #080;
 }
 
-.mechanicLabel:before {
+.mechanic-label:before {
   content: 'Mechanic: ';
   color: #f0f;
 }
 
-.componentWrapper {
+.component-wrapper {
   float: left;
   max-width: calc(100% - 24px);
 }
@@ -97,7 +97,7 @@ h3:active {
   background-color: #181818;
 }
 
-.componentChildren {
+.component-children {
   margin-left: 20px;
 }
 
@@ -105,7 +105,7 @@ h3:active {
   display: flex;
 }
 
-.builderButton {
+.builder-button {
   background-color: #043;
   width: 90px;
   height: 32px;
@@ -120,11 +120,11 @@ h3:active {
   transition: background-color 600ms;
 }
 
-.smallButton {
+.small-button {
   width: 32px;
 }
 
-.builderButton:hover {
+.builder-button:hover {
   background-color: #666;
 }
 

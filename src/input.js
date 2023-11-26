@@ -224,7 +224,7 @@ class IndexListValue extends FormInput {
     this.label = document.createElement('label');
     this.label.textContent = this.name;
     if (this.tooltip) {
-      this.label.setAttribute('data-tooltip', this.tooltip);
+      this.label.dataset.tooltip = this.tooltip;
       this.label.className = 'tooltip';
     }
     target.appendChild(this.label);
@@ -336,7 +336,7 @@ class ListValue extends FormInput {
     this.label = document.createElement('label');
     this.label.textContent = this.name;
     if (this.tooltip) {
-      this.label.setAttribute('data-tooltip', this.tooltip);
+      this.label.dataset.tooltip = this.tooltip;
       this.label.className = 'tooltip';
     }
     target.appendChild(this.label);
@@ -465,7 +465,7 @@ class AttributeValue extends FormInput {
     this.label = document.createElement('label');
     this.label.textContent = this.name;
     if (this.tooltip) {
-      this.label.setAttribute('data-tooltip', this.tooltip);
+      this.label.dataset.tooltip = this.tooltip;
       this.label.className = 'tooltip';
     }
     target.appendChild(this.label);
@@ -479,7 +479,7 @@ class AttributeValue extends FormInput {
 
     this.left = document.createElement('label');
     this.left.textContent = '+ (';
-    this.left.className = 'attrLabel';
+    this.left.className = 'attr-label';
     target.appendChild(this.left);
 
     this.scaleBox = document.createElement('input');
@@ -491,7 +491,7 @@ class AttributeValue extends FormInput {
 
     this.right = document.createElement('label');
     this.right.textContent = ')';
-    this.right.className = 'attrLabel';
+    this.right.className = 'attr-label';
     target.appendChild(this.right);
   }
 
@@ -618,7 +618,7 @@ class DoubleValue extends FormInput {
     this.label = document.createElement('label');
     this.label.textContent = this.name;
     if (this.tooltip) {
-      this.label.setAttribute('data-tooltip', this.tooltip);
+      this.label.dataset.tooltip = this.tooltip;
       this.label.className = 'tooltip';
     }
     target.appendChild(this.label);
@@ -725,7 +725,7 @@ class IntValue extends FormInput {
     this.label = document.createElement('label');
     this.label.textContent = this.name;
     if (this.tooltip) {
-      this.label.setAttribute('data-tooltip', this.tooltip);
+      this.label.dataset.tooltip = this.tooltip;
       this.label.className = 'tooltip';
     }
     target.appendChild(this.label);
@@ -832,7 +832,7 @@ class StringValue extends FormInput {
     this.label = document.createElement('label');
     this.label.textContent = this.name;
     if (this.tooltip) {
-      this.label.setAttribute('data-tooltip', this.tooltip);
+      this.label.dataset.tooltip = this.tooltip;
       this.label.className = 'tooltip';
     }
     target.appendChild(this.label);
@@ -945,9 +945,9 @@ class StringListValue extends FormInput {
   createHTML(target) {
     this.label = document.createElement('label');
     this.label.textContent = this.name;
-    this.label.className = 'areaLabel';
+    this.label.className = 'area-label';
     if (this.tooltip) {
-      this.label.setAttribute('data-tooltip', this.tooltip);
+      this.label.dataset.tooltip = this.tooltip;
       this.label.className = 'tooltip';
     }
     target.appendChild(this.label);
@@ -1086,7 +1086,7 @@ class MultiListValue extends FormInput {
     this.label = document.createElement('label');
     this.label.textContent = this.name;
     if (this.tooltip) {
-      this.label.setAttribute('data-tooltip', this.tooltip);
+      this.label.dataset.tooltip = this.tooltip;
       this.label.className = 'tooltip';
     }
     target.appendChild(this.label);
@@ -1122,7 +1122,7 @@ class MultiListValue extends FormInput {
     target.appendChild(this.help);
 
     this.div = document.createElement('div');
-    this.div.className = 'byteList';
+    this.div.className = 'byte-list';
     target.appendChild(this.div);
 
     for (let i = 0; i < this.values.length; i++) {
@@ -1132,7 +1132,7 @@ class MultiListValue extends FormInput {
 
   populate(value) {
     const entry = document.createElement('div');
-    entry.className = 'multilist';
+    entry.className = 'multi-list';
     entry.textContent = value;
     entry.addEventListener('click', () => {
       entry.parentNode.removeChild(entry);
@@ -1253,9 +1253,9 @@ class ByteListValue extends FormInput {
   createHTML(target) {
     this.label = document.createElement('label');
     this.label.textContent = this.name;
-    this.label.className = 'areaLabel';
+    this.label.className = 'area-label';
     if (this.tooltip) {
-      this.label.setAttribute('data-tooltip', this.tooltip);
+      this.label.dataset.tooltip = this.tooltip;
       this.label.className = 'tooltip';
     }
     target.appendChild(this.label);
@@ -1263,7 +1263,7 @@ class ByteListValue extends FormInput {
     // Add div elements
     this.checkboxes = [];
     this.div = document.createElement('div');
-    this.div.className = 'byteList';
+    this.div.className = 'byte-list';
     this.div.classList.add(...this.HTMLClasses);
     let html = '';
     for (let i = 0; i < this.values.length; i++) {

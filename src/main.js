@@ -144,7 +144,7 @@ const init = () => {
   skill.init();
 
   /** @type {HTMLSelectElement} */
-  const skillList = document.getElementById('skillList');
+  const skillList = document.getElementById('skill-list');
 
   skillList.addEventListener('mousedown', (e) => {
     if (e.target.tagName !== 'OPTION') {
@@ -168,15 +168,15 @@ const init = () => {
       debug.logIfAllowed(debug.levels.VERBOSE, 'Same skill option is selected');
       const currentForm = getCurrentForm();
       const activeSkill = getActiveSkill();
-      if (currentForm === 'skillForm') {
+      if (currentForm === 'skill-form') {
         // Create form content if not already created
         if (document.getElementById('builderContent').innerHTML === '') {
           activeSkill.apply();
         }
         showSkillPage('builder');
       } else if (currentForm === 'builder') {
-        // May be cleared because of previously opening a component (it also uses skillForm)
-        if (document.getElementById('skillForm').innerHTML === '') {
+        // May be cleared because of previously opening a component (it also uses skill-form)
+        if (document.getElementById('skill-form').innerHTML === '') {
           debug.logIfAllowed(
             debug.levels.VERBOSE,
             'Skill form does not exist for the active skill - recreating it',
@@ -184,7 +184,7 @@ const init = () => {
           );
           activeSkill.createFormHTML(true);
         }
-        showSkillPage('skillForm');
+        showSkillPage('skill-form');
       }
     }
   });
@@ -209,19 +209,19 @@ const init = () => {
 
   document.getElementById('skillDetails').addEventListener('click', () => {
     const activeSkill = getActiveSkill();
-    // IsSameSkill must be true because the button is to switch to the active skill's skillForm (from builder)
+    // IsSameSkill must be true because the button is to switch to the active skill's skill-form (from builder)
     activeSkill.createFormHTML(true);
-    showSkillPage('skillForm');
+    showSkillPage('skill-form');
   });
   document.getElementById('saveButton').addEventListener('click', () => {
     saveToFile('skills.yml', getSkillSaveData());
   });
-  document.getElementById('saveSkill').addEventListener('click', () => {
+  document.getElementById('save-skill').addEventListener('click', () => {
     const activeSkill = getActiveSkill();
     saveToFile(`${activeSkill.data[0].value}.yml`, activeSkill.getSaveString());
   });
   document.getElementById('deleteSkill').addEventListener('click', () => {
-    const list = document.getElementById('skillList');
+    const list = document.getElementById('skill-list');
     let index = list.selectedIndex;
 
     const skills = getSkills();
@@ -262,7 +262,7 @@ window.onload = () => {
   const isFirefox = typeof InstallTrigger !== 'undefined'; // Firefox 1.0+
   const isChrome = !!window.chrome && !isOpera; // Chrome 1+
   const badBrowser = !isOpera && !isFirefox && !isChrome;
-  document.getElementById('badBrowser').style.display = badBrowser ? 'block' : 'none';
+  document.getElementById('bad-browser').style.display = badBrowser ? 'block' : 'none';
   if (badBrowser) {
     return;
   }
@@ -272,7 +272,7 @@ window.onload = () => {
   document.getElementById('addTrigger').addEventListener('click', () => {
     const activeSkill = getActiveSkill();
     setActiveComponent(activeSkill);
-    showSkillPage('triggerChooser');
+    showSkillPage('trigger-chooser');
   });
 
   document.getElementById('skillTab').addEventListener('click', () => {
@@ -286,20 +286,20 @@ window.onload = () => {
    * @param {MouseEvent} e
    */
   const triggerCancelOnRightClick = (e) => {
-    const cancelButton = e.currentTarget.querySelector('.cancelButton');
+    const cancelButton = e.currentTarget.querySelector('.cancel-button');
     if (cancelButton) {
       e.preventDefault();
       cancelButton.dispatchEvent(new Event('click'));
     }
   };
   document
-    .getElementById('triggerChooser')
+    .getElementById('trigger-chooser')
     .addEventListener('contextmenu', triggerCancelOnRightClick);
   document
-    .getElementById('componentChooser')
+    .getElementById('component-chooser')
     .addEventListener('contextmenu', triggerCancelOnRightClick);
 
-  const cancelButtons = document.querySelectorAll('.cancelButton');
+  const cancelButtons = document.querySelectorAll('.cancel-button');
   for (let i = 0; i < cancelButtons.length; i++) {
     cancelButtons[i].addEventListener('click', () => {
       showSkillPage('builder');
@@ -339,6 +339,6 @@ window.onbeforeunload = () => {
   localStorage.setItem('skillData', getSkillSaveData());
   localStorage.setItem('classData', getClassSaveData());
   localStorage.setItem('skillsActive', getSkillsActive() ? 'true' : 'false');
-  localStorage.setItem('skillIndex', document.getElementById('skillList').selectedIndex);
-  localStorage.setItem('classIndex', document.getElementById('classList').selectedIndex);
+  localStorage.setItem('skillIndex', document.getElementById('skill-list').selectedIndex);
+  localStorage.setItem('classIndex', document.getElementById('class-list').selectedIndex);
 };
