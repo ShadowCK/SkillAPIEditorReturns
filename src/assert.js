@@ -6,6 +6,7 @@ const assertNotNull = (...values) => {
       throw new Error('Assertion failed');
     }
   });
+  return true;
 };
 const assertMatches = (predicate, onFail, ...values) => {
   if (!predicate || typeof predicate !== 'function') {

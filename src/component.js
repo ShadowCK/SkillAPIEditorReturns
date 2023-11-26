@@ -378,17 +378,18 @@ class Component {
       if (!input.hasValidValueForInputLabel()) {
         return false;
       }
-      // No default value, so it is valid
+      // No default value, so it is valid unless it has no valid value
       if (input.defaultValue == null) {
-        const isAllValid = [input.value, input.base, input.scale, input.values].every(
+        const hasValidValue = [input.value, input.base, input.scale, input.values].some(
           (v) => v !== null && v !== undefined && v !== 'null' && v !== 'undefined',
         );
-        return isAllValid;
+        return hasValidValue;
       }
       // Otherwise, check if the value is the same as the default value
       // * Input may be a string of the default value
       if (
         input instanceof AttributeValue &&
+        assertNotNull(input.defaultValue.base, input.defaultValue.scale) &&
         (input.base === input.defaultValue.base ||
           input.base === input.defaultValue.base.toString()) &&
         (input.scale === input.defaultValue.scale ||
