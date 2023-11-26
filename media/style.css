@@ -229,39 +229,32 @@ footer {
   background-color: black;
 }
 
-footer a {
+#footer-navbar {
+  display: flex;
+}
+
+#footer-navbar .icon {
+  margin-right: 2px;
+}
+
+#footer-navbar a {
   text-align: center;
-  height: 25px;
   display: inline-block;
-  width: 25%;
-  color: #06c;
+  flex-grow: 1;
+  color: #5e77f3;
   padding-top: 5px;
   text-decoration: none;
   border-top: 1px solid white;
-  position: absolute;
-  left: 0;
   transition: background-color 600ms;
   border-left: 1px solid white;
 }
 
-footer a:hover {
+#footer-navbar a:hover {
   background-color: #222;
 }
 
-footer a:first-child {
+#footer-navbar a:first-child {
   border-left: none;
-}
-
-footer #profile {
-  left: 25%;
-}
-
-footer #source {
-  left: 50%;
-}
-
-footer #irc {
-  left: 75%;
 }
 
 input,
