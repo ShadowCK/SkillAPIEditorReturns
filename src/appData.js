@@ -17,7 +17,7 @@ const set = (key, value) => {
   return appData;
 };
 
-export { settings, globals, get, set };
+export { settings, globals, get, set, appData as _map };
 
 // Set default values
 appData.set(settings.ShowComment, true);

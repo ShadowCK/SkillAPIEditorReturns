@@ -168,23 +168,47 @@ const init = () => {
       debug.logIfAllowed(debug.levels.VERBOSE, 'Same skill option is selected');
       const currentForm = getCurrentForm();
       const activeSkill = getActiveSkill();
-      if (currentForm === 'skill-form') {
-        // Create form content if not already created
-        if (document.getElementById('builder-content').innerHTML === '') {
-          activeSkill.apply();
+
+      const process = (form) => {
+        if (form === 'skill-form') {
+          // Create form content if not already created
+          if (document.getElementById('builder-content').innerHTML === '') {
+            debug.logIfAllowed(
+              debug.levels.VERBOSE,
+              '#builder-content does not exist for the active skill - recreating it',
+              activeSkill,
+            );
+            activeSkill.apply();
+          }
+          showSkillPage('builder');
+          return true;
         }
-        showSkillPage('builder');
-      } else if (currentForm === 'builder') {
-        // May be cleared because of previously opening a component (it also uses skill-form)
-        if (document.getElementById('skill-form').innerHTML === '') {
+        if (form === 'builder') {
+          // May be cleared because of previously opening a component (it also uses skill-form)
+          if (document.getElementById('skill-form').innerHTML === '') {
+            debug.logIfAllowed(
+              debug.levels.VERBOSE,
+              '#skill-form does not exist for the active skill - recreating it',
+              activeSkill,
+            );
+            activeSkill.createFormHTML(true);
+          }
+          showSkillPage('skill-form');
+          return true;
+        }
+        return false;
+      };
+
+      if (!process(currentForm)) {
+        // Try it again with last visited form
+        const lastVisitedForm = appData.get(appData.globals.lastVisitedForm);
+        if (!process(lastVisitedForm)) {
           debug.logIfAllowed(
             debug.levels.VERBOSE,
-            'Skill form does not exist for the active skill - recreating it',
-            activeSkill,
+            'Both `currentForm` and `lastVisitedForm` are neither "builder" nor "skill-form" - defaulting to "builder".',
           );
-          activeSkill.createFormHTML(true);
+          process('builder');
         }
-        showSkillPage('skill-form');
       }
     }
   });

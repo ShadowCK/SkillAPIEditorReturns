@@ -3,6 +3,7 @@
 // Note: This script is intended for development use only and should not be deployed in production environments.
 
 import diContainer from './diContainer.js';
+import * as appData from './appData.js';
 
 // component.js
 let getActiveComponent;
@@ -124,6 +125,11 @@ const init = (isProduction) => {
     },
     log: {
       value: log,
+    },
+    appData: {
+      get() {
+        return appData;
+      },
     },
   });
 };
