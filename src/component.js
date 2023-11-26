@@ -500,7 +500,7 @@ class Component {
     remove.className = 'builderButton smallButton cancelButton';
     remove.style.background = 'url("media/img/delete.png") no-repeat center #f00';
     remove.component = this;
-    remove.addEventListener('click', () => {
+    this.removeFunction = () => {
       const list = remove.component.parent.components;
       for (let i = 0; i < list.length; i++) {
         if (list[i] === remove.component) {
@@ -508,10 +508,9 @@ class Component {
           break;
         }
       }
-      const parentChildContainer = this.parent.html;
-      const componentWrapper = this.html.parentNode;
-      parentChildContainer.removeChild(componentWrapper);
-    });
+      container.remove();
+    };
+    remove.addEventListener('click', this.removeFunction);
     builderButtonWrapper.appendChild(remove);
 
     container.appendChild(div);
@@ -613,7 +612,19 @@ class Component {
     const handleContextMenu = (e) => {
       if (form.parentNode === e.currentTarget) {
         e.preventDefault();
-        done.dispatchEvent(new Event('click'));
+        const lastVisitedForm = appData.get('last-visited-form');
+        if (['triggerChooser', 'componentChooser'].includes(lastVisitedForm)) {
+          // Remove the newly added component
+          this.removeFunction();
+          debug.logIfAllowed(
+            debug.levels.VERBOSE,
+            `Removed ${this.type} component ${this.name} because it was cancelled`,
+          );
+          // Go back to the chooser
+          showSkillPage(lastVisitedForm);
+        } else {
+          done.dispatchEvent(new Event('click'));
+        }
       } else {
         target.removeEventListener('contextmenu', handleContextMenu);
         debug.logIfAllowed(

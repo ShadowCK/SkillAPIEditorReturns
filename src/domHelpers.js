@@ -90,6 +90,7 @@ const setPageStyle = (name, visible) => {
  * Returns the view back to the skill builder when in the skill tab
  */
 const showSkillPage = (name) => {
+  appData.set(appData.globals.lastVisitedForm, getCurrentForm());
   setPageStyle('builder', name);
   setPageStyle('skillForm', name);
   setPageStyle('componentChooser', name);
@@ -182,6 +183,7 @@ const setupOptionList = (div, list, type) => {
             showSkillPage('builder');
           } else {
             showSkillPage('skillForm');
+            /** @type {import('./component.js').Component} */
             const component = h5.component.constructor
               ? new h5.component.constructor()
               : h5.component.supplier();

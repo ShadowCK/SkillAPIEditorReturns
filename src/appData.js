@@ -4,7 +4,9 @@ const settings = {
   SortPinyin: 'sort-pinyin',
 };
 
-const globals = {};
+const globals = {
+  lastVisitedForm: 'last-visited-form',
+};
 
 const appData = new Map();
 
@@ -20,3 +22,4 @@ export { settings, globals, get, set };
 // Set default values
 appData.set(settings.ShowComment, true);
 appData.set(settings.SortPinyin, true);
+appData.set(globals.lastVisitedForm, null);
