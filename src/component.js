@@ -60,20 +60,20 @@ const createSettingButton = (options) => {
   const {
     isForComponent = true,
     form,
-    component,
+    component, // ? not used for now but is useful when `isForComponent` is true
     button = document.createElement('h5'),
     key,
     callback,
     onText,
     offText,
-  } = options;
+  } = options; // expected parameters
 
   button.key = key;
   button.className = 'setting-button';
   // Set text and class with the default state
   resetSettingButton(appData.get(key), button, onText, offText);
 
-  const update = () => {
+  button.addEventListener('click', () => {
     // Revert on/off state
     appData.set(key, !appData.get(key));
     // Reset text and class with the new state
@@ -81,33 +81,11 @@ const createSettingButton = (options) => {
     if (callback != null && typeof callback === 'function') {
       callback({ ...options, newValue: appData.get(key) });
     }
-  };
+  });
 
-  // TODO: refactor this to be more generic making use of the callback
   if (isForComponent) {
-    button.addEventListener('click', () => {
-      update();
-      // Recreate the form.
-      // We can also set the visibility of the comment input here.
-      // FIXME: This may lead to potential bugs as creating a new form clears out any stored data in previous elements.
-      // If the form is holding extra data after it was created, it will be lost.
-      component.update();
-      component.createFormHTML();
-    });
     form.appendChild(button);
   } else {
-    button.addEventListener('click', () => {
-      update();
-      const currentForm = getCurrentForm();
-      if (currentForm === 'skill-form') {
-        // FIXME: Make this check more professional and less hacky
-        // Quick and dirty way to check if the skill form is for a skill or a component
-        if (!document.getElementById('skill-form').textContent.includes('Skill Details')) {
-          activeComponent.update();
-          activeComponent.createFormHTML();
-        }
-      }
-    });
     document.getElementById('footer-settings').appendChild(button);
   }
 };
@@ -115,10 +93,14 @@ const createSettingButton = (options) => {
 const createSettingButtons = (component, form) => {
   createSettingButton({
     form,
-    component,
+    component, // ? Unnecessary for now
     key: settings.ShowComment,
     onText: 'Hide Comment',
     offText: 'Show Comment',
+    callback: () => {
+      component.update();
+      component.createFormHTML();
+    },
   });
 };
 

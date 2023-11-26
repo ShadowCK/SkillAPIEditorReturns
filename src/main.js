@@ -298,6 +298,18 @@ window.onload = () => {
     key: appData.settings.ShowComment,
     onText: 'Hide Comment',
     offText: 'Show Comment',
+    callback: () => {
+      const currentForm = getCurrentForm();
+      if (currentForm === 'skill-form') {
+        // FIXME: Make this check more professional and less hacky
+        // Quick and dirty way to check if the skill form is for a skill or a component
+        if (!document.getElementById('skill-form').textContent.includes('Skill Details')) {
+          const activeComponent = getActiveComponent();
+          activeComponent.update();
+          activeComponent.createFormHTML();
+        }
+      }
+    },
   });
 
   createSettingButton({
@@ -305,11 +317,11 @@ window.onload = () => {
     key: appData.settings.ZenMode,
     onText: 'Zen Mode On',
     offText: 'Zen Mode Off',
-    callback: (options)=>{
-      if (options.newValue != null){
+    callback: (options) => {
+      if (options.newValue != null) {
         document.body.dataset.zenMode = !!options.newValue;
       }
-    }
+    },
   });
 
   document.getElementById('add-trigger').addEventListener('click', () => {

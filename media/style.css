@@ -817,13 +817,13 @@ body[data-zen-mode='true'] #trigger-chooser {
 
 #skills label,
 #classes label {
-  transition: all 600ms ease-in-out;
+  transition: all 450ms ease-in-out 300ms;
 }
 
 body[data-zen-mode='true'] #skills label,
 body[data-zen-mode='true'] #classes label {
   width: 30%;
-  transition: all 600ms ease-in-out;
+  transition: all 450ms ease-in-out 300ms;
 }
 
 /* #endregion */
