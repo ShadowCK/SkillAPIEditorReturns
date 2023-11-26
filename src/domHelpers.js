@@ -277,6 +277,7 @@ selectedOption = skillList.options[skillList.selectedIndex];
 // Register dependencies
 diContainer.register('showSkillPage', showSkillPage);
 diContainer.register('getSkillsActive', getSkillsActive);
+diContainer.register('getCurrentForm',getCurrentForm);
 
 export {
   getSkillsActive,

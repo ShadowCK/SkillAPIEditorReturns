@@ -34,9 +34,11 @@ import { notNull, assertMatches, assertNotNull } from './assert.js';
 
 let showSkillPage;
 let loadSection;
+let getCurrentForm;
 
 let hoverSpace;
 // The active component being edited or added to
+/** @type {Component} */
 let activeComponent;
 let saveIndex;
 
@@ -55,6 +57,7 @@ const resetSettingButton = (state, button, onText, offText) => {
 };
 
 const createSettingButton = ({
+  isForComponent = true,
   form,
   component,
   button = document.createElement('h5'),
@@ -68,7 +71,7 @@ const createSettingButton = ({
   // Set text and class with the default state
   resetSettingButton(appData.get(key), button, onText, offText);
 
-  button.addEventListener('click', () => {
+  const update = () => {
     // Revert on/off state
     appData.set(key, !appData.get(key));
     // Reset text and class with the new state
@@ -76,14 +79,34 @@ const createSettingButton = ({
     if (callback != null && typeof callback === 'function') {
       callback();
     }
-    // Recreate the form.
-    // We can also set the visibility of the comment input here.
-    // FIXME: This may lead to potential bugs as creating a new form clears out any stored data in previous elements.
-    // If the form is holding extra data after it was created, it will be lost.
-    component.update();
-    component.createFormHTML();
-  });
-  form.appendChild(button);
+  };
+
+  if (isForComponent) {
+    button.addEventListener('click', () => {
+      update();
+      // Recreate the form.
+      // We can also set the visibility of the comment input here.
+      // FIXME: This may lead to potential bugs as creating a new form clears out any stored data in previous elements.
+      // If the form is holding extra data after it was created, it will be lost.
+      component.update();
+      component.createFormHTML();
+    });
+    form.appendChild(button);
+  } else {
+    button.addEventListener('click', () => {
+      update();
+      const currentForm = getCurrentForm();
+      if (currentForm === 'skill-form') {
+        // FIXME: Make this check more professional and less hacky
+        // Quick and dirty way to check if the skill form is for a skill or a component
+        if (!document.getElementById('skill-form').textContent.includes('Skill Details')) {
+          activeComponent.update();
+          activeComponent.createFormHTML();
+        }
+      }
+    });
+    document.getElementById('footer-settings').appendChild(button);
+  }
 };
 
 const createSettingsButtons = (component, form) => {
@@ -372,7 +395,6 @@ class Component {
      * @returns
      */
     const isValidInput = (input) => {
-      console.log(input)
       if (input.hidden) {
         return false;
       }
@@ -4623,11 +4645,15 @@ diContainer.inject('loadSection').then((value) => {
   loadSection = value;
   Component.prototype.load = loadSection;
 });
+diContainer.inject('getCurrentForm').then((value) => {
+  getCurrentForm = value;
+});
 
 // Register dependencies
 diContainer.register('getActiveComponent', getActiveComponent);
 
 export {
+  createSettingButton,
   setSaveIndex,
   getSaveIndex,
   Component,

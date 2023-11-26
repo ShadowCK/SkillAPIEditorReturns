@@ -2,6 +2,7 @@ const settings = {
   ShowComment: 'show-comment',
   // If true, will convert Chinese characters to pinyin, otherwise directly sort by unicode
   SortPinyin: 'sort-pinyin',
+  ZenMode: 'zen-mode',
 };
 
 const globals = {

@@ -33,7 +33,7 @@ import {
   updateUIForNewActiveSkill,
 } from './domHelpers.js';
 import { initSkills, initClasses, loadFiles, parseConfig } from './loader.js';
-import { getActiveComponent, setActiveComponent } from './component.js';
+import { createSettingButton, getActiveComponent, setActiveComponent } from './component.js';
 import { getVersionData, setActiveData } from './data/index.js';
 import * as skill from './skill.js';
 import { getActiveSkill, setActiveSkill, getSkills, newSkill } from './skill.js';
@@ -292,6 +292,20 @@ window.onload = () => {
   }
 
   init();
+
+  createSettingButton({
+    isForComponent: false,
+    key: appData.settings.ShowComment,
+    onText: 'Hide Comment',
+    offText: 'Show Comment',
+  });
+
+  createSettingButton({
+    isForComponent: false,
+    key: appData.settings.ZenMode,
+    onText: 'Zen Mode On',
+    offText: 'Zen Mode Off',
+  });
 
   document.getElementById('add-trigger').addEventListener('click', () => {
     const activeSkill = getActiveSkill();
