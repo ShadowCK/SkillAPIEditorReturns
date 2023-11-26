@@ -372,6 +372,7 @@ class Component {
      * @returns
      */
     const isValidInput = (input) => {
+      console.log(input)
       if (input.hidden) {
         return false;
       }
@@ -3750,7 +3751,7 @@ class MechanicSound extends Component {
     this.description = "Plays a sound at the target's location.";
 
     this.data.push(
-      new ListValue('Sound', 'sound', getSounds, 'Ambience Cave').setTooltip(
+      new ListValue('Sound', 'sound', getSounds, getSounds()[0]).setTooltip(
         'The sound clip to play',
       ),
     );
