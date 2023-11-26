@@ -282,6 +282,23 @@ window.onload = () => {
     switchToClasses();
   });
 
+  /**
+   * @param {MouseEvent} e
+   */
+  const triggerCancelOnRightClick = (e) => {
+    const cancelButton = e.currentTarget.querySelector('.cancelButton');
+    if (cancelButton) {
+      e.preventDefault();
+      cancelButton.dispatchEvent(new Event('click'));
+    }
+  };
+  document
+    .getElementById('triggerChooser')
+    .addEventListener('contextmenu', triggerCancelOnRightClick);
+  document
+    .getElementById('componentChooser')
+    .addEventListener('contextmenu', triggerCancelOnRightClick);
+
   const cancelButtons = document.querySelectorAll('.cancelButton');
   for (let i = 0; i < cancelButtons.length; i++) {
     cancelButtons[i].addEventListener('click', () => {
