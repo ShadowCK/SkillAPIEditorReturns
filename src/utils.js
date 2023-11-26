@@ -1,4 +1,22 @@
 import pinyin from 'pinyin';
+import * as appData from './appData.js';
+
+/**
+ * The original skillAPI sorts skills by their names' unicode values.
+ * The order determines the triggers' execution order.
+ * @param {string} strA
+ * @param {string} strB
+ * @returns {number}
+ */
+const compareUnicode = (strA, strB) => {
+  if (strA > strB) {
+    return 1;
+  }
+  if (strA < strB) {
+    return -1;
+  }
+  return 0;
+};
 
 const toPinyin = (str) =>
   pinyin(str, {
@@ -10,4 +28,11 @@ const toPinyin = (str) =>
 
 window.toPinyin = toPinyin;
 
-export { toPinyin }; // eslint-disable-line import/prefer-default-export
+const sortStrings = (strA, strB) => {
+  const isSortByPinyin = appData.get(appData.settings.SortPinyin);
+  return isSortByPinyin
+    ? compareUnicode(toPinyin(strA), toPinyin(strB))
+    : compareUnicode(strA, strB);
+};
+
+export { toPinyin, sortStrings };

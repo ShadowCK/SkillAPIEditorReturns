@@ -313,6 +313,7 @@ const addSkill = (name) => {
 
   const option = document.createElement('option');
   option.text = name;
+  option.skill = skill;
   const list = document.getElementById('skill-list');
   list.add(option, list.length - 1);
 

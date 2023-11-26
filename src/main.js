@@ -36,11 +36,18 @@ import { initSkills, initClasses, loadFiles, parseConfig } from './loader.js';
 import { createSettingButton, getActiveComponent, setActiveComponent } from './component.js';
 import { getVersionData, setActiveData } from './data/index.js';
 import * as skill from './skill.js';
-import { getActiveSkill, setActiveSkill, getSkills, newSkill } from './skill.js';
+import {
+  getActiveSkill,
+  setActiveSkill,
+  getSkills,
+  newSkill,
+  setSkills,
+  getSkill,
+} from './skill.js';
 import { getActiveClass, setActiveClass, getClasses, newClass } from './class.js';
 import Attribute from './classes/Attribute.js';
 import * as debug from './debug.js';
-import { toPinyin } from './utils.js';
+import { sortStrings } from './utils.js';
 import * as appData from './appData.js';
 
 const updateActiveSkillAndComponent = () => {
@@ -62,14 +69,7 @@ const getSkillSaveData = () => {
   updateActiveSkillAndComponent();
   let data = 'loaded: false\n';
   const alphabetic = [...skills];
-  alphabetic.sort((a, b) => {
-    const aName = a.data[0].value;
-    const bName = b.data[0].value;
-    const isSortByPinyin = appData.get(appData.settings.SortPinyin);
-    return isSortByPinyin
-      ? toPinyin(aName).localeCompare(toPinyin(bName))
-      : aName.localeCompare(bName);
-  });
+  alphabetic.sort((a, b) => sortStrings(a.data[0].value, b.data[0].value));
   for (let i = 0; i < alphabetic.length; i++) {
     data += alphabetic[i].getSaveString();
   }
@@ -322,6 +322,22 @@ window.onload = () => {
       if (options.newValue != null) {
         document.body.dataset.zenMode = !!options.newValue;
       }
+    },
+  });
+
+  createSettingButton({
+    isForComponent: false,
+    key: appData.settings.SortPinyin,
+    onText: 'Sort w Pinyin',
+    offText: 'Sort w/o Pinyin',
+    callback: () => {
+      const skillList = document.getElementById('skill-list');
+      const skillOptions = Array.from(skillList.options);
+      const newSkillOption = skillOptions.pop();
+      const sortedSkillOptions = skillOptions.sort((a, b) => sortStrings(a.value, b.value));
+      skillList.innerHTML = '';
+      skillList.append(...sortedSkillOptions, newSkillOption);
+      setSkills(sortedSkillOptions.map((option) => option.skill || getSkill(option.value)));
     },
   });
 

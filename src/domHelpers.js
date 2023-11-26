@@ -4,7 +4,7 @@ import { getActiveComponent, Type, Trigger, Target, Condition, Mechanic } from '
 import * as debug from './debug.js';
 import diContainer from './diContainer.js';
 
-import { toPinyin } from './utils.js';
+import { sortStrings } from './utils.js';
 import * as appData from './appData.js';
 
 let skillsActive = true;
@@ -62,6 +62,10 @@ const getCurrentForm = (source) => {
 };
 
 const updateSelectedOptionCSS = (action) => {
+  if (selectedOption === undefined) {
+    debug.logIfAllowed(debug.levels.WARN, 'No selected option found');
+    return;
+  }
   if (action === 'skill-form') {
     selectedOption.classList.remove('in-builder');
     selectedOption.classList.add('active-skill', 'in-skill-form');
@@ -142,12 +146,7 @@ const setupOptionList = (div, list, type) => {
       container = parent;
     }
     Object.entries(source)
-      .sort(([keyA], [keyB]) => {
-        const isSortByPinyin = appData.get(appData.settings.SortPinyin);
-        return isSortByPinyin
-          ? toPinyin(keyA).localeCompare(toPinyin(keyB))
-          : keyA.localeCompare(keyB);
-      })
+      .sort(([keyA], [keyB]) => sortStrings(keyA, keyB))
       .forEach(([, value], index) => {
         if (index % 4 === 0) {
           output += '| ';
@@ -277,7 +276,7 @@ selectedOption = skillList.options[skillList.selectedIndex];
 // Register dependencies
 diContainer.register('showSkillPage', showSkillPage);
 diContainer.register('getSkillsActive', getSkillsActive);
-diContainer.register('getCurrentForm',getCurrentForm);
+diContainer.register('getCurrentForm', getCurrentForm);
 
 export {
   getSkillsActive,

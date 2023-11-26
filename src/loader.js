@@ -37,6 +37,8 @@ import {
 import Attribute from './classes/Attribute.js';
 import { clamp } from './mathUtils.js';
 import diContainer from './diContainer.js';
+import { sortStrings } from './utils.js';
+import * as debug from './debug.js';
 
 /**
  * Loads a section of config data
@@ -143,19 +145,21 @@ const loadSkillText = (text) => {
   const activeSkill = getActiveSkill();
   // Load new skills
   const data = parseYAML(text);
-  Object.entries(data).forEach(([key, value]) => {
-    if (value instanceof YAMLObject && key !== 'loaded') {
-      if (isSkillNameTaken(key)) {
-        getSkill(key).load(value);
-        if (getSkill(key) === activeSkill) {
-          activeSkill.apply();
-          showSkillPage('builder');
+  Object.entries(data)
+    .sort(([keyA], [keyB]) => sortStrings(keyA, keyB))
+    .forEach(([key, value]) => {
+      if (value instanceof YAMLObject && key !== 'loaded') {
+        if (isSkillNameTaken(key)) {
+          getSkill(key).load(value);
+          if (getSkill(key) === activeSkill) {
+            activeSkill.apply();
+            showSkillPage('builder');
+          }
+        } else {
+          addSkill(key).load(value);
         }
-      } else {
-        addSkill(key).load(value);
       }
-    }
-  });
+    });
 };
 
 // Loads skill data from a file after it has been read
@@ -172,8 +176,13 @@ const initSkills = (skillData, skillIndex) => {
   const skillList = document.getElementById('skill-list');
   skillList.remove(0);
   loadSkillText(skillData); // Load skills from data
-  if (skillIndex) {
-    const indexNumber = parseInt(skillIndex, 10);
+  if (skillIndex != null) {
+    let indexNumber = parseInt(skillIndex, 10);
+    if (Number.isNaN(indexNumber) || indexNumber === -1) {
+      debug.logIfAllowed(debug.levels.WARN, `Invalid skill index ${indexNumber}, defaulting to 0`);
+      indexNumber = 0;
+    }
+
     skillList.selectedIndex = indexNumber;
     const skills = getSkills();
     const newActiveSkill = skills[clamp(indexNumber, 0, skills.length - 1)];
