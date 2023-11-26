@@ -30,7 +30,7 @@ import * as appData from './appData.js';
 import { settings } from './appData.js';
 import diContainer from './diContainer.js';
 import * as debug from './debug.js';
-import { notNull, assertMatches } from './assert.js';
+import { notNull, assertMatches, assertNotNull } from './assert.js';
 
 let showSkillPage;
 let loadSection;
@@ -509,6 +509,9 @@ class Component {
         }
       }
       container.remove();
+      // Set new activeComponent
+      assertNotNull(this.parent);
+      setActiveComponent(this.parent);
     };
     remove.addEventListener('click', this.removeFunction);
     builderButtonWrapper.appendChild(remove);
