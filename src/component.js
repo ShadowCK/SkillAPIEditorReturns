@@ -330,6 +330,16 @@ class Component {
     if (activeComponent === this) {
       div.classList.add('active-component');
     }
+    div.addEventListener('click', (e) => {
+      if (e.target === e.currentTarget || e.target.parentNode === e.currentTarget) {
+        debug.logIfAllowed(
+          debug.levels.VERBOSE,
+          `Clicked on selfElement of ${this.type} component ${this.name}!`,
+        );
+        this.createFormHTML();
+        showSkillPage('skillForm');
+      }
+    });
 
     // Component label
     const label = document.createElement('h3');
@@ -337,7 +347,13 @@ class Component {
     label.className = `${this.type}Label`;
     label.textContent = this.name;
     label.component = this;
-    label.addEventListener('click', () => {
+    label.addEventListener('click', (e) => {
+      debug.logIfAllowed(
+        debug.levels.VERBOSE,
+        `Clicked on targetLabel of ${this.type} component ${this.name}!`,
+      );
+      // Prevents the click from bubbling up to the selfElement
+      e.stopPropagation();
       this.createFormHTML();
       showSkillPage('skillForm');
     });
