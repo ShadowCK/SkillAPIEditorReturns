@@ -572,7 +572,7 @@ class Component {
     }
 
     // Add comment if "show-comment" setting is on
-    if (appData.get('show-comment')) {
+    if (appData.get(appData.settings.ShowComment)) {
       form.appendChild(document.createElement('hr'));
       this.comment.createHTML(form);
     }

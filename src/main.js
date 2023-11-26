@@ -312,6 +312,7 @@ window.onload = () => {
     },
   });
 
+  document.body.dataset.zenMode = appData.get(appData.settings.ZenMode);
   createSettingButton({
     isForComponent: false,
     key: appData.settings.ZenMode,
@@ -396,4 +397,5 @@ window.onbeforeunload = () => {
   localStorage.setItem('skillsActive', getSkillsActive() ? 'true' : 'false');
   localStorage.setItem('skillIndex', document.getElementById('skill-list').selectedIndex);
   localStorage.setItem('classIndex', document.getElementById('class-list').selectedIndex);
+  localStorage.setItem('appData', JSON.stringify(Array.from(appData._map)));
 };
