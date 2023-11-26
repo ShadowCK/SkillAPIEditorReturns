@@ -178,7 +178,7 @@ const initSkills = (skillData, skillIndex) => {
   loadSkillText(skillData); // Load skills from data
   if (skillIndex != null) {
     let indexNumber = parseInt(skillIndex, 10);
-    if (Number.isNaN(indexNumber) || indexNumber === -1) {
+    if (Number.isNaN(indexNumber) || indexNumber < 0 || indexNumber > getSkills().length - 1) {
       debug.logIfAllowed(debug.levels.WARN, `Invalid skill index ${indexNumber}, defaulting to 0`);
       indexNumber = 0;
     }
