@@ -815,15 +815,15 @@ body[data-zen-mode='true'] #trigger-chooser {
   transition-timing-function: ease-out;
 }
 
-#skills label,
-#classes label {
-  transition: all 450ms ease-in-out 300ms;
+#skills label.tooltip,
+#classes label.tooltip {
+  transition: all 600ms ease-in-out 300ms;
 }
 
-body[data-zen-mode='true'] #skills label,
-body[data-zen-mode='true'] #classes label {
+body[data-zen-mode='true'] #skills label.tooltip,
+body[data-zen-mode='true'] #classes label.tooltip {
   width: 30%;
-  transition: all 450ms ease-in-out 300ms;
+  transition: all 600ms ease-in-out 300ms;
 }
 
 /* #endregion */
