@@ -181,6 +181,13 @@ class FormInput {
     throw new Error('Method "getValueForInputLabel" must be implemented.');
   }
 
+  bindWithElements(...htmlElements) {
+    htmlElements.forEach((element) => {
+      element.input = this;
+    });
+    this.elements = htmlElements;
+  }
+
   /* eslint-enable */
 }
 
@@ -238,6 +245,8 @@ class IndexListValue extends FormInput {
     }
     this.select.selectedIndex = this.index;
     target.appendChild(this.select);
+
+    this.bindWithElements(this.select);
   }
 
   /**
@@ -360,6 +369,8 @@ class ListValue extends FormInput {
     }
     this.select.selectedIndex = Math.max(0, selected);
     target.appendChild(this.select);
+
+    this.bindWithElements(this.select);
   }
 
   /**
@@ -493,6 +504,8 @@ class AttributeValue extends FormInput {
     this.right.textContent = ')';
     this.right.className = 'attr-label';
     target.appendChild(this.right);
+
+    this.bindWithElements(this.baseBox, this.scaleBox);
   }
 
   /**
@@ -629,6 +642,8 @@ class DoubleValue extends FormInput {
     this.box.value = this.value;
     this.box.addEventListener('input', filterDouble);
     target.appendChild(this.box);
+
+    this.bindWithElements(this.box);
   }
 
   /**
@@ -736,6 +751,8 @@ class IntValue extends FormInput {
     this.box.value = this.value;
     this.box.addEventListener('input', filterInt);
     target.appendChild(this.box);
+
+    this.bindWithElements(this.box);
   }
 
   /**
@@ -842,6 +859,8 @@ class StringValue extends FormInput {
     this.box.id = this.key;
     this.box.value = this.value;
     target.appendChild(this.box);
+
+    this.bindWithElements(this.box);
   }
 
   /**
@@ -965,6 +984,8 @@ class StringListValue extends FormInput {
     this.box.id = this.key;
     this.box.value = content;
     target.appendChild(this.box);
+
+    this.bindWithElements(this.box);
   }
 
   /**
@@ -1128,6 +1149,8 @@ class MultiListValue extends FormInput {
     for (let i = 0; i < this.values.length; i++) {
       this.populate(this.values[i]);
     }
+
+    this.bindWithElements(this.select);
   }
 
   populate(value) {

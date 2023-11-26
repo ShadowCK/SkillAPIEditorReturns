@@ -433,8 +433,17 @@ class Component {
           inputLabel.addEventListener('click', () => {
             this.createFormHTML();
             showSkillPage('skill-form');
-            const inputElementInSkillForm =
-              document.getElementById(input.key) || document.getElementById(`${input.key}-base`);
+            const getInputElementInSkillForm = () => {
+              // * Input elements may have same ids depending on how SkillAPI reads them.
+              // * We should respect that.
+              const candidates = [
+                ...document.querySelectorAll(`#${input.key}`),
+                ...document.querySelectorAll(`#${input.key}-base`),
+              ];
+              return candidates.find((element) => element.input === input);
+            };
+            const inputElementInSkillForm = getInputElementInSkillForm();
+            assertNotNull(inputElementInSkillForm);
             inputElementInSkillForm.focus();
           });
         }
