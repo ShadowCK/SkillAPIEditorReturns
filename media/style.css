@@ -230,9 +230,33 @@ footer {
   display: flex;
 }
 
+footer .setting-button,
+#footer-navbar a {
+  font-size: 16px;
+}
+
 #footer-navbar {
   display: inline-flex;
-  width: 40%;
+  width: 20%;
+}
+
+#footer-navbar .visible-on-hover {
+  width: 0px;
+  opacity: 0;
+  overflow: hidden;
+  transition-property: width, opacity;
+  transition-duration: 500ms;
+  transition-timing-function: ease-in-out;
+}
+
+#footer-navbar a:hover .visible-on-hover {
+  display: flex;
+  justify-content: center;
+  width: 50px;
+  opacity: 1;
+  transition-property: width, opacity;
+  transition-duration: 500ms;
+  transition-timing-function: ease-in-out;
 }
 
 #footer-navbar .icon {
@@ -253,7 +277,7 @@ footer {
 
 #footer-settings {
   display: inline-flex;
-  width: 60%;
+  width: 80%;
 }
 
 #footer-settings .setting-button {
@@ -265,7 +289,6 @@ footer {
   flex-grow: 1;
   border-top: 1px solid white;
   border-left: 1px solid white;
-  font-size: 20px;
   margin: 0;
   padding: 0 20px;
   border-radius: 0;
