@@ -766,3 +766,64 @@ div:has(> .options-category):hover {
   font-size: 24px;
   transition: all 400ms ease-in-out, background-color 300ms ease-in;
 }
+
+/* #region Zen Mode*/
+#skills,
+#classes {
+  position: relative;
+}
+
+#skill-list,
+#class-list {
+  position: absolute;
+  left: 0;
+  transition-property: left;
+  transition-duration: 600ms;
+  transition-timing-function: ease-in;
+}
+
+body[data-zen-mode='true'] #skill-list,
+body[data-zen-mode='true'] #class-list {
+  left: -200px;
+  transition-property: left;
+  transition-duration: 600ms;
+  transition-timing-function: ease-out;
+}
+
+/* FIXME: add a .main-form class so we do not iterate each like below */
+#builder,
+#skill-form,
+#class-form,
+#component-chooser,
+#trigger-chooser {
+  position: absolute;
+  left: 200px;
+  transition-property: left, width;
+  transition-duration: 600ms;
+  transition-timing-function: ease-in;
+}
+
+body[data-zen-mode='true'] #builder,
+body[data-zen-mode='true'] #skill-form,
+body[data-zen-mode='true'] #class-form,
+body[data-zen-mode='true'] #component-chooser,
+body[data-zen-mode='true'] #trigger-chooser {
+  left: 0px;
+  width: 100%;
+  transition-property: left, width;
+  transition-duration: 600ms;
+  transition-timing-function: ease-out;
+}
+
+#skills label,
+#classes label {
+  transition: all 600ms ease-in-out;
+}
+
+body[data-zen-mode='true'] #skills label,
+body[data-zen-mode='true'] #classes label {
+  width: 30%;
+  transition: all 600ms ease-in-out;
+}
+
+/* #endregion */

@@ -305,6 +305,11 @@ window.onload = () => {
     key: appData.settings.ZenMode,
     onText: 'Zen Mode On',
     offText: 'Zen Mode Off',
+    callback: (options)=>{
+      if (options.newValue != null){
+        document.body.dataset.zenMode = !!options.newValue;
+      }
+    }
   });
 
   document.getElementById('add-trigger').addEventListener('click', () => {

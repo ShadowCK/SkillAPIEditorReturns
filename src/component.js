@@ -56,16 +56,18 @@ const resetSettingButton = (state, button, onText, offText) => {
   button.classList.remove(state ? 'off' : 'on');
 };
 
-const createSettingButton = ({
-  isForComponent = true,
-  form,
-  component,
-  button = document.createElement('h5'),
-  key,
-  callback,
-  onText,
-  offText,
-}) => {
+const createSettingButton = (options) => {
+  const {
+    isForComponent = true,
+    form,
+    component,
+    button = document.createElement('h5'),
+    key,
+    callback,
+    onText,
+    offText,
+  } = options;
+
   button.key = key;
   button.className = 'setting-button';
   // Set text and class with the default state
@@ -77,10 +79,11 @@ const createSettingButton = ({
     // Reset text and class with the new state
     resetSettingButton(appData.get(key), button, onText, offText);
     if (callback != null && typeof callback === 'function') {
-      callback();
+      callback({ ...options, newValue: appData.get(key) });
     }
   };
 
+  // TODO: refactor this to be more generic making use of the callback
   if (isForComponent) {
     button.addEventListener('click', () => {
       update();
@@ -109,7 +112,7 @@ const createSettingButton = ({
   }
 };
 
-const createSettingsButtons = (component, form) => {
+const createSettingButtons = (component, form) => {
   createSettingButton({
     form,
     component,
@@ -671,7 +674,7 @@ class Component {
     };
     target.addEventListener('contextmenu', handleContextMenu);
 
-    createSettingsButtons(this, form);
+    createSettingButtons(this, form);
 
     this.form = form;
 
