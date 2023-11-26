@@ -158,9 +158,9 @@ const allowDrop = (e) => {
   while (hoverSpace.className.indexOf('component') < 0) {
     hoverSpace = hoverSpace.parentNode;
   }
-  const thing = document.getElementById('dragComponent');
+  const thing = document.getElementById('drag-component');
   if (
-    hoverSpace.id !== 'dragComponent' &&
+    hoverSpace.id !== 'drag-component' &&
     hoverSpace.parentNode.comp.container &&
     canDrop(thing, hoverSpace)
   ) {
@@ -181,11 +181,11 @@ const allowDrop = (e) => {
 
 const drag = (e) => {
   e.dataTransfer.setData('text', 'anything');
-  const dragged = document.getElementById('dragComponent');
+  const dragged = document.getElementById('drag-component');
   if (dragged) {
     dragged.id = '';
   }
-  e.target.id = 'dragComponent';
+  e.target.id = 'drag-component';
 };
 
 const drop = (e) => {
@@ -195,13 +195,13 @@ const drop = (e) => {
   }
 
   e.preventDefault();
-  const thing = document.getElementById('dragComponent').parentNode;
+  const thing = document.getElementById('drag-component').parentNode;
   let { target } = e;
   while (target.className.indexOf('component') < 0) {
     target = target.parentNode;
   }
   if (
-    target.id === 'dragComponent' ||
+    target.id === 'drag-component' ||
     !target.parentNode.comp.container ||
     !canDrop(thing, target)
   ) {

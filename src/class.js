@@ -218,7 +218,7 @@ class Class {
     del.textContent = 'Delete';
     del.className = 'cancel-button';
     del.addEventListener('click', () => {
-      const list = document.getElementById('classList');
+      const list = document.getElementById('class-list');
       let index = list.selectedIndex;
 
       classes.splice(index, 1);
@@ -243,7 +243,7 @@ class Class {
    */
   update() {
     let index;
-    const list = document.getElementById('classList');
+    const list = document.getElementById('class-list');
     for (let i = 0; i < classes.length; i++) {
       if (classes[i] === this) {
         index = i;
@@ -298,7 +298,7 @@ const addClass = (name) => {
 
   const option = document.createElement('option');
   option.text = name;
-  const list = document.getElementById('classList');
+  const list = document.getElementById('class-list');
   list.add(option, list.length - 1);
 
   return c;
@@ -317,7 +317,7 @@ const _newClass = () => {
 
   activeClass = addClass(`Class ${id}`);
 
-  const list = document.getElementById('classList');
+  const list = document.getElementById('class-list');
   list.selectedIndex = list.length - 2;
 
   activeClass.createFormHTML();

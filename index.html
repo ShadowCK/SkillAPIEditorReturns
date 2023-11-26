@@ -47,7 +47,7 @@
     <!-- IO Buttons -->
     <div id="io">
       <p class="io-text">Drop file anywhere to load</p>
-      <button id="saveButton" class="io-button">Backup All Data</button>
+      <button id="save-button" class="io-button">Backup All Data</button>
     </div>
 
     <!-- Display when the window is too small -->
@@ -58,8 +58,8 @@
     <div id="main">
       <!-- Skill/Class Tabs -->
       <div id="tab-spacer"></div>
-      <div id="skillTab" class="tab tab-left tab-active">Skills</div>
-      <div id="classTab" class="tab tab-right">Classes</div>
+      <div id="skill-tab" class="tab tab-left tab-active">Skills</div>
+      <div id="class-tab" class="tab tab-right">Classes</div>
 
       <!-- Skill Content -->
       <div id="skills">
@@ -71,11 +71,11 @@
 
         <!-- Effect builder -->
         <div id="builder">
-          <h6 id="skillDetails">Details</h6>
-          <h6 id="addTrigger">Triggers</h6>
+          <h6 id="skill-details">Details</h6>
+          <h6 id="add-trigger">Triggers</h6>
           <h6 id="save-skill" class>Save Skill</h6>
           <h6 id="deleteSkill" class="cancel-button">Delete</h6>
-          <div id="builderContent"></div>
+          <div id="builder-content"></div>
         </div>
 
         <!-- Component editor -->
@@ -85,7 +85,7 @@
         <div id="trigger-chooser">
           <h4>Triggers</h4>
 
-          <div id="triggerOptions"></div>
+          <div id="trigger-options"></div>
 
           <h5 class="cancel-button">Cancel</h5>
         </div>
@@ -93,13 +93,13 @@
         <!-- Component selection -->
         <div id="component-chooser">
           <h4>Targets</h4>
-          <div id="targetOptions"></div>
+          <div id="target-options"></div>
 
           <h4>Conditions</h4>
-          <div id="conditionOptions"></div>
+          <div id="condition-options"></div>
 
           <h4>Mechanics</h4>
-          <div id="mechanicOptions"></div>
+          <div id="mechanic-options"></div>
 
           <hr />
           <h5 class="cancel-button">Cancel</h5>
@@ -109,7 +109,7 @@
       <!-- Class Content -->
       <div id="classes">
         <!-- Class list -->
-        <select id="classList" size="30">
+        <select id="class-list" size="30">
           <option selected="selected">Class 1</option>
           <option>+ New Class</option>
         </select>

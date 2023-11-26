@@ -214,10 +214,10 @@ const loadClasses = (e) => {
 // Loads class data from local storage when the page is loaded
 const initClasses = (classData, classIndex) => {
   setClasses([]); // Reset classes
-  document.getElementById('classList').remove(0);
+  document.getElementById('class-list').remove(0);
   loadClassText(classData); // Load classes from data
   if (classIndex) {
-    document.getElementById('classList').selectedIndex = parseInt(classIndex, 10);
+    document.getElementById('class-list').selectedIndex = parseInt(classIndex, 10);
     const classes = getClasses();
     const newActiveClass =
       classes[Math.max(0, Math.min(classes.length - 1, parseInt(classIndex, 10)))];

@@ -228,16 +228,16 @@ const setupOptionList = (div, list, type) => {
 
 const refreshOptions = () => {
   // Set up component option lists
-  setupOptionList(document.getElementById('triggerOptions'), Trigger, Type.TRIGGER);
-  setupOptionList(document.getElementById('targetOptions'), Target, Type.TARGET);
-  setupOptionList(document.getElementById('conditionOptions'), Condition, Type.CONDITION);
-  setupOptionList(document.getElementById('mechanicOptions'), Mechanic, Type.MECHANIC);
+  setupOptionList(document.getElementById('trigger-options'), Trigger, Type.TRIGGER);
+  setupOptionList(document.getElementById('target-options'), Target, Type.TARGET);
+  setupOptionList(document.getElementById('condition-options'), Condition, Type.CONDITION);
+  setupOptionList(document.getElementById('mechanic-options'), Mechanic, Type.MECHANIC);
 };
 
 const switchToSkills = () => {
   if (!skillsActive) {
-    document.getElementById('skillTab').className = 'tab tab-left tab-active';
-    document.getElementById('classTab').className = 'tab tab-right';
+    document.getElementById('skill-tab').className = 'tab tab-left tab-active';
+    document.getElementById('class-tab').className = 'tab tab-right';
     document.getElementById('skills').style.display = 'block';
     document.getElementById('classes').style.display = 'none';
     skillsActive = true;
@@ -246,8 +246,8 @@ const switchToSkills = () => {
 
 const switchToClasses = () => {
   if (skillsActive) {
-    document.getElementById('classTab').className = 'tab tab-right tab-active';
-    document.getElementById('skillTab').className = 'tab tab-left';
+    document.getElementById('class-tab').className = 'tab tab-right tab-active';
+    document.getElementById('skill-tab').className = 'tab tab-left';
     document.getElementById('classes').style.display = 'block';
     document.getElementById('skills').style.display = 'none';
     skillsActive = false;

@@ -170,7 +170,7 @@ const init = () => {
       const activeSkill = getActiveSkill();
       if (currentForm === 'skill-form') {
         // Create form content if not already created
-        if (document.getElementById('builderContent').innerHTML === '') {
+        if (document.getElementById('builder-content').innerHTML === '') {
           activeSkill.apply();
         }
         showSkillPage('builder');
@@ -207,13 +207,13 @@ const init = () => {
     updateUIForNewActiveSkill(newActiveSkill);
   });
 
-  document.getElementById('skillDetails').addEventListener('click', () => {
+  document.getElementById('skill-details').addEventListener('click', () => {
     const activeSkill = getActiveSkill();
     // IsSameSkill must be true because the button is to switch to the active skill's skill-form (from builder)
     activeSkill.createFormHTML(true);
     showSkillPage('skill-form');
   });
-  document.getElementById('saveButton').addEventListener('click', () => {
+  document.getElementById('save-button').addEventListener('click', () => {
     saveToFile('skills.yml', getSkillSaveData());
   });
   document.getElementById('save-skill').addEventListener('click', () => {
@@ -239,7 +239,7 @@ const init = () => {
   });
 
   // class.js
-  document.getElementById('classList').addEventListener('change', (e) => {
+  document.getElementById('class-list').addEventListener('change', (e) => {
     const classList = e.currentTarget;
     const classes = getClasses();
     getActiveClass().update();
@@ -251,7 +251,7 @@ const init = () => {
       newActiveClass.createFormHTML();
     }
   });
-  document.getElementById('saveButton').addEventListener('click', () => {
+  document.getElementById('save-button').addEventListener('click', () => {
     saveToFile('classes.yml', getClassSaveData());
   });
 };
@@ -269,16 +269,16 @@ window.onload = () => {
 
   init();
 
-  document.getElementById('addTrigger').addEventListener('click', () => {
+  document.getElementById('add-trigger').addEventListener('click', () => {
     const activeSkill = getActiveSkill();
     setActiveComponent(activeSkill);
     showSkillPage('trigger-chooser');
   });
 
-  document.getElementById('skillTab').addEventListener('click', () => {
+  document.getElementById('skill-tab').addEventListener('click', () => {
     switchToSkills();
   });
-  document.getElementById('classTab').addEventListener('click', () => {
+  document.getElementById('class-tab').addEventListener('click', () => {
     switchToClasses();
   });
 

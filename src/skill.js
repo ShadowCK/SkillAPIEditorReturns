@@ -68,7 +68,7 @@ class Skill {
     this.components = [];
 
     // Included to simplify code when adding components
-    this.html = document.getElementById('builderContent');
+    this.html = document.getElementById('builder-content');
 
     this.dataKey = 'attributes';
     this.componentKey = 'components';
@@ -143,7 +143,7 @@ class Skill {
    * Applies the skill data to the HTML page, overwriting any previous data
    */
   apply() {
-    const builder = document.getElementById('builderContent');
+    const builder = document.getElementById('builder-content');
     // Reset builder
     builder.innerHTML = '';
 
@@ -207,7 +207,7 @@ class Skill {
       const list = document.getElementById('skill-list');
       list[list.selectedIndex].text = done.skill.data[0].value;
       done.form.remove();
-      const builder = document.getElementById('builderContent');
+      const builder = document.getElementById('builder-content');
       if (builder.skill !== activeSkill) {
         activeSkill.apply();
       }
