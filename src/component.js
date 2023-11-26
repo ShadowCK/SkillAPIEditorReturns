@@ -610,6 +610,20 @@ class Component {
     });
     form.appendChild(done);
 
+    const handleContextMenu = (e) => {
+      if (form.parentNode === e.currentTarget) {
+        e.preventDefault();
+        done.dispatchEvent(new Event('click'));
+      } else {
+        target.removeEventListener('contextmenu', handleContextMenu);
+        debug.logIfAllowed(
+          debug.levels.VERBOSE,
+          `Removed context menu listener on skillForm for ${this.type} component ${this.name}`,
+        );
+      }
+    };
+    target.addEventListener('contextmenu', handleContextMenu);
+
     createSettingsButtons(this, form);
 
     this.form = form;
