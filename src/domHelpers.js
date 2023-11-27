@@ -4,7 +4,7 @@ import { getActiveComponent, Type, Trigger, Target, Condition, Mechanic } from '
 import * as debug from './debug.js';
 import diContainer from './diContainer.js';
 
-import { sortStrings } from './utils.js';
+import { removeListenerOnTargetRemoval, sortStrings } from './utils.js';
 import * as appData from './appData.js';
 
 let skillsActive = true;
@@ -271,7 +271,6 @@ const updateUIForNewActiveSkill = (newActiveSkill) => {
 
 const setupMouseEnterLeaveListener = (element, onEnter, onLeave) => {
   let isInside = false;
-  let currentParent = element.parentNode;
 
   const getElementRect = () => element.getBoundingClientRect();
 
@@ -293,44 +292,8 @@ const setupMouseEnterLeaveListener = (element, onEnter, onLeave) => {
     }
   };
 
-  // TODO: Externalize this observer pattern
-  let observer;
-  const updateObserver = () => {
-    // Disconnet current observer (if it exists)
-    if (observer) {
-      observer.disconnect();
-    }
-
-    // Re-observe with the new parent
-    if (currentParent) {
-      observer.observe(currentParent, { childList: true });
-    }
-  };
-
-  const handleParentChange = () => {
-    currentParent = element.parentNode;
-    updateObserver();
-  };
-
-  observer = new MutationObserver((mutations) => {
-    const removed = mutations.find((mutation) =>
-      Array.from(mutation.removedNodes).includes(element),
-    );
-    if (!removed) {
-      return;
-    }
-    if (element.parentNode !== null) {
-      handleParentChange();
-    }
-    // `element` is removed from DOM
-    else {
-      document.removeEventListener('mousemove', handleMouseMove);
-      observer.disconnect();
-    }
-  });
-
-  updateObserver();
   document.addEventListener('mousemove', handleMouseMove);
+  removeListenerOnTargetRemoval(document, element, 'mousemove', handleMouseMove);
 };
 
 // Init variables
