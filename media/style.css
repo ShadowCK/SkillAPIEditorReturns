@@ -283,6 +283,7 @@ footer .setting-button,
 #footer-settings .setting-button {
   border: unset;
 
+  box-sizing: content-box;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -292,7 +293,12 @@ footer .setting-button,
   margin: 0;
   padding: 0 20px;
   border-radius: 0;
-  transition: background-color 600ms, color 600ms, border-color 600ms;
+  transition-property: background-color, color, padding;
+  transition-duration: 600ms;
+}
+
+#footer-settings .setting-button:hover {
+  padding: 0 30px;
 }
 
 #footer-settings .setting-button.on {
@@ -305,12 +311,12 @@ footer .setting-button,
   color: #a3a3a3;
 }
 
-#footer-settings .setting-button:hover.on {
+#footer-settings .setting-button.on:hover {
   background-color: hsl(93, 50%, 25%);
   color: #ffffff;
 }
 
-#footer-settings .setting-button:hover.off {
+#footer-settings .setting-button.off:hover {
   background-color: #222222;
   color: #bfbfbf;
 }
@@ -684,13 +690,13 @@ textarea {
   color: #a3a3a3;
 }
 
-.setting-button:hover.on {
+.setting-button.on:hover {
   background-color: #659f3d;
   border-color: #558835;
   color: #f0f0f0;
 }
 
-.setting-button:hover.off {
+.setting-button.off:hover {
   background-color: #2f2f2f;
   border-color: #1f1f1f;
   color: #bdbdbd;
