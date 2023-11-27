@@ -873,8 +873,8 @@ body[data-zen-mode='true'] footer > :not([data-is-visible]) {
   transition: opacity 600ms ease-in-out, bottom 600ms ease-in-out;
 }
 
-body[data-zen-mode='true'] footer .overlay {
-  position: absolute;
+.overlay {
+  position: absolute !important;
   top: 0;
   left: 0;
   width: 100%;

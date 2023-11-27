@@ -316,19 +316,19 @@ const setupMouseEnterLeaveListener = (element, onEnter, onLeave) => {
     const removed = mutations.find((mutation) =>
       Array.from(mutation.removedNodes).includes(element),
     );
-    const added = mutations.find((mutation) => Array.from(mutation.addedNodes).includes(element));
-
-    if (removed) {
-      if (added) {
-        handleParentChange();
-      } else {
-        document.removeEventListener('mousemove', handleMouseMove);
-        observer.disconnect();
-      }
+    if (!removed) {
+      return;
+    }
+    if (element.parentNode !== null) {
+      handleParentChange();
+    }
+    // `element` is removed from DOM
+    else {
+      document.removeEventListener('mousemove', handleMouseMove);
+      observer.disconnect();
     }
   });
 
-  // 初始观察
   updateObserver();
   document.addEventListener('mousemove', handleMouseMove);
 };
