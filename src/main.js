@@ -31,6 +31,7 @@ import {
   switchToSkills,
   switchToClasses,
   updateUIForNewActiveSkill,
+  setupMouseEnterLeaveListener,
 } from './domHelpers.js';
 import { initSkills, initClasses, loadFiles, parseConfig } from './loader.js';
 import { createSettingButton, getActiveComponent, setActiveComponent } from './component.js';
@@ -340,6 +341,26 @@ window.onload = () => {
       setSkills(sortedSkillOptions.map((option) => option.skill || getSkill(option.value)));
     },
   });
+
+  setupMouseEnterLeaveListener(
+    document.getElementById('footer-overlay'),
+    () => {
+      const footer = document.getElementById('footer');
+      Array.from(footer.children).forEach((child) => {
+        if (!child.classList.contains('overlay')) {
+          child.dataset.isVisible = true;
+        }
+      });
+    },
+    () => {
+      const footer = document.getElementById('footer');
+      Array.from(footer.children).forEach((child) => {
+        if (!child.classList.contains('overlay')) {
+          delete child.dataset.isVisible;
+        }
+      });
+    },
+  );
 
   document.getElementById('add-trigger').addEventListener('click', () => {
     const activeSkill = getActiveSkill();

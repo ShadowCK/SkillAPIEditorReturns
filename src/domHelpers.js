@@ -269,6 +269,32 @@ const updateUIForNewActiveSkill = (newActiveSkill) => {
   }
 };
 
+const setupMouseEnterLeaveListener = (element, onEnter, onLeave) => {
+  let isInside = false;
+
+  const getElementRect = () => element.getBoundingClientRect();
+
+  const isMouseOverElement = (mouseX, mouseY) => {
+    const rect = getElementRect();
+    return (
+      mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom
+    );
+  };
+
+  const handleMouseMove = (e) => {
+    const mouseOverElement = isMouseOverElement(e.clientX, e.clientY);
+    if (mouseOverElement && !isInside) {
+      isInside = true;
+      onEnter(e);
+    } else if (!mouseOverElement && isInside) {
+      isInside = false;
+      onLeave(e);
+    }
+  };
+
+  document.addEventListener('mousemove', handleMouseMove);
+};
+
 // Init variables
 const skillList = document.getElementById('skill-list');
 selectedOption = skillList.options[skillList.selectedIndex];
@@ -293,4 +319,5 @@ export {
   switchToSkills,
   switchToClasses,
   updateUIForNewActiveSkill,
+  setupMouseEnterLeaveListener,
 };
