@@ -360,6 +360,7 @@ diContainer.inject('loadSection').then((value) => {
 diContainer.register('getActiveSkill', getActiveSkill);
 diContainer.register('getSkills', getSkills);
 diContainer.register('newSkill', newSkill);
+diContainer.register('Skill', Skill);
 
 export {
   Skill,

@@ -33,6 +33,9 @@ import * as debug from './debug.js';
 import { notNull, assertMatches, assertNotNull } from './assert.js';
 
 let showSkillPage;
+
+/** @type {typeof import('./skill.js'.Skill)} */
+let Skill;
 let loadSection;
 let getCurrentForm;
 
@@ -225,6 +228,45 @@ const drop = (e) => {
   thingComp.parent.components.splice(thingComp.parent.components.indexOf(thingComp), 1);
   thingComp.parent = targetComp;
   thingComp.parent.components.push(thingComp);
+};
+
+/**
+ * Checks if a given source component contains a specified target component.
+ * Supports both direct and recursive searches. In a direct search, only
+ * examines the immediate children of the source component. In a recursive
+ * search, traverses all descendants of the source component.
+ *
+ * @param {Component} source - The source component in which to search for the target.
+ * @param {Component} target - The target component to search for within the source component.
+ * @param {Boolean} recursive - Specifies the type of search. If true, performs
+ *                              a recursive search through all descendants of the source.
+ *                              If false, only checks the immediate children of the source.
+ * @returns {Boolean} Returns true if the target component is found within the source
+ *                    component (or its descendants, if recursive search is enabled).
+ *                    Returns false otherwise.
+ *
+ * @example
+ * const componentA = { components: [componentB, componentC] };
+ * const componentB = { components: [componentD] };
+ *
+ * // Direct search - checks only immediate children
+ * console.log(contains(componentA, componentC, false)); // Output: true
+ *
+ * // Recursive search - checks all descendants
+ * console.log(contains(componentA, componentD, true)); // Output: true
+ */
+const contains = (source, target, recursive) => {
+  if (source === target) {
+    return true;
+  }
+  // * This check ensures safety but is unnecessary. `components` should not be null or undefined in any case.
+  if (!source.components) {
+    return false;
+  }
+  if (recursive) {
+    return source.components.some((child) => contains(child, target, recursive));
+  }
+  return source.components.includes(target);
 };
 
 /**
@@ -527,9 +569,11 @@ class Component {
         }
       }
       container.remove();
-      // Set new activeComponent
-      assertNotNull(this.parent);
-      setActiveComponent(this.parent);
+      // Set new activeComponent if the deleted component or its child is active
+      if (activeComponent instanceof Skill === false && contains(this, activeComponent, true)) {
+        assertNotNull(this.parent);
+        setActiveComponent(this.parent);
+      }
     };
     remove.addEventListener('click', this.removeFunction);
     builderButtonWrapper.appendChild(remove);
@@ -4626,6 +4670,9 @@ const _setActiveComponent = (value) => setActiveComponent(value);
 diContainer.inject('showSkillPage').then((value) => {
   showSkillPage = value;
 });
+diContainer.inject('Skill').then((value) => {
+  Skill = value;
+});
 diContainer.inject('loadSection').then((value) => {
   loadSection = value;
   Component.prototype.load = loadSection;
@@ -4645,6 +4692,7 @@ export {
   CustomComponent,
   getActiveComponent,
   _setActiveComponent as setActiveComponent,
+  contains,
   Type,
   Trigger,
   Target,
