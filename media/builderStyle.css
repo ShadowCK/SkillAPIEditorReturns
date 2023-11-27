@@ -181,6 +181,10 @@ h3:active {
   line-height: 1.5;
 }
 
+body[data-show-labels='false'] .input-container {
+  display: none;
+}
+
 .input-label:hover {
   color: rgb(211, 211, 213);
   background-color: #666;

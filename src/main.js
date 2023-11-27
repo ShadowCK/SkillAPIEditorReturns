@@ -343,6 +343,17 @@ window.onload = () => {
     },
   });
 
+  document.body.dataset.showLabels = appData.get(appData.settings.ShowLabels);
+  createSettingButton({
+    isForComponent: false,
+    key: appData.settings.ShowLabels,
+    onText: 'Hide Labels',
+    offText: 'Show Labels',
+    callback: ({ newValue }) => {
+      document.body.dataset.showLabels = newValue;
+    },
+  });
+
   setupMouseEnterLeaveListener(
     document.getElementById('footer-overlay'),
     () => {
