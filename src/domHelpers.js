@@ -271,6 +271,7 @@ const updateUIForNewActiveSkill = (newActiveSkill) => {
 
 const setupMouseEnterLeaveListener = (element, onEnter, onLeave) => {
   let isInside = false;
+  let currentParent = element.parentNode;
 
   const getElementRect = () => element.getBoundingClientRect();
 
@@ -292,6 +293,43 @@ const setupMouseEnterLeaveListener = (element, onEnter, onLeave) => {
     }
   };
 
+  // TODO: Externalize this observer pattern
+  let observer;
+  const updateObserver = () => {
+    // Disconnet current observer (if it exists)
+    if (observer) {
+      observer.disconnect();
+    }
+
+    // Re-observe with the new parent
+    if (currentParent) {
+      observer.observe(currentParent, { childList: true });
+    }
+  };
+
+  const handleParentChange = () => {
+    currentParent = element.parentNode;
+    updateObserver();
+  };
+
+  observer = new MutationObserver((mutations) => {
+    const removed = mutations.find((mutation) =>
+      Array.from(mutation.removedNodes).includes(element),
+    );
+    const added = mutations.find((mutation) => Array.from(mutation.addedNodes).includes(element));
+
+    if (removed) {
+      if (added) {
+        handleParentChange();
+      } else {
+        document.removeEventListener('mousemove', handleMouseMove);
+        observer.disconnect();
+      }
+    }
+  });
+
+  // 初始观察
+  updateObserver();
   document.addEventListener('mousemove', handleMouseMove);
 };
 
