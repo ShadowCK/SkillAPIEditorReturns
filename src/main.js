@@ -314,6 +314,7 @@ window.onload = () => {
   });
 
   document.body.dataset.zenMode = appData.get(appData.settings.ZenMode);
+  document.body.dataset.zenModeShowFooter = false;
   createSettingButton({
     isForComponent: false,
     key: appData.settings.ZenMode,
@@ -345,20 +346,10 @@ window.onload = () => {
   setupMouseEnterLeaveListener(
     document.getElementById('footer-overlay'),
     () => {
-      const footer = document.getElementById('footer');
-      Array.from(footer.children).forEach((child) => {
-        if (!child.classList.contains('overlay')) {
-          child.dataset.isVisible = true;
-        }
-      });
+      document.body.dataset.zenModeShowFooter = true;
     },
     () => {
-      const footer = document.getElementById('footer');
-      Array.from(footer.children).forEach((child) => {
-        if (!child.classList.contains('overlay')) {
-          delete child.dataset.isVisible;
-        }
-      });
+      document.body.dataset.zenModeShowFooter = false;
     },
   );
 
