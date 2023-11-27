@@ -362,6 +362,7 @@ diContainer.register('getSkills', getSkills);
 diContainer.register('newSkill', newSkill);
 
 export {
+  Skill,
   init,
   getActiveSkill,
   setActiveSkill,

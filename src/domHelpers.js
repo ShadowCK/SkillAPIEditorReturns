@@ -1,4 +1,4 @@
-import { getActiveSkill } from './skill.js';
+import { Skill, getActiveSkill } from './skill.js';
 import { getActiveComponent, Type, Trigger, Target, Condition, Mechanic } from './component.js';
 
 import * as debug from './debug.js';
@@ -6,6 +6,7 @@ import diContainer from './diContainer.js';
 
 import { removeListenerOnTargetRemoval, sortStrings } from './utils.js';
 import * as appData from './appData.js';
+import { assertNotNull } from './assert.js';
 
 let skillsActive = true;
 const getSkillsActive = () => skillsActive;
@@ -84,7 +85,6 @@ const setPageStyle = (name, visible) => {
   const target = document.getElementById(name);
   if (visible === name) {
     target.style.display = 'block';
-    updateSelectedOptionCSS(name);
   } else {
     target.style.display = 'none';
   }
@@ -99,6 +99,13 @@ const showSkillPage = (name) => {
   setPageStyle('skill-form', name);
   setPageStyle('component-chooser', name);
   setPageStyle('trigger-chooser', name);
+
+  updateSelectedOptionCSS(name);
+  const activeComponent = getActiveComponent();
+  if (name === 'builder' && !(activeComponent instanceof Skill)) {
+    assertNotNull(activeComponent.selfElement);
+    activeComponent.selfElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 };
 
 let activeSection = null;
