@@ -4,7 +4,7 @@ import { getActiveComponent, Type, Trigger, Target, Condition, Mechanic } from '
 import * as debug from './debug.js';
 import diContainer from './diContainer.js';
 
-import { removeListenerOnTargetRemoval, sortStrings } from './utils.js';
+import { removeListenerOnTargetRemoval, sortStrings, isMouseOverElement } from './utils.js';
 import * as appData from './appData.js';
 import { assertNotNull } from './assert.js';
 
@@ -279,17 +279,8 @@ const updateUIForNewActiveSkill = (newActiveSkill) => {
 const setupMouseEnterLeaveListener = (element, onEnter, onLeave) => {
   let isInside = false;
 
-  const getElementRect = () => element.getBoundingClientRect();
-
-  const isMouseOverElement = (mouseX, mouseY) => {
-    const rect = getElementRect();
-    return (
-      mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom
-    );
-  };
-
   const handleMouseMove = (e) => {
-    const mouseOverElement = isMouseOverElement(e.clientX, e.clientY);
+    const mouseOverElement = isMouseOverElement(e.clientX, e.clientY, element);
     if (mouseOverElement && !isInside) {
       isInside = true;
       onEnter(e);

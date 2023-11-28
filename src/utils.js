@@ -104,4 +104,16 @@ const removeListenerOnTargetRemoval = (
   updateObserver();
 };
 
-export { toPinyin, sortStrings, removeListenerOnTargetRemoval };
+/**
+ * Checks if the mouse is over the specified element.
+ * @param {number} mouseX - The x-coordinate of the mouse position.
+ * @param {number} mouseY - The y-coordinate of the mouse position.
+ * @param {Element} element - The element to check.
+ * @returns {boolean} - True if the mouse is over the element, false otherwise.
+ */
+const isMouseOverElement = (mouseX, mouseY, element) => {
+  const rect = element.getBoundingClientRect();
+  return mouseX >= rect.left && mouseX <= rect.right && mouseY >= rect.top && mouseY <= rect.bottom;
+};
+
+export { toPinyin, sortStrings, removeListenerOnTargetRemoval, isMouseOverElement };

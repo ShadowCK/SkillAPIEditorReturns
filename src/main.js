@@ -34,10 +34,16 @@ import {
   setupMouseEnterLeaveListener,
 } from './domHelpers.js';
 import { initSkills, initClasses, loadFiles, parseConfig } from './loader.js';
-import { createSettingButton, getActiveComponent, setActiveComponent } from './component.js';
+import {
+  Component,
+  createSettingButton,
+  getActiveComponent,
+  setActiveComponent,
+} from './component.js';
 import { getVersionData, setActiveData } from './data/index.js';
 import * as skill from './skill.js';
 import {
+  Skill,
   getActiveSkill,
   setActiveSkill,
   getSkills,
@@ -48,8 +54,9 @@ import {
 import { getActiveClass, setActiveClass, getClasses, newClass } from './class.js';
 import Attribute from './classes/Attribute.js';
 import * as debug from './debug.js';
-import { sortStrings } from './utils.js';
+import { isMouseOverElement, sortStrings } from './utils.js';
 import * as appData from './appData.js';
+import { getMouseX, getMouseY } from './inputManager.js';
 
 const updateActiveSkillAndComponent = () => {
   const activeSkill = getActiveSkill();
@@ -401,6 +408,100 @@ window.onload = () => {
     });
   }
 
+  // Register input listeners
+  const copyComponent = () => {
+    const currentForm = getCurrentForm();
+    if (currentForm !== 'builder') {
+      debug.logIfAllowed(
+        debug.levels.WARN,
+        `Copying failed - current form is not "builder" (it is instead ${currentForm}).`,
+      );
+      return false;
+    }
+    if (!isMouseOverElement(getMouseX(), getMouseY(), document.getElementById('builder'))) {
+      debug.logIfAllowed(debug.levels.WARN, 'Copying failed - mouse is not in the builder.');
+      return false;
+    }
+    const activeComponent = getActiveComponent();
+    if (!(activeComponent instanceof Component)) {
+      debug.logIfAllowed(
+        debug.levels.WARN,
+        'Copying failed - active component is either nonexistent or a skill (skills are regarded as "root components").',
+      );
+      return false;
+    }
+    // Copy the component to the clipboard
+    appData.set('clipboard', activeComponent);
+    return true;
+  };
+
+  const pasteComponent = () => {
+    const currentForm = getCurrentForm();
+    if (currentForm !== 'builder') {
+      debug.logIfAllowed(
+        debug.levels.WARN,
+        `Pasting failed - current form is not "builder" (it is instead ${currentForm}).`,
+      );
+      return false;
+    }
+    if (!isMouseOverElement(getMouseX(), getMouseY(), document.getElementById('builder'))) {
+      debug.logIfAllowed(debug.levels.WARN, 'Pasting failed - mouse is not in the builder.');
+      return false;
+    }
+    const activeComponent = getActiveComponent();
+    if (!(activeComponent instanceof Component)) {
+      debug.logIfAllowed(
+        debug.levels.WARN,
+        'Pasting failed - active component is either nonexistent or a skill (skills are regarded as "root components").',
+      );
+      return false;
+    }
+    const copiedComponent = appData.get('clipboard');
+    // Technically, a null check is good enough but a type validation is even better
+    if (!(copiedComponent instanceof Component)) {
+      debug.logIfAllowed(debug.levels.WARN, 'Pasting failed - no valid component was copied.');
+      return false;
+    }
+    if (!activeComponent.container) {
+      debug.logIfAllowed(
+        debug.levels.WARN,
+        'Pasting failed - active component is not a container.',
+      );
+      return false;
+    }
+    if (activeComponent.type === 'trigger' && copiedComponent.type === 'trigger') {
+      debug.logIfAllowed(
+        debug.levels.WARN,
+        'Pasting failed - active component is a trigger and the copied component is also a trigger.',
+      );
+      return false;
+    }
+    const copy = copiedComponent.dupe(activeComponent);
+    activeComponent.components.push(copy);
+    copy.createBuilderHTML(activeComponent.html);
+    return true;
+  };
+
+  document.addEventListener('keydown', (e) => {
+    const isCtrlPressed = e.ctrlKey || e.metaKey; // metaKey is Cmd on Mac
+
+    // Ctrl + C is pressed
+    if (isCtrlPressed && e.key === 'c') {
+      debug.logIfAllowed(debug.levels.VERBOSE, 'Ctrl+C pressed, copying component to clipboard');
+      const result = copyComponent();
+      if (result) {
+        e.preventDefault();
+      }
+    } else if (isCtrlPressed && e.key === 'v') {
+      debug.logIfAllowed(debug.levels.VERBOSE, 'Ctrl+V pressed, pasting component from clipboard');
+      const result = pasteComponent();
+      if (result) {
+        e.preventDefault();
+      }
+    }
+  });
+
+  // Load saved data from local storage
   const attribs = localStorage.getItem('attribs');
   const skillData = localStorage.getItem('skillData');
   const skillIndex = localStorage.getItem('skillIndex');
