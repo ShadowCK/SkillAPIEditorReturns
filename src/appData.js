@@ -18,20 +18,25 @@ const defaultAppData = [
   [settings.ShowLabels, true],
   [globals.lastVisitedForm, null],
 ];
-if (savedAppData) {
-  // Remove properties not in defaultAppData from savedAppData.
-  [...savedAppData.keys()].forEach((key) => {
+
+const cleanup = (appData) => {
+  // Remove properties not in defaultAppData from appData.
+  [...appData.keys()].forEach((key) => {
     if (!defaultAppData.some(([k]) => k === key)) {
-      savedAppData.delete(key);
+      appData.delete(key);
     }
   });
 
-  // Add missing default properties to savedAppData.
+  // Add missing default properties to appData.
   defaultAppData.forEach(([key, value]) => {
-    if (!savedAppData.has(key)) {
-      savedAppData.set(key, value);
+    if (!appData.has(key)) {
+      appData.set(key, value);
     }
   });
+};
+
+if (savedAppData) {
+  cleanup(savedAppData);
 } else {
   console.log('No saved app data, using default app data');
 }
@@ -44,4 +49,6 @@ const set = (key, value) => {
   return appData;
 };
 
-export { settings, globals, get, set, appData as _map };
+const getSaveString = () => JSON.stringify(Array.from(appData));
+
+export { settings, globals, get, set, getSaveString };

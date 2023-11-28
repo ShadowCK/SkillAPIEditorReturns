@@ -436,6 +436,16 @@ window.onload = () => {
   };
 
   const pasteComponent = () => {
+    const doPaste = (copiedComponent, activeComponent) => {
+      const copy = copiedComponent.dupe(activeComponent);
+      activeComponent.components.push(copy);
+      copy.createBuilderHTML(activeComponent.html);
+      copy.selfElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    };
+
     const currentForm = getCurrentForm();
     if (currentForm !== 'builder') {
       debug.logIfAllowed(
@@ -448,18 +458,43 @@ window.onload = () => {
       debug.logIfAllowed(debug.levels.WARN, 'Pasting failed - mouse is not in the builder.');
       return false;
     }
-    const activeComponent = getActiveComponent();
-    if (!(activeComponent instanceof Component)) {
-      debug.logIfAllowed(
-        debug.levels.WARN,
-        'Pasting failed - active component is either nonexistent or a skill (skills are regarded as "root components").',
-      );
-      return false;
-    }
     const copiedComponent = appData.get('clipboard');
     // Technically, a null check is good enough but a type validation is even better
     if (!(copiedComponent instanceof Component)) {
       debug.logIfAllowed(debug.levels.WARN, 'Pasting failed - no valid component was copied.');
+      return false;
+    }
+    const activeComponent = getActiveComponent();
+    if (activeComponent instanceof Skill) {
+      if (copiedComponent.type !== 'trigger') {
+        debug.logIfAllowed(
+          debug.levels.WARN,
+          'Pasting failed - pasting a non-trigger component into a skill is not allowed.',
+        );
+        return false;
+      }
+      if (activeComponent.usingTrigger(copiedComponent.name)) {
+        debug.logIfAllowed(
+          debug.levels.WARN,
+          'Pasting failed - active skill already has a trigger with the same name.',
+        );
+        return false;
+      }
+      // Paste a trigger into a skill
+      doPaste(copiedComponent, activeComponent);
+      return true;
+    }
+    if (!(activeComponent instanceof Component)) {
+      // activeComponent is neither a skill nor a component. It can't exist.
+      debug.logIfAllowed(debug.levels.WARN, 'Pasting failed - active component is nonexistent.');
+      return false;
+    }
+    // Now, activeComponent and copiedComponent are both components
+    if (copiedComponent.type === 'trigger') {
+      debug.logIfAllowed(
+        debug.levels.WARN,
+        'Pasting failed - you must paste a trigger into a skill, not a component.',
+      );
       return false;
     }
     if (!activeComponent.container) {
@@ -469,16 +504,11 @@ window.onload = () => {
       );
       return false;
     }
-    if (activeComponent.type === 'trigger' && copiedComponent.type === 'trigger') {
-      debug.logIfAllowed(
-        debug.levels.WARN,
-        'Pasting failed - active component is a trigger and the copied component is also a trigger.',
-      );
-      return false;
+    // Paste a component into a component
+    doPaste(copiedComponent, activeComponent);
+    if (activeComponent.childrenHidden) {
+      activeComponent.vision.toggleVision();
     }
-    const copy = copiedComponent.dupe(activeComponent);
-    activeComponent.components.push(copy);
-    copy.createBuilderHTML(activeComponent.html);
     return true;
   };
 
@@ -537,5 +567,7 @@ window.onbeforeunload = () => {
   localStorage.setItem('skillsActive', getSkillsActive() ? 'true' : 'false');
   localStorage.setItem('skillIndex', document.getElementById('skill-list').selectedIndex);
   localStorage.setItem('classIndex', document.getElementById('class-list').selectedIndex);
-  localStorage.setItem('appData', JSON.stringify(Array.from(appData._map)));
+  // We do not want temporary data (those not pre-defined in defaultAppData) to be saved
+  appData.cleanup();
+  localStorage.setItem('appData', appData.getSaveString());
 };

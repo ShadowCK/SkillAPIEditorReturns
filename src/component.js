@@ -523,7 +523,8 @@ class Component {
       vision.className = 'builder-button small-button';
       vision.style.background = 'url("media/img/eye.png") no-repeat center #222';
       vision.component = this;
-      vision.addEventListener('click', () => {
+      this.vision = vision;
+      vision.toggleVision = () => {
         const comp = vision.component;
         if (comp.childrenHidden) {
           comp.childDiv.style.display = 'block';
@@ -533,7 +534,8 @@ class Component {
           vision.style.backgroundImage = 'url("media/img/eyeShaded.png")';
         }
         comp.childrenHidden = !comp.childrenHidden;
-      });
+      };
+      vision.addEventListener('click', vision.toggleVision);
       builderButtonWrapper.appendChild(vision);
       this.childrenHidden = false;
     }
