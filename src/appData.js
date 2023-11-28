@@ -19,7 +19,7 @@ const defaultAppData = [
   [globals.lastVisitedForm, null],
 ];
 
-const cleanup = (appData) => {
+const _cleanup = (appData) => {
   // Remove properties not in defaultAppData from appData.
   [...appData.keys()].forEach((key) => {
     if (!defaultAppData.some(([k]) => k === key)) {
@@ -36,7 +36,7 @@ const cleanup = (appData) => {
 };
 
 if (savedAppData) {
-  cleanup(savedAppData);
+  _cleanup(savedAppData);
 } else {
   console.log('No saved app data, using default app data');
 }
@@ -51,4 +51,8 @@ const set = (key, value) => {
 
 const getSaveString = () => JSON.stringify(Array.from(appData));
 
-export { settings, globals, get, set, getSaveString };
+const cleanup = () => {
+  _cleanup(appData);
+};
+
+export { settings, globals, get, set, getSaveString, cleanup };
