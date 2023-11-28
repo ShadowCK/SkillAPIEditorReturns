@@ -304,8 +304,8 @@ window.onload = () => {
   createSettingButton({
     isForComponent: false,
     key: appData.settings.ShowComment,
-    onText: 'Hide Comment',
-    offText: 'Show Comment',
+    onText: 'Comments',
+    offText: 'Comments',
     callback: () => {
       const currentForm = getCurrentForm();
       if (currentForm === 'skill-form') {
@@ -320,16 +320,15 @@ window.onload = () => {
     },
   });
 
-  document.body.dataset.zenMode = appData.get(appData.settings.ZenMode);
-  document.body.dataset.zenModeShowFooter = false;
+  document.body.dataset.showLabels = appData.get(appData.settings.ShowLabels);
   createSettingButton({
     isForComponent: false,
-    key: appData.settings.ZenMode,
-    onText: 'Zen Mode On',
-    offText: 'Zen Mode Off',
+    key: appData.settings.ShowLabels,
+    onText: 'Labels',
+    offText: 'Labels',
     callback: ({ newValue }) => {
       if (newValue != null) {
-        document.body.dataset.zenMode = !!newValue;
+        document.body.dataset.showLabels = !!newValue;
       }
     },
   });
@@ -337,8 +336,8 @@ window.onload = () => {
   createSettingButton({
     isForComponent: false,
     key: appData.settings.SortPinyin,
-    onText: 'Sort w Pinyin',
-    offText: 'Sort w/o Pinyin',
+    onText: 'Pinyin Sort',
+    offText: 'Pinyin Sort',
     callback: () => {
       const skillList = document.getElementById('skill-list');
       const skillOptions = Array.from(skillList.options);
@@ -350,15 +349,16 @@ window.onload = () => {
     },
   });
 
-  document.body.dataset.showLabels = appData.get(appData.settings.ShowLabels);
+  document.body.dataset.zenMode = appData.get(appData.settings.ZenMode);
+  document.body.dataset.zenModeShowFooter = false;
   createSettingButton({
     isForComponent: false,
-    key: appData.settings.ShowLabels,
-    onText: 'Hide Labels',
-    offText: 'Show Labels',
+    key: appData.settings.ZenMode,
+    onText: 'Zen Mode',
+    offText: 'Zen Mode',
     callback: ({ newValue }) => {
       if (newValue != null) {
-        document.body.dataset.showLabels = !!newValue;
+        document.body.dataset.zenMode = !!newValue;
       }
     },
   });
@@ -367,8 +367,8 @@ window.onload = () => {
   createSettingButton({
     isForComponent: false,
     key: appData.settings.CompactMode,
-    onText: 'Compact Mode On',
-    offText: 'Compact Mode Off',
+    onText: 'Compact Mode',
+    offText: 'Compact Mode',
     callback: ({ newValue }) => {
       if (newValue != null) {
         document.body.dataset.compactMode = !!newValue;
