@@ -10,7 +10,7 @@ h3 {
 
 h3:hover {
   background-color: #666;
-  cursor: pointer;
+  cursor: zoom-in;
 }
 
 h3:active {
@@ -52,6 +52,10 @@ h3:active {
   width: 260px;
   min-height: 90px;
 
+  cursor: pointer;
+}
+
+.component.active-component {
   cursor: zoom-in;
 }
 

@@ -386,8 +386,12 @@ class Component {
           debug.levels.VERBOSE,
           `Clicked on selfElement of ${this.type} component ${this.name}!`,
         );
-        this.createFormHTML();
-        showSkillPage('skill-form');
+        if (this === activeComponent) {
+          this.createFormHTML();
+          showSkillPage('skill-form');
+        } else {
+          setActiveComponent(this);
+        }
       }
     });
 
