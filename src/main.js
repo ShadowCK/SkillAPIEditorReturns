@@ -327,9 +327,9 @@ window.onload = () => {
     key: appData.settings.ZenMode,
     onText: 'Zen Mode On',
     offText: 'Zen Mode Off',
-    callback: (options) => {
-      if (options.newValue != null) {
-        document.body.dataset.zenMode = !!options.newValue;
+    callback: ({ newValue }) => {
+      if (newValue != null) {
+        document.body.dataset.zenMode = !!newValue;
       }
     },
   });
@@ -357,7 +357,22 @@ window.onload = () => {
     onText: 'Hide Labels',
     offText: 'Show Labels',
     callback: ({ newValue }) => {
-      document.body.dataset.showLabels = newValue;
+      if (newValue != null) {
+        document.body.dataset.showLabels = !!newValue;
+      }
+    },
+  });
+
+  document.body.dataset.compactMode = appData.get(appData.settings.CompactMode);
+  createSettingButton({
+    isForComponent: false,
+    key: appData.settings.CompactMode,
+    onText: 'Compact Mode On',
+    offText: 'Compact Mode Off',
+    callback: ({ newValue }) => {
+      if (newValue != null) {
+        document.body.dataset.compactMode = !!newValue;
+      }
     },
   });
 
