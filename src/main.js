@@ -431,7 +431,7 @@ window.onload = () => {
       return false;
     }
     // Copy the component to the clipboard
-    appData.set('clipboard', activeComponent);
+    appData.set('clipboard-component', activeComponent.dupe(null));
     return true;
   };
 
@@ -458,7 +458,7 @@ window.onload = () => {
       debug.logIfAllowed(debug.levels.WARN, 'Pasting failed - mouse is not in the builder.');
       return false;
     }
-    const copiedComponent = appData.get('clipboard');
+    const copiedComponent = appData.get('clipboard-component');
     // Technically, a null check is good enough but a type validation is even better
     if (!(copiedComponent instanceof Component)) {
       debug.logIfAllowed(debug.levels.WARN, 'Pasting failed - no valid component was copied.');
