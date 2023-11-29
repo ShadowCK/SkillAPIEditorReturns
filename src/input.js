@@ -202,13 +202,13 @@ class FormInput {
  * @param {Number} index - the current selected index
  */
 class IndexListValue extends FormInput {
-  constructor(name, key, list, index) {
+  constructor(name, key, list, index, defaultValue = index) {
     super();
     this.name = name;
     this.key = key;
     this.list = list;
     this.index = index;
-    this.defaultValue = index;
+    this.defaultValue = defaultValue;
 
     this.label = undefined;
     this.select = undefined;
@@ -216,7 +216,7 @@ class IndexListValue extends FormInput {
   }
 
   dupe() {
-    return new IndexListValue(this.name, this.key, this.list, this.index)
+    return new IndexListValue(this.name, this.key, this.list, this.index, this.defaultValue)
       .setTooltip(this.tooltip)
       .addHTMLClasses(...this.HTMLClasses);
   }
@@ -316,13 +316,13 @@ class IndexListValue extends FormInput {
  * @param {string} value - the current selected value
  */
 class ListValue extends FormInput {
-  constructor(name, key, list, value) {
+  constructor(name, key, list, value, defaultValue = value) {
     super();
     this.name = name;
     this.key = key;
     this.list = list;
     this.value = value;
-    this.defaultValue = value;
+    this.defaultValue = defaultValue;
 
     this.label = undefined;
     this.select = undefined;
@@ -330,7 +330,7 @@ class ListValue extends FormInput {
   }
 
   dupe() {
-    return new ListValue(this.name, this.key, this.list, this.value)
+    return new ListValue(this.name, this.key, this.list, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
       .addHTMLClasses(...this.HTMLClasses);
   }
@@ -444,13 +444,13 @@ class ListValue extends FormInput {
  * @param {Number} scale - the current scale of the value
  */
 class AttributeValue extends FormInput {
-  constructor(name, key, base, scale) {
+  constructor(name, key, base, scale, defaultValue = { base, scale }) {
     super();
     this.name = name;
     this.key = key;
     this.base = base;
     this.scale = scale;
-    this.defaultValue = { base, scale };
+    this.defaultValue = defaultValue;
 
     this.label = undefined;
     this.left = undefined;
@@ -461,7 +461,7 @@ class AttributeValue extends FormInput {
   }
 
   dupe() {
-    return new AttributeValue(this.name, this.key, this.base, this.scale)
+    return new AttributeValue(this.name, this.key, this.base, this.scale, this.defaultValue)
       .setTooltip(this.tooltip)
       .addHTMLClasses(...this.HTMLClasses);
   }
@@ -603,12 +603,12 @@ class AttributeValue extends FormInput {
  * @param {Number} value - the current value
  */
 class DoubleValue extends FormInput {
-  constructor(name, key, value) {
+  constructor(name, key, value, defaultValue = value) {
     super();
     this.name = name;
     this.key = key;
     this.value = value;
-    this.defaultValue = value;
+    this.defaultValue = defaultValue;
 
     this.label = undefined;
     this.box = undefined;
@@ -616,7 +616,7 @@ class DoubleValue extends FormInput {
   }
 
   dupe() {
-    return new DoubleValue(this.name, this.key, this.value)
+    return new DoubleValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
       .addHTMLClasses(...this.HTMLClasses);
   }
@@ -712,12 +712,12 @@ class DoubleValue extends FormInput {
  * @param {Number} value - the current value
  */
 class IntValue extends FormInput {
-  constructor(name, key, value) {
+  constructor(name, key, value, defaultValue = value) {
     super();
     this.name = name;
     this.key = key;
     this.value = value;
-    this.defaultValue = value;
+    this.defaultValue = defaultValue;
 
     this.label = undefined;
     this.box = undefined;
@@ -725,7 +725,7 @@ class IntValue extends FormInput {
   }
 
   dupe() {
-    return new IntValue(this.name, this.key, this.value)
+    return new IntValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
       .addHTMLClasses(...this.HTMLClasses);
   }
@@ -821,12 +821,12 @@ class IntValue extends FormInput {
  * @param {string} value - the current value
  */
 class StringValue extends FormInput {
-  constructor(name, key, value) {
+  constructor(name, key, value, defaultValue = value) {
     super();
     this.name = name;
     this.key = key;
     this.value = value;
-    this.defaultValue = value;
+    this.defaultValue = defaultValue;
 
     this.label = undefined;
     this.box = undefined;
@@ -834,7 +834,7 @@ class StringValue extends FormInput {
   }
 
   dupe() {
-    return new StringValue(this.name, this.key, this.value)
+    return new StringValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
       .addHTMLClasses(...this.HTMLClasses);
   }
@@ -937,12 +937,12 @@ class StringValue extends FormInput {
  * @param {Array}  value - the current value
  */
 class StringListValue extends FormInput {
-  constructor(name, key, value) {
+  constructor(name, key, value, defaultValue = value) {
     super();
     this.name = name;
     this.key = key;
     this.value = value;
-    this.defaultValue = value;
+    this.defaultValue = defaultValue;
 
     this.label = undefined;
     this.box = undefined;
@@ -950,7 +950,7 @@ class StringListValue extends FormInput {
   }
 
   dupe() {
-    return new StringListValue(this.name, this.key, this.value)
+    return new StringListValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
       .addHTMLClasses(...this.HTMLClasses);
   }
@@ -1076,13 +1076,13 @@ class StringListValue extends FormInput {
  * @param {Array} [values] - the default values to include
  */
 class MultiListValue extends FormInput {
-  constructor(name, key, list, values) {
+  constructor(name, key, list, values, defaultValue = values) {
     super();
     this.name = name;
     this.key = key;
     this.list = list;
     this.values = values || [];
-    this.defaultValue = this.values;
+    this.defaultValue = defaultValue || [];
 
     this.label = undefined;
     this.select = undefined;
@@ -1092,7 +1092,7 @@ class MultiListValue extends FormInput {
   }
 
   dupe() {
-    return new MultiListValue(this.name, this.key, this.list, this.values)
+    return new MultiListValue(this.name, this.key, this.list, this.values, this.defaultValue)
       .setTooltip(this.tooltip)
       .addHTMLClasses(...this.HTMLClasses);
   }
@@ -1248,13 +1248,13 @@ class MultiListValue extends FormInput {
  * @param {number} value  - the current value
  */
 class ByteListValue extends FormInput {
-  constructor(name, key, values, value) {
+  constructor(name, key, values, value, defaultValue = { value, values }) {
     super();
     this.name = name;
     this.key = key;
     this.value = value;
     this.values = values;
-    this.defaultValue = { value, values };
+    this.defaultValue = defaultValue;
 
     this.label = undefined;
     this.div = undefined;
@@ -1262,7 +1262,7 @@ class ByteListValue extends FormInput {
   }
 
   dupe() {
-    return new ByteListValue(this.name, this.key, this.values, this.value)
+    return new ByteListValue(this.name, this.key, this.values, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
       .addHTMLClasses(...this.HTMLClasses);
   }
