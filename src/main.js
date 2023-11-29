@@ -304,7 +304,7 @@ window.onload = () => {
   createSettingButton({
     isForComponent: false,
     key: appData.settings.ShowComment,
-    onText: 'Comments',
+    onText: '[ Comments ]',
     offText: 'Comments',
     callback: () => {
       const currentForm = getCurrentForm();
@@ -324,7 +324,7 @@ window.onload = () => {
   createSettingButton({
     isForComponent: false,
     key: appData.settings.ShowLabels,
-    onText: 'Labels',
+    onText: '[ Labels ]',
     offText: 'Labels',
     callback: ({ newValue }) => {
       if (newValue != null) {
@@ -336,7 +336,7 @@ window.onload = () => {
   createSettingButton({
     isForComponent: false,
     key: appData.settings.SortPinyin,
-    onText: 'Pinyin Sort',
+    onText: '[ Pinyin Sort ]',
     offText: 'Pinyin Sort',
     callback: () => {
       const skillList = document.getElementById('skill-list');
@@ -354,7 +354,7 @@ window.onload = () => {
   createSettingButton({
     isForComponent: false,
     key: appData.settings.ZenMode,
-    onText: 'Zen Mode',
+    onText: '[ Zen Mode ]',
     offText: 'Zen Mode',
     callback: ({ newValue }) => {
       if (newValue != null) {
@@ -367,7 +367,7 @@ window.onload = () => {
   createSettingButton({
     isForComponent: false,
     key: appData.settings.CompactMode,
-    onText: 'Compact Mode',
+    onText: '[ Compact Mode ]',
     offText: 'Compact Mode',
     callback: ({ newValue }) => {
       if (newValue != null) {

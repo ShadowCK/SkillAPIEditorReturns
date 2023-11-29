@@ -234,6 +234,7 @@ footer {
 footer .setting-button,
 #footer-navbar a {
   font-size: 16px;
+  user-select: none;
 }
 
 #footer-navbar {
