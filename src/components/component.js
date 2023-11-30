@@ -312,6 +312,11 @@ class Component {
    * @param {number}  index  - the index of the component in the parent
    */
   createBuilderHTML(target, index) {
+    // Normally, inputs are checked and hidden in createFormHTML().
+    // If we never called createFormHTML(), we need to check and hide inputs here.
+    // Otherwise, labels will be shown for hidden inputs since they were not checked.
+    // The NoDom version is super light-weighted compared to the original version.
+    this.createFormHTMLNoDom();
     // Create the wrapping divs with the appropriate classes
     // The wrapper includes the self element and childDiv/html.
     const container = document.createElement('div');
@@ -384,15 +389,15 @@ class Component {
       if (input.hidden) {
         return false;
       }
-      if (!input.hasValidValueForInputLabel()) {
+      const hasValidValue = [input.value, input.base, input.scale, input.values].some(
+        (v) => v !== null && v !== undefined && v !== 'null' && v !== 'undefined',
+      );
+      if (!input.hasValidValueForInputLabel() || !hasValidValue) {
         return false;
       }
-      // If no default value or "show-all-labels" setting is on, it is valid unless it has no valid value
+      // If no default value or "show-all-labels" setting is on, it is valid
       if (input.defaultValue == null || appData.get(appData.settings.ShowAllLabels)) {
-        const hasValidValue = [input.value, input.base, input.scale, input.values].some(
-          (v) => v !== null && v !== undefined && v !== 'null' && v !== 'undefined',
-        );
-        return hasValidValue;
+        return true;
       }
       // Otherwise, check if the value is the same as the default value
       // * Input may be a string of the default value
@@ -590,12 +595,11 @@ class Component {
         form.appendChild(document.createElement('hr'));
       }
       // If no AttributeValue, will not add Icon Key
-      for (let j = 1; j < this.data.length; j++) {
-        if (this.data[j] instanceof AttributeValue) {
-          index = 0;
-          break;
-        }
+      const hasAttribValue = this.data.some((input) => input instanceof AttributeValue);
+      if (hasAttribValue) {
+        index = 0;
       }
+      this.data[0].hidden = !hasAttribValue;
       // Initialize inputs
       for (let i = index; i < this.data.length; i++) {
         this.data[i].hidden = false;
@@ -695,6 +699,10 @@ class Component {
         input.hidden = false;
         // Note: We are adding a copy of the input to the map so that less side effects happen.
         currentComponentInputs.set(input.key, input.dupe());
+      }
+      const hasAttribValue = this.data.some((input) => input instanceof AttributeValue);
+      if (!hasAttribValue) {
+        this.data[0].hidden = true;
       }
 
       for (let i = index; i < this.data.length; i++) {

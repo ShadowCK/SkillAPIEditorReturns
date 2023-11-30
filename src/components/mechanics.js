@@ -957,12 +957,12 @@ class MechanicParticleAnimation extends Component {
       'Plays an animated particle effect at the location of each target over time by applying various transformations.';
 
     this.data.push(
-      new IntValue('Steps', 'steps', 1, 0).setTooltip(
+      new IntValue('Steps', 'steps', 1).setTooltip(
         'The number of times to play particles and apply translations each application.',
       ),
     );
     this.data.push(
-      new DoubleValue('Frequency', 'frequency', 0.05, 0).setTooltip(
+      new DoubleValue('Frequency', 'frequency', 0.05).setTooltip(
         'How often to apply the animation in seconds. 0.05 is the fastest (1 tick). Lower than that will act the same.',
       ),
     );
