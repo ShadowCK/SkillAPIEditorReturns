@@ -1,4 +1,4 @@
-import { Skill, getActiveSkill } from './skill.js';
+import { getActiveSkill } from './skill.js';
 import {
   getActiveComponent,
   Type,
@@ -6,6 +6,7 @@ import {
   Target,
   Condition,
   Mechanic,
+  Component,
 } from './components/index.js';
 
 import * as debug from './debug.js';
@@ -109,9 +110,15 @@ const showSkillPage = (name) => {
 
   updateSelectedOptionCSS(name);
   const activeComponent = getActiveComponent();
-  if (name === 'builder' && !(activeComponent instanceof Skill)) {
-    assertNotNull(activeComponent.selfElement);
-    activeComponent.selfElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (name === 'builder') {
+    // Should only happen on editor init with stored curretForm !== 'builder' && !== 'skill-form'
+    if (document.getElementById('builder-content').innerHTML === '') {
+      debug.logIfAllowed(debug.levels.INFO, 'Builder is empty, applying active skill');
+      getActiveSkill().apply();
+    } else if (activeComponent instanceof Component) {
+      assertNotNull(activeComponent.selfElement);
+      activeComponent.selfElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 };
 

@@ -552,6 +552,11 @@ window.onload = () => {
   const skillIndex = localStorage.getItem('skillIndex');
   const classData = localStorage.getItem('classData');
   const classIndex = localStorage.getItem('classIndex');
+  const currentForm = localStorage.getItem('currentForm');
+  if (currentForm) {
+    debug.logIfAllowed(debug.levels.VERBOSE, `The user was last on the ${currentForm} skill page`);
+    showSkillPage(currentForm);
+  }
   if (attribs) {
     debug.logIfAllowed(debug.levels.VERBOSE, 'ATTRIBS loaded from local storage', attribs);
     Attribute.ATTRIBS = attribs.split(',');
@@ -582,6 +587,7 @@ window.onbeforeunload = () => {
   localStorage.setItem('skillsActive', getSkillsActive() ? 'true' : 'false');
   localStorage.setItem('skillIndex', document.getElementById('skill-list').selectedIndex);
   localStorage.setItem('classIndex', document.getElementById('class-list').selectedIndex);
+  localStorage.setItem('currentForm', getCurrentForm());
   // We do not want temporary data (those not pre-defined in defaultAppData) to be saved
   appData.cleanup();
   localStorage.setItem('appData', appData.getSaveString());

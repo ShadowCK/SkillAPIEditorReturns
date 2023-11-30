@@ -176,20 +176,22 @@ const initSkills = (skillData, skillIndex) => {
   const skillList = document.getElementById('skill-list');
   skillList.remove(0);
   loadSkillText(skillData); // Load skills from data
+  let indexNumber;
   if (skillIndex != null) {
-    let indexNumber = parseInt(skillIndex, 10);
+    indexNumber = parseInt(skillIndex, 10);
     if (Number.isNaN(indexNumber) || indexNumber < 0 || indexNumber > getSkills().length - 1) {
       debug.logIfAllowed(debug.levels.WARN, `Invalid skill index ${indexNumber}, defaulting to 0`);
       indexNumber = 0;
     }
-
-    skillList.selectedIndex = indexNumber;
-    const skills = getSkills();
-    const newActiveSkill = skills[clamp(indexNumber, 0, skills.length - 1)];
-    setActiveSkill(newActiveSkill);
-    setActiveComponent(newActiveSkill);
-    updateUIForNewActiveSkill(newActiveSkill);
+  } else {
+    indexNumber = 0;
   }
+  skillList.selectedIndex = indexNumber;
+  const skills = getSkills();
+  const newActiveSkill = skills[clamp(indexNumber, 0, skills.length - 1)];
+  setActiveSkill(newActiveSkill);
+  setActiveComponent(newActiveSkill);
+  updateUIForNewActiveSkill(newActiveSkill);
 };
 
 // Loads class data from a string
