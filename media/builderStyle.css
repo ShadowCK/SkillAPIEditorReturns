@@ -263,7 +263,7 @@ h3:active {
 
 /* #region Compact Mode */
 body[data-compact-mode='true'] .component {
-  max-width: 180px;
+  width: 180px;
   min-height: 50px;
   padding: 5px;
   border-radius: 0;
@@ -346,6 +346,11 @@ body[data-show-all-labels='true'][data-compact-mode='false'] .input-container {
 
 body[data-show-all-labels='true'][data-compact-mode='true'] .input-container {
   max-height: none;
+}
+
+body[data-show-all-labels='true'][data-compact-mode='true'] .component {
+  width: fit-content;
+  max-width: 400px;
 }
 
 /* #endregion */
