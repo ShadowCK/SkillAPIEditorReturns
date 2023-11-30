@@ -226,6 +226,54 @@ const contains = (source, target, recursive) => {
 };
 
 /**
+ * @param {import('../input.js').FormInput} input
+ * @returns
+ */
+const isValidInput = (input) => {
+  if (input.hidden) {
+    return false;
+  }
+  const hasValidValue = [input.value, input.base, input.scale, input.values].some(
+    (v) => v !== null && v !== undefined && v !== 'null' && v !== 'undefined',
+  );
+  if (!input.hasValidValueForInputLabel() || !hasValidValue) {
+    return false;
+  }
+  // If no default value or "show-all-labels" setting is on, it is valid
+  if (input.defaultValue == null || appData.get(appData.settings.ShowAllLabels)) {
+    return true;
+  }
+  // Otherwise, check if the value is the same as the default value
+  // * Input may be a string of the default value
+  if (
+    input instanceof AttributeValue &&
+    assertNotNull(input.defaultValue.base, input.defaultValue.scale) &&
+    (input.base === input.defaultValue.base || input.base === input.defaultValue.base.toString()) &&
+    (input.scale === input.defaultValue.scale ||
+      input.scale === input.defaultValue.scale.toString())
+  ) {
+    return false;
+  }
+  // ByteListValue will only hold number values
+  if (input instanceof ByteListValue && input.value === input.defaultValue.value) {
+    return false;
+  }
+  // MultiListValue
+  if (
+    input instanceof MultiListValue &&
+    (input.values === input.defaultValue ||
+      input.values.toString() === input.defaultValue.toString())
+  ) {
+    return false;
+  }
+  // Input may be a string of the default value
+  if (input.value === input.defaultValue || input.value === input.defaultValue.toString()) {
+    return false;
+  }
+  return true;
+};
+
+/**
  * Types of components
  */
 // prettier-ignore
@@ -302,6 +350,50 @@ class Component {
     }
     ele.description = this.description;
     return ele;
+  }
+
+  createInputLabels(parent) {
+    // If already has input-container, cleanup and readd input labels
+    const foundInputContainer = parent.querySelector('.input-container');
+    if (foundInputContainer) {
+      foundInputContainer.innerHTML = '';
+    }
+
+    const hasValidInput = this.data.find((input) => isValidInput(input));
+    if (hasValidInput) {
+      const inputContainer = foundInputContainer || document.createElement('div');
+      inputContainer.className = 'input-container';
+      this.data.forEach((input) => {
+        if (isValidInput(input)) {
+          const inputLabel = document.createElement('div');
+          inputLabel.input = input;
+          inputLabel.className = 'input-label';
+          inputLabel.innerHTML = `<span class="input-label-name">${
+            input.name
+          }</span>: <span class="input-label-value">${input.getValueForInputLabel()}</span>`;
+          inputContainer.appendChild(inputLabel);
+          inputLabel.addEventListener('click', () => {
+            this.createFormHTML();
+            showSkillPage('skill-form');
+            const getInputElementInSkillForm = () => {
+              // * Input elements may have same ids depending on how SkillAPI reads them.
+              // * We should respect that.
+              const candidates = [
+                ...document.querySelectorAll(`#${input.key}`),
+                ...document.querySelectorAll(`#${input.key}-base`),
+              ];
+              return candidates.find((element) => element.input === input);
+            };
+            const inputElementInSkillForm = getInputElementInSkillForm();
+            assertNotNull(inputElementInSkillForm);
+            inputElementInSkillForm.focus();
+          });
+        }
+      });
+      if (!foundInputContainer) {
+        parent.appendChild(inputContainer);
+      }
+    }
   }
 
   /**
@@ -381,90 +473,8 @@ class Component {
       div.append(comment);
     }
 
-    /**
-     * @param {import('../input.js').FormInput} input
-     * @returns
-     */
-    const isValidInput = (input) => {
-      if (input.hidden) {
-        return false;
-      }
-      const hasValidValue = [input.value, input.base, input.scale, input.values].some(
-        (v) => v !== null && v !== undefined && v !== 'null' && v !== 'undefined',
-      );
-      if (!input.hasValidValueForInputLabel() || !hasValidValue) {
-        return false;
-      }
-      // If no default value or "show-all-labels" setting is on, it is valid
-      if (input.defaultValue == null || appData.get(appData.settings.ShowAllLabels)) {
-        return true;
-      }
-      // Otherwise, check if the value is the same as the default value
-      // * Input may be a string of the default value
-      if (
-        input instanceof AttributeValue &&
-        assertNotNull(input.defaultValue.base, input.defaultValue.scale) &&
-        (input.base === input.defaultValue.base ||
-          input.base === input.defaultValue.base.toString()) &&
-        (input.scale === input.defaultValue.scale ||
-          input.scale === input.defaultValue.scale.toString())
-      ) {
-        return false;
-      }
-      // ByteListValue will only hold number values
-      if (input instanceof ByteListValue && input.value === input.defaultValue.value) {
-        return false;
-      }
-      // MultiListValue
-      if (
-        input instanceof MultiListValue &&
-        (input.values === input.defaultValue ||
-          input.values.toString() === input.defaultValue.toString())
-      ) {
-        return false;
-      }
-      // Input may be a string of the default value
-      if (input.value === input.defaultValue || input.value === input.defaultValue.toString()) {
-        return false;
-      }
-      return true;
-    };
-
-    // Input labels
-    const hasValidInput = this.data.find((input) => isValidInput(input));
-
-    if (hasValidInput) {
-      const inputContainer = document.createElement('div');
-      inputContainer.className = 'input-container';
-      this.data.forEach((input) => {
-        if (isValidInput(input)) {
-          const inputLabel = document.createElement('div');
-          inputLabel.input = input;
-          inputLabel.className = 'input-label';
-          inputLabel.innerHTML = `<span class="input-label-name">${
-            input.name
-          }</span>: <span class="input-label-value">${input.getValueForInputLabel()}</span>`;
-          inputContainer.appendChild(inputLabel);
-          inputLabel.addEventListener('click', () => {
-            this.createFormHTML();
-            showSkillPage('skill-form');
-            const getInputElementInSkillForm = () => {
-              // * Input elements may have same ids depending on how SkillAPI reads them.
-              // * We should respect that.
-              const candidates = [
-                ...document.querySelectorAll(`#${input.key}`),
-                ...document.querySelectorAll(`#${input.key}-base`),
-              ];
-              return candidates.find((element) => element.input === input);
-            };
-            const inputElementInSkillForm = getInputElementInSkillForm();
-            assertNotNull(inputElementInSkillForm);
-            inputElementInSkillForm.focus();
-          });
-        }
-      });
-      div.appendChild(inputContainer);
-    }
+    // Create input labels
+    this.createInputLabels(div);
 
     const builderButtonWrapper = document.createElement('div');
     builderButtonWrapper.className = 'builder-button-wrapper';

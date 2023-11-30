@@ -334,6 +334,12 @@ window.onload = () => {
   });
 
   document.body.dataset.showAllLabels = appData.get(appData.settings.ShowAllLabels);
+  const recursiveLabelUpdate = (parentComponent) => {
+    parentComponent.components.forEach((component) => {
+      recursiveLabelUpdate(component);
+      component.createInputLabels(component.selfElement);
+    });
+  };
   createSettingButton({
     isForComponent: false,
     key: appData.settings.ShowAllLabels,
@@ -344,7 +350,8 @@ window.onload = () => {
         document.body.dataset.showAllLabels = !!newValue;
       }
       if (document.getElementById('builder-content').innerHTML !== '') {
-        getActiveSkill().apply();
+        const activeSkill = getActiveSkill();
+        recursiveLabelUpdate(activeSkill);
       }
     },
   });
