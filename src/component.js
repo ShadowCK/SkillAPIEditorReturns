@@ -300,7 +300,7 @@ class Component {
     this.components = [];
     this.comment = new StringListValue('Comment', 'comment', [])
       .setTooltip('A comment to help you remember what this component does')
-      .addHTMLClasses('input-comment');
+      .addHTMLClasses('main', 'input-comment');
     /** @type {import('./input.js'.FormInput[])} */
     this.data = [
       new StringValue('Icon Key', 'icon-key', '').setTooltip(

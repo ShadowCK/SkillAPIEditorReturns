@@ -51,12 +51,7 @@ class FormInput {
 
   hidden;
 
-  HTMLClasses = [];
-
-  addHTMLClasses(...tags) {
-    this.HTMLClasses.push(...tags);
-    return this;
-  }
+  HTMLClasses = { label: ['input-title'] };
 
   /**
    * Requires one of the given values to be active for the
@@ -128,6 +123,42 @@ class FormInput {
     return this;
   }
 
+  bindWithElements(...htmlElements) {
+    htmlElements.forEach((element) => {
+      element.input = this;
+    });
+    this.elements = htmlElements;
+    return this;
+  }
+
+  addHTMLClasses(key = 'main', ...tags) {
+    if (this.HTMLClasses[key] == null) {
+      this.HTMLClasses[key] = [];
+    }
+    this.HTMLClasses[key].push(...tags);
+    return this;
+  }
+
+  /**
+   * @param {Map} options
+   */
+  applyHTMLClasses(options) {
+    // * Map's forEach callback has params (value, key); the passed in Map stores [element(key), key(value)]
+    options.forEach((key, element) => {
+      if (this.HTMLClasses[key]) {
+        element.classList.add(...this.HTMLClasses[key]);
+      }
+    });
+  }
+
+  copyHTMLClassesFrom(HTMLClasses) {
+    this.HTMLClasses = Object.keys(HTMLClasses).reduce((copy, key) => {
+      copy[key] = HTMLClasses[key].slice();
+      return copy;
+    }, {});
+    return this;
+  }
+
   /* eslint-disable */
   dupe() {
     throw new Error('Method "dupe" must be implemented.');
@@ -181,13 +212,6 @@ class FormInput {
     throw new Error('Method "getValueForInputLabel" must be implemented.');
   }
 
-  bindWithElements(...htmlElements) {
-    htmlElements.forEach((element) => {
-      element.input = this;
-    });
-    this.elements = htmlElements;
-  }
-
   /* eslint-enable */
 }
 
@@ -218,7 +242,7 @@ class IndexListValue extends FormInput {
   dupe() {
     return new IndexListValue(this.name, this.key, this.list, this.index, this.defaultValue)
       .setTooltip(this.tooltip)
-      .addHTMLClasses(...this.HTMLClasses);
+      .copyHTMLClassesFrom(...this.HTMLClasses);
   }
 
   /**
@@ -247,6 +271,12 @@ class IndexListValue extends FormInput {
     target.appendChild(this.select);
 
     this.bindWithElements(this.select);
+    this.applyHTMLClasses(
+      new Map([
+        [this.label, 'label'],
+        [this.select, 'main'],
+      ]),
+    );
   }
 
   /**
@@ -332,7 +362,7 @@ class ListValue extends FormInput {
   dupe() {
     return new ListValue(this.name, this.key, this.list, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .addHTMLClasses(...this.HTMLClasses);
+      .copyHTMLClassesFrom(...this.HTMLClasses);
   }
 
   /**
@@ -351,7 +381,6 @@ class ListValue extends FormInput {
     target.appendChild(this.label);
 
     this.select = document.createElement('select');
-    this.select.classList.add(...this.HTMLClasses);
     this.select.id = this.key;
     let selected = -1;
 
@@ -371,6 +400,12 @@ class ListValue extends FormInput {
     target.appendChild(this.select);
 
     this.bindWithElements(this.select);
+    this.applyHTMLClasses(
+      new Map([
+        [this.label, 'label'],
+        [this.select, 'main'],
+      ]),
+    );
   }
 
   /**
@@ -463,7 +498,7 @@ class AttributeValue extends FormInput {
   dupe() {
     return new AttributeValue(this.name, this.key, this.base, this.scale, this.defaultValue)
       .setTooltip(this.tooltip)
-      .addHTMLClasses(...this.HTMLClasses);
+      .copyHTMLClassesFrom(...this.HTMLClasses);
   }
 
   /**
@@ -482,7 +517,6 @@ class AttributeValue extends FormInput {
     target.appendChild(this.label);
 
     this.baseBox = document.createElement('input');
-    this.baseBox.classList.add(...this.HTMLClasses);
     this.baseBox.id = `${this.key}-base`;
     this.baseBox.value = this.base;
     this.baseBox.className = 'base';
@@ -494,7 +528,6 @@ class AttributeValue extends FormInput {
     target.appendChild(this.left);
 
     this.scaleBox = document.createElement('input');
-    this.scaleBox.classList.add(...this.HTMLClasses);
     this.scaleBox.id = `${this.key}-scale`;
     this.scaleBox.value = this.scale;
     this.scaleBox.className = 'scale';
@@ -506,6 +539,15 @@ class AttributeValue extends FormInput {
     target.appendChild(this.right);
 
     this.bindWithElements(this.baseBox, this.scaleBox);
+    this.applyHTMLClasses(
+      new Map([
+        [this.label, 'label'],
+        [this.baseBox, 'main'],
+        [this.scaleBox, 'main'],
+        [this.baseBox, 'base'],
+        [this.scaleBox, 'scale'],
+      ]),
+    );
   }
 
   /**
@@ -618,7 +660,7 @@ class DoubleValue extends FormInput {
   dupe() {
     return new DoubleValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .addHTMLClasses(...this.HTMLClasses);
+      .copyHTMLClassesFrom(...this.HTMLClasses);
   }
 
   /**
@@ -637,13 +679,18 @@ class DoubleValue extends FormInput {
     target.appendChild(this.label);
 
     this.box = document.createElement('input');
-    this.box.classList.add(...this.HTMLClasses);
     this.box.id = this.key;
     this.box.value = this.value;
     this.box.addEventListener('input', filterDouble);
     target.appendChild(this.box);
 
     this.bindWithElements(this.box);
+    this.applyHTMLClasses(
+      new Map([
+        [this.label, 'label'],
+        [this.box, 'main'],
+      ]),
+    );
   }
 
   /**
@@ -727,7 +774,7 @@ class IntValue extends FormInput {
   dupe() {
     return new IntValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .addHTMLClasses(...this.HTMLClasses);
+      .copyHTMLClassesFrom(...this.HTMLClasses);
   }
 
   /**
@@ -746,13 +793,18 @@ class IntValue extends FormInput {
     target.appendChild(this.label);
 
     this.box = document.createElement('input');
-    this.box.classList.add(...this.HTMLClasses);
     this.box.id = this.key;
     this.box.value = this.value;
     this.box.addEventListener('input', filterInt);
     target.appendChild(this.box);
 
     this.bindWithElements(this.box);
+    this.applyHTMLClasses(
+      new Map([
+        [this.label, 'label'],
+        [this.box, 'main'],
+      ]),
+    );
   }
 
   /**
@@ -836,7 +888,7 @@ class StringValue extends FormInput {
   dupe() {
     return new StringValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .addHTMLClasses(...this.HTMLClasses);
+      .copyHTMLClassesFrom(...this.HTMLClasses);
   }
 
   /**
@@ -855,12 +907,17 @@ class StringValue extends FormInput {
     target.appendChild(this.label);
 
     this.box = document.createElement('input');
-    this.box.classList.add(...this.HTMLClasses);
     this.box.id = this.key;
     this.box.value = this.value;
     target.appendChild(this.box);
 
     this.bindWithElements(this.box);
+    this.applyHTMLClasses(
+      new Map([
+        [this.label, 'label'],
+        [this.box, 'main'],
+      ]),
+    );
   }
 
   /**
@@ -952,7 +1009,7 @@ class StringListValue extends FormInput {
   dupe() {
     return new StringListValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .addHTMLClasses(...this.HTMLClasses);
+      .copyHTMLClassesFrom(...this.HTMLClasses);
   }
 
   /**
@@ -980,12 +1037,17 @@ class StringListValue extends FormInput {
     }
 
     this.box = document.createElement('textarea');
-    this.box.classList.add(...this.HTMLClasses);
     this.box.id = this.key;
     this.box.value = content;
     target.appendChild(this.box);
 
     this.bindWithElements(this.box);
+    this.applyHTMLClasses(
+      new Map([
+        [this.label, 'label'],
+        [this.box, 'main'],
+      ]),
+    );
   }
 
   /**
@@ -1094,7 +1156,7 @@ class MultiListValue extends FormInput {
   dupe() {
     return new MultiListValue(this.name, this.key, this.list, this.values, this.defaultValue)
       .setTooltip(this.tooltip)
-      .addHTMLClasses(...this.HTMLClasses);
+      .copyHTMLClassesFrom(...this.HTMLClasses);
   }
 
   /**
@@ -1114,7 +1176,6 @@ class MultiListValue extends FormInput {
 
     const select = document.createElement('select');
     this.select = select;
-    select.classList.add(...this.HTMLClasses);
     select.id = this.key;
 
     let option = document.createElement('option');
@@ -1151,6 +1212,12 @@ class MultiListValue extends FormInput {
     }
 
     this.bindWithElements(this.select);
+    this.applyHTMLClasses(
+      new Map([
+        [this.label, 'label'],
+        [this.select, 'main'],
+      ]),
+    );
   }
 
   populate(value) {
@@ -1264,7 +1331,7 @@ class ByteListValue extends FormInput {
   dupe() {
     return new ByteListValue(this.name, this.key, this.values, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .addHTMLClasses(...this.HTMLClasses);
+      .copyHTMLClassesFrom(...this.HTMLClasses);
   }
 
   /**
@@ -1287,7 +1354,6 @@ class ByteListValue extends FormInput {
     this.checkboxes = [];
     this.div = document.createElement('div');
     this.div.className = 'byte-list';
-    this.div.classList.add(...this.HTMLClasses);
     let html = '';
     for (let i = 0; i < this.values.length; i++) {
       const id = `${this.key}-${this.values[i].replace(' ', '-').toLowerCase()}`;
@@ -1300,6 +1366,14 @@ class ByteListValue extends FormInput {
       this.checkboxes[i / 3] = this.div.childNodes[i];
     }
     target.appendChild(this.div);
+
+    this.bindWithElements(this.div);
+    this.applyHTMLClasses(
+      new Map([
+        [this.label, 'label'],
+        [this.div, 'main'],
+      ]),
+    );
   }
 
   /**

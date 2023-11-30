@@ -53,9 +53,12 @@ body {
 }
 
 #attribute-label {
-  width: 90% !important;
+  position: relative;
+  left: -5%;
+  width: 100% !important;
   text-align: center !important;
   color: #888;
+  transition: left 600ms ease-in-out 300ms;
 }
 
 #bad-browser p {
@@ -846,15 +849,19 @@ body[data-zen-mode='true'] #trigger-chooser {
   transition-timing-function: ease-out;
 }
 
-#skills label.tooltip,
-#classes label.tooltip {
+#skill-form label.input-title,
+#class-form label.input-title {
   transition: all 600ms ease-in-out 300ms;
 }
 
-body[data-zen-mode='true'] #skills label.tooltip,
-body[data-zen-mode='true'] #classes label.tooltip {
+body[data-zen-mode='true'] #skill-form label.input-title,
+body[data-zen-mode='true'] #class-form label.input-title {
   width: 30%;
   transition: all 600ms ease-in-out 300ms;
+}
+
+body[data-zen-mode='true'] #attribute-label {
+  left: -15%;
 }
 
 body[data-zen-mode='true'] footer {
