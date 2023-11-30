@@ -340,4 +340,12 @@ body[data-compact-mode='true'] .input-container {
   max-height: 60px;
 }
 
+body[data-show-all-labels='true'][data-compact-mode='false'] .input-container {
+  max-height: none;
+}
+
+body[data-show-all-labels='true'][data-compact-mode='true'] .input-container {
+  max-height: none;
+}
+
 /* #endregion */

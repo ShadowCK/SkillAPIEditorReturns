@@ -4,6 +4,7 @@ const settings = {
   SortPinyin: 'sort-pinyin',
   ZenMode: 'zen-mode',
   ShowLabels: 'show-labels',
+  ShowAllLabels: 'show-all-labels',
   CompactMode: 'compact-mode',
 };
 
@@ -17,6 +18,7 @@ const defaultAppData = [
   [settings.SortPinyin, true],
   [settings.ZenMode, false],
   [settings.ShowLabels, true],
+  [settings.ShowAllLabels, false],
   [settings.CompactMode, false],
   [globals.lastVisitedForm, null],
 ];

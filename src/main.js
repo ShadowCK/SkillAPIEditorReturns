@@ -333,6 +333,22 @@ window.onload = () => {
     },
   });
 
+  document.body.dataset.showAllLabels = appData.get(appData.settings.ShowAllLabels);
+  createSettingButton({
+    isForComponent: false,
+    key: appData.settings.ShowAllLabels,
+    onText: '[ All Labels ]',
+    offText: 'All Labels',
+    callback: ({ newValue }) => {
+      if (newValue != null) {
+        document.body.dataset.showAllLabels = !!newValue;
+      }
+      if (document.getElementById('builder-content').innerHTML !== '') {
+        getActiveSkill().apply();
+      }
+    },
+  });
+
   createSettingButton({
     isForComponent: false,
     key: appData.settings.SortPinyin,

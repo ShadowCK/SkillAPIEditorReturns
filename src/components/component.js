@@ -387,8 +387,8 @@ class Component {
       if (!input.hasValidValueForInputLabel()) {
         return false;
       }
-      // No default value, so it is valid unless it has no valid value
-      if (input.defaultValue == null) {
+      // If no default value or "show-all-labels" setting is on, it is valid unless it has no valid value
+      if (input.defaultValue == null || appData.get(appData.settings.ShowAllLabels)) {
         const hasValidValue = [input.value, input.base, input.scale, input.values].some(
           (v) => v !== null && v !== undefined && v !== 'null' && v !== 'undefined',
         );
