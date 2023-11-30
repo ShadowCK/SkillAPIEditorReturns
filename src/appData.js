@@ -1,5 +1,6 @@
 const settings = {
-  ShowComment: 'show-comment',
+  ShowComments: 'show-comments',
+  ShowCommentsInComponent: 'show-comments-in-component',
   // If true, will convert Chinese characters to pinyin, otherwise directly sort by unicode
   SortPinyin: 'sort-pinyin',
   ZenMode: 'zen-mode',
@@ -14,7 +15,8 @@ const globals = {
 
 const savedAppData = new Map(JSON.parse(localStorage.getItem('appData')));
 const defaultAppData = [
-  [settings.ShowComment, true],
+  [settings.ShowComments, true],
+  [settings.ShowCommentsInComponent, true],
   [settings.SortPinyin, true],
   [settings.ZenMode, false],
   [settings.ShowLabels, true],

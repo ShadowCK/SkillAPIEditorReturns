@@ -301,21 +301,16 @@ window.onload = () => {
 
   init();
 
+  document.body.dataset.showComments = appData.get(appData.settings.ShowComments);
   createSettingButton({
     isForComponent: false,
-    key: appData.settings.ShowComment,
+    key: appData.settings.ShowComments,
     onText: '[ Comments ]',
     offText: 'Comments',
-    callback: () => {
-      const currentForm = getCurrentForm();
-      if (currentForm === 'skill-form') {
-        // FIXME: Make this check more professional and less hacky
-        // Quick and dirty way to check if the skill form is for a skill or a component
-        if (!document.getElementById('skill-form').textContent.includes('Skill Details')) {
-          const activeComponent = getActiveComponent();
-          activeComponent.update();
-          activeComponent.createFormHTML();
-        }
+    callback: ({ newValue }) => {
+      // Update builder
+      if (newValue != null) {
+        document.body.dataset.showComments = !!newValue;
       }
     },
   });

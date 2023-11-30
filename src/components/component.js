@@ -81,7 +81,7 @@ const createSettingButtons = (component, form) => {
   createSettingButton({
     form,
     component, // ? Unnecessary for now
-    key: settings.ShowComment,
+    key: settings.ShowCommentsInComponent,
     onText: 'Hide Comment',
     offText: 'Show Comment',
     callback: () => {
@@ -592,7 +592,7 @@ class Component {
     }
 
     // Add comment if "show-comment" setting is on
-    if (appData.get(appData.settings.ShowComment)) {
+    if (appData.get(appData.settings.ShowComments)) {
       form.appendChild(document.createElement('hr'));
       this.comment.createHTML(form);
     }
