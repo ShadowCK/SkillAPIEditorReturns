@@ -242,7 +242,7 @@ class IndexListValue extends FormInput {
   dupe() {
     return new IndexListValue(this.name, this.key, this.list, this.index, this.defaultValue)
       .setTooltip(this.tooltip)
-      .copyHTMLClassesFrom(...this.HTMLClasses);
+      .copyHTMLClassesFrom(this.HTMLClasses);
   }
 
   /**
@@ -362,7 +362,7 @@ class ListValue extends FormInput {
   dupe() {
     return new ListValue(this.name, this.key, this.list, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .copyHTMLClassesFrom(...this.HTMLClasses);
+      .copyHTMLClassesFrom(this.HTMLClasses);
   }
 
   /**
@@ -498,7 +498,7 @@ class AttributeValue extends FormInput {
   dupe() {
     return new AttributeValue(this.name, this.key, this.base, this.scale, this.defaultValue)
       .setTooltip(this.tooltip)
-      .copyHTMLClassesFrom(...this.HTMLClasses);
+      .copyHTMLClassesFrom(this.HTMLClasses);
   }
 
   /**
@@ -660,7 +660,7 @@ class DoubleValue extends FormInput {
   dupe() {
     return new DoubleValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .copyHTMLClassesFrom(...this.HTMLClasses);
+      .copyHTMLClassesFrom(this.HTMLClasses);
   }
 
   /**
@@ -774,7 +774,7 @@ class IntValue extends FormInput {
   dupe() {
     return new IntValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .copyHTMLClassesFrom(...this.HTMLClasses);
+      .copyHTMLClassesFrom(this.HTMLClasses);
   }
 
   /**
@@ -888,7 +888,7 @@ class StringValue extends FormInput {
   dupe() {
     return new StringValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .copyHTMLClassesFrom(...this.HTMLClasses);
+      .copyHTMLClassesFrom(this.HTMLClasses);
   }
 
   /**
@@ -1009,7 +1009,7 @@ class StringListValue extends FormInput {
   dupe() {
     return new StringListValue(this.name, this.key, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .copyHTMLClassesFrom(...this.HTMLClasses);
+      .copyHTMLClassesFrom(this.HTMLClasses);
   }
 
   /**
@@ -1156,7 +1156,7 @@ class MultiListValue extends FormInput {
   dupe() {
     return new MultiListValue(this.name, this.key, this.list, this.values, this.defaultValue)
       .setTooltip(this.tooltip)
-      .copyHTMLClassesFrom(...this.HTMLClasses);
+      .copyHTMLClassesFrom(this.HTMLClasses);
   }
 
   /**
@@ -1331,7 +1331,7 @@ class ByteListValue extends FormInput {
   dupe() {
     return new ByteListValue(this.name, this.key, this.values, this.value, this.defaultValue)
       .setTooltip(this.tooltip)
-      .copyHTMLClassesFrom(...this.HTMLClasses);
+      .copyHTMLClassesFrom(this.HTMLClasses);
   }
 
   /**
