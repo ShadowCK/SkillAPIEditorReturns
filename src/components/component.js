@@ -273,6 +273,24 @@ const isValidInput = (input) => {
   return true;
 };
 
+const getInputElementInSkillForm = (input) => {
+  // * Input elements may have same ids depending on how SkillAPI reads them.
+  // * We should respect that.
+  const candidates = [
+    ...document.querySelectorAll(`#${input.key}`),
+    ...document.querySelectorAll(`#${input.key}-base`),
+  ];
+  return candidates.find((element) => element.input === input);
+};
+
+const showSkillFormForInput = (component, input) => {
+  component.createFormHTML();
+  showSkillPage('skill-form');
+  const inputElementInSkillForm = getInputElementInSkillForm(input);
+  assertNotNull(inputElementInSkillForm);
+  inputElementInSkillForm.focus();
+};
+
 /**
  * Types of components
  */
@@ -372,21 +390,10 @@ class Component {
             input.name
           }</span>: <span class="input-label-value">${input.getValueForInputLabel()}</span>`;
           inputContainer.appendChild(inputLabel);
-          inputLabel.addEventListener('click', () => {
-            this.createFormHTML();
-            showSkillPage('skill-form');
-            const getInputElementInSkillForm = () => {
-              // * Input elements may have same ids depending on how SkillAPI reads them.
-              // * We should respect that.
-              const candidates = [
-                ...document.querySelectorAll(`#${input.key}`),
-                ...document.querySelectorAll(`#${input.key}-base`),
-              ];
-              return candidates.find((element) => element.input === input);
-            };
-            const inputElementInSkillForm = getInputElementInSkillForm();
-            assertNotNull(inputElementInSkillForm);
-            inputElementInSkillForm.focus();
+          inputLabel.addEventListener('click', (e) => {
+            // Prevents the click from bubbling up to the selfElement
+            e.stopPropagation();
+            showSkillFormForInput(this, input);
           });
         }
       });
@@ -470,6 +477,11 @@ class Component {
       const comment = document.createElement('pre');
       comment.className = 'component-comment';
       comment.textContent = this.comment.value.join('\n');
+      comment.addEventListener('click', (e) => {
+        // Prevents the click from bubbling up to the selfElement
+        e.stopPropagation();
+        showSkillFormForInput(this, this.comment);
+      });
       div.append(comment);
     }
 
