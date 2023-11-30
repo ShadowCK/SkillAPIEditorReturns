@@ -1,5 +1,12 @@
 import { Skill, getActiveSkill } from './skill.js';
-import { getActiveComponent, Type, Trigger, Target, Condition, Mechanic } from './component.js';
+import {
+  getActiveComponent,
+  Type,
+  Trigger,
+  Target,
+  Condition,
+  Mechanic,
+} from './components/index.js';
 
 import * as debug from './debug.js';
 import diContainer from './diContainer.js';
@@ -189,7 +196,7 @@ const setupOptionList = (div, list, type) => {
             showSkillPage('builder');
           } else {
             showSkillPage('skill-form');
-            /** @type {import('./component.js').Component} */
+            /** @type {import('./components/component.js').Component} */
             const component = h5.component.constructor
               ? new h5.component.constructor()
               : h5.component.supplier();

@@ -6,7 +6,7 @@ import {
   StringListValue,
   isAttribute,
 } from './input.js';
-import { setActiveComponent, setSaveIndex } from './component.js';
+import { setActiveComponent, setSaveIndex } from './components/component.js';
 import { getMaterials } from './data/index.js';
 import * as debug from './debug.js';
 import diContainer from './diContainer.js';
@@ -64,7 +64,7 @@ const isSkillNameTaken = (name) => getSkill(name) != null;
  */
 class Skill {
   constructor(name) {
-    /** @type {import('./component.js').Component[]} */
+    /** @type {import('./components/component.js').Component[]} */
     this.components = [];
 
     // Included to simplify code when adding components

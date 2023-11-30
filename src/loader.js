@@ -9,12 +9,12 @@ import {
 import {
   CustomComponent,
   Type,
+  setActiveComponent,
   Trigger,
   Target,
   Condition,
   Mechanic,
-  setActiveComponent,
-} from './component.js';
+} from './components/index.js';
 import { YAMLObject, parseYAML } from './yaml.js';
 import {
   getActiveSkill,

@@ -39,7 +39,7 @@ import {
   createSettingButton,
   getActiveComponent,
   setActiveComponent,
-} from './component.js';
+} from './components/component.js';
 import { getVersionData, setActiveData } from './data/index.js';
 import * as skill from './skill.js';
 import {
